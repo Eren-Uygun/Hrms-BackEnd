@@ -1,4 +1,5 @@
 # Hrms-BackEnd
 KodlamaIo hrms project backend
 
-https://res.cloudinary.com/hp-cloud/image/upload/v1631380222/Hrms/HumanResourceManagementSystem_fjpce3.png
+![HumanResourceManagementSystem](https://user-images.githubusercontent.com/29507530/132955764-b4b61e6f-fac6-44a3-bf30-ace511a83318.png)
+
