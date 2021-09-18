@@ -1,33 +1,63 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CurriculumVitaeService;
-import kodlamaio.HumanResourceManagementSystem.core.utils.Claudinary.abstracts.ImageService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.Claudinary.abstracts.CustomImageService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
-import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.CurriculumVitae;
+import kodlamaio.HumanResourceManagementSystem.entities.concretes.Image;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CurriculumVitaeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class CurriculumVitaeManager implements CurriculumVitaeService {
     private CurriculumVitaeDao _curriculumVitaeDao;
-    private ImageService _imageService;
+    private CandidateDao _candidateDao;
+    private CustomImageService _imageService;
+    private ImageDao _imageDao;
+    private CoverLetterDao _coverLetterDao;
+    private ForeignLanguageDao _foreignLanguageDao;
+    private SkillDao _skillDao;
+    private EducationDao _educationDao;
+    private JobExperienceDao _jobExperienceDao;
+
 
     @Autowired
-    public CurriculumVitaeManager(CurriculumVitaeDao _curriculumVitaeDao) {
+    public CurriculumVitaeManager(CurriculumVitaeDao _curriculumVitaeDao, CandidateDao _candidateDao, CustomImageService _imageService, ImageDao _imageDao, CoverLetterDao _coverLetterDao, ForeignLanguageDao _foreignLanguageDao, SkillDao _skillDao, EducationDao _educationDao, JobExperienceDao _jobExperienceDao) {
         this._curriculumVitaeDao = _curriculumVitaeDao;
+        this._candidateDao = _candidateDao;
+        this._imageService = _imageService;
+        this._imageDao = _imageDao;
+        this._coverLetterDao = _coverLetterDao;
+        this._foreignLanguageDao = _foreignLanguageDao;
+        this._skillDao = _skillDao;
+        this._educationDao = _educationDao;
+        this._jobExperienceDao = _jobExperienceDao;
     }
-
 
     @Override
     public Result add(CurriculumVitaeDto curriculumVitaeDto) {
+        CurriculumVitae tempCurriculumVitae = new CurriculumVitae();
+        tempCurriculumVitae.setCandidate(_candidateDao.getById(curriculumVitaeDto.getCandidateId()));
+        tempCurriculumVitae.setCreatedDate(LocalDate.now());
+        tempCurriculumVitae.setLinkedin(curriculumVitaeDto.getLinkedIn());
+        tempCurriculumVitae.setGithub(curriculumVitaeDto.getGithubLink());
 
-        return null;
+        Image photo = new Image();
+        photo.setImageUrl(curriculumVitaeDto.getPhoto());
+        if (!photo.getImageUrl().isEmpty() && !photo.getImageUrl().isBlank()){
+            _imageDao.save(photo);
+        }
+        else{
+            photo.setImageUrl("NoImage.jpg");
+            _imageDao.save(photo);
+        }
+        _curriculumVitaeDao.save(tempCurriculumVitae);
+       return new SuccessResult("Cv Eklendi.");
     }
 
     @Override
@@ -46,9 +76,10 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
         }
     }
 
+
     @Override
-    public DataResult<List<CurriculumVitae>> getCurriculumVitaeByCandidate(int candidateId) {
-        return null;
+    public DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(int candidateId) {
+        return new SuccessDataResult<CurriculumVitae>(_curriculumVitaeDao.findCurriculumVitaeByCandidate_Id(candidateId),"Kullanıcıya ait cv getirildi.");
     }
 
     @Override
@@ -58,12 +89,59 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result uploadCvPhoto(int cvId, MultipartFile multipartFile) throws IOException {
-        var temp = _curriculumVitaeDao.getById(cvId);
-        if (temp.getPhoto()!=null){
-            return new ErrorResult("Cv bulunamadı.");
-        }
-        _imageService.uploadImage(multipartFile);
+    public Result updateGithub(String github, int cvId) {
         return null;
     }
+
+    @Override
+    public Result deleteGithub(int cvId) {
+
+        if (!_curriculumVitaeDao.existsById(cvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }
+        CurriculumVitae curriculumVitae = _curriculumVitaeDao.getById(cvId);
+        curriculumVitae.setGithub(null);
+        _curriculumVitaeDao.save(curriculumVitae);
+
+        return new SuccessResult("Github adresi silindi.");
+    }
+
+    @Override
+    public Result updateLinkedin(String linkedin, int cvId) {
+        if(!this._curriculumVitaeDao.existsById(cvId)){
+            return new ErrorResult("Böyle bir cv yok");
+        }else if(!linkedin.startsWith("https://www.linkedin.com") &&
+                !linkedin.startsWith("www.linkedin.com") &&
+                !linkedin.startsWith("https://linkedin.com") &&
+                !linkedin.startsWith("linkedin.com")){
+            return new ErrorResult("Geçerli bir linked in adresi değil");
+        }
+        CurriculumVitae cv=this._curriculumVitaeDao.getById(cvId);
+        cv.setLinkedin(linkedin);
+        this._curriculumVitaeDao.save(cv);
+        return new SuccessResult("Kaydedildi");
+    }
+
+    @Override
+    public Result deleteLinkedin(int cvId) {
+        if(!this._curriculumVitaeDao.existsById(cvId)){
+            return new ErrorResult("Böyle bir cv yok");
+        }
+        CurriculumVitae cv=this._curriculumVitaeDao.getById(cvId);
+        cv.setLinkedin(null);
+        this._curriculumVitaeDao.save(cv);
+        return new SuccessResult("Linkedin adresi silindi");
+    }
+
+    @Override
+    public Result updateBiography(String biography, int cvId) {
+        return null;
+    }
+
+    @Override
+    public Result deleteBiography(int cvId) {
+        return null;
+    }
+
+
 }

@@ -4,9 +4,7 @@ package kodlamaio.HumanResourceManagementSystem.entities.abstracts;
 
 
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 

@@ -16,17 +16,13 @@ public class JobAdvertisementDto {
     private int jobId;
     private int employerId;
     private String description;
-    private String advertisementNumber;
     private int cityId;
     private int minSalary;
     private int maxSalary;
     private int openPosition;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate releaseDate;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate endDate;
-    private JobAdvertisementStatus jobAdvertisementStatus;
     private int workPlaceId;
     private int jobTypeId;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate endDate;
 
 }

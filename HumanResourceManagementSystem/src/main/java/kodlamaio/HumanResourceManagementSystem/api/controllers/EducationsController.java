@@ -5,6 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Education;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.WorkPlace;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.EducationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class EducationsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody Education education){
+    public ResponseEntity<?> add(@RequestBody EducationDto education){
         Result result = _educationService.add(education);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

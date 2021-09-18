@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobTypeService
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobTypeDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class JobTypeManager implements JobTypeService {
 
     private JobTypeDao _jobTypeDao;
 
+    @Autowired
     public JobTypeManager(JobTypeDao _jobTypeDao) {
         this._jobTypeDao = _jobTypeDao;
     }

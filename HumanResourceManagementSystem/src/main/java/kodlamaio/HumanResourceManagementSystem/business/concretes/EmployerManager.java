@@ -11,6 +11,7 @@ import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerActi
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerActivation;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.EmployerAddDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,19 +37,25 @@ public class EmployerManager implements EmployerService {
 
 
     @Override
-    public Result add(Employer employer) {
+    public Result add(EmployerAddDto employerAddDto) {
         try{
-            if (employer.getCompanyName().length()<2){
+            if (employerAddDto.getCompanyName().length()<2){
                 return new ErrorResult("Şirket adınız 2 karakterden fazla olmalıdır.");
-            }else if(employer.getPhoneNumber().length()>15 && employer.getPhoneNumber().length()<2){
+            }else if(employerAddDto.getPhoneNumber().length()>15 && employerAddDto.getPhoneNumber().length()<2){
                 return new ErrorResult("Telefon numaranız en az 3 karakter en fazla 15 karakter olmalıdır.");
-            } else if (_userValidationService.isMailAddressExists(employer.getEmail())){
+            } else if (_userValidationService.isMailAddressExists(employerAddDto.getEmail())){
                 return new ErrorResult("Bu kullanıcı sistemde mevcuttur.");
-
-            }else if (!_ruleValidationService.isMailRuleOk(employer.getEmail())&&!_ruleValidationService.isPasswordRuleOk(employer.getPassword())){
+            }else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail())&&!_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
             }else{
                 EmployerActivation employerActivation = new EmployerActivation();
+                Employer employer = new Employer();
+                employer.setCompanyName(employerAddDto.getCompanyName());
+                employer.setWebsite(employerAddDto.getWebsite());
+                employer.setPhoneNumber(employerAddDto.getPhoneNumber());
+                employer.setEmail(employerAddDto.getEmail());
+                employer.setPassword(employerAddDto.getPassword());
+                employer.setPasswordRepeat(employerAddDto.getConfirmPassword());
                 employer.setUserStatus(UserStatus.Passive);
                 employerActivation.setEmployer(employer);
                 employerActivation.setActivationNumber(ActivationNumberGenerator.generateActivationNumber());

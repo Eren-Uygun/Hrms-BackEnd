@@ -2,8 +2,10 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobExperienceService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobExperienceDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobExperience;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobExperienceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,22 +15,43 @@ import java.util.List;
 public class JobExperienceManager implements JobExperienceService {
 
     private JobExperienceDao _jobExperienceDao;
+    private CurriculumVitaeDao _cvDao;
 
     @Autowired
-    public JobExperienceManager(JobExperienceDao _jobExperienceDao) {
+    public JobExperienceManager(JobExperienceDao _jobExperienceDao, CurriculumVitaeDao _cvDao) {
         this._jobExperienceDao = _jobExperienceDao;
+        this._cvDao = _cvDao;
     }
 
     @Override
-    public Result add(JobExperience jobExperience) {
+    public Result add(JobExperienceDto jobExperienceDto) {
         try{
-            var temp = _jobExperienceDao.getById(jobExperience.getId());
-            if (temp.getId()== jobExperience.getId()){
-                return new ErrorResult("Veri sistemde kayıtlı");
-            }else {
-                _jobExperienceDao.save(jobExperience);
-                return new SuccessResult("Veri eklendi.");
+
+            if (!_cvDao.existsById(jobExperienceDto.getCvId())){
+                return new ErrorResult("Cv bulunamadı.");
+            }else if(jobExperienceDto.getCompanyName().length()<=2) {
+                return new ErrorResult("Şirket Adı en az 2 karakter olmalıdır.");
+            }else  if(jobExperienceDto.getJobInformation().length()<=5){
+                return new ErrorResult("Çalıştığınız yer hakkında verdiğiniz bilgi en az 5 karakter olmalıdır.");
+            }else  if(jobExperienceDto.getStartDate() == null){
+                return new ErrorResult("İşe başlangıç tarihiniz boş bırakılamaz.");
+            }else  if(jobExperienceDto.getEndDate() == null){
+                return new ErrorResult("İş'den ayrılış tarihiniz boş bırakılamaz.");
+            }else  if(jobExperienceDto.getPositionName().length()<= 2){
+                return new ErrorResult("Çalıştığınız departman adı en az 2 karakter olmalıdır.");
             }
+            JobExperience jobExperience = new JobExperience();
+            jobExperience.setCurriculumVitae(_cvDao.getById(jobExperienceDto.getCvId()));
+            jobExperience.setCompanyName(jobExperienceDto.getCompanyName());
+            jobExperience.setPositionName(jobExperienceDto.getPositionName());
+            jobExperience.setStartDate(jobExperienceDto.getStartDate());
+            jobExperience.setEndDate(jobExperienceDto.getEndDate());
+            jobExperience.setJobInformation(jobExperienceDto.getJobInformation());
+
+            _jobExperienceDao.save(jobExperience);
+            return new SuccessResult("İş tecrübesi eklendi.");
+
+
         }catch (Exception ex){
             return new ErrorResult("Veri ekleme hatası "+ex);
         }
@@ -36,32 +59,10 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public Result update(JobExperience jobExperience) {
-        try{
-            var temp = _jobExperienceDao.getById(jobExperience.getId());
-            if (temp.getId()!= jobExperience.getId()){
-                return new ErrorResult("Güncellenecek veri bulunamadı.");
-            }else{
-                temp.setCompanyName(jobExperience.getCompanyName());
-                temp.setPositionName(jobExperience.getPositionName());
-                temp.setStartDate(jobExperience.getStartDate());
-                temp.setEndDate(jobExperience.getEndDate());
-                temp.setJobInformation(jobExperience.getJobInformation());
-                temp.setCurriculumVitae(jobExperience.getCurriculumVitae());
-                _jobExperienceDao.save(temp);
-                return new SuccessResult("Veri güncellendi.");
-            }
-
-        }catch (Exception ex){
-return new ErrorResult("Veri güncelleme hatası");
-        }
-    }
-
-    @Override
     public Result delete(int id) {
         try{
-            var temp = _jobExperienceDao.getById(id);
-            if (temp.getId() != id){
+
+            if (!_jobExperienceDao.existsById(id)){
                 return new ErrorResult("Silinecek veri bulunamadı.");
             }else {
                 _jobExperienceDao.deleteById(id);

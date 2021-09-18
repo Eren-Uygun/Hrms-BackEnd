@@ -21,6 +21,7 @@ public class WorkPlaceManager implements WorkPlaceService {
 
     @Override
     public Result add(WorkPlace workPlace) {
+        _workPlaceDao.save(workPlace);
         return new SuccessResult("Veri eklendi");
     }
 

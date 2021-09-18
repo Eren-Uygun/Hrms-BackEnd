@@ -5,13 +5,13 @@ import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.
 import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.AdvertisementNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
-import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.HrmsEmployeeDao;
-import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobAdvertisementActivationByEmployeeDao;
-import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobAdvertisementDao;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
+import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.HrmsEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisementActivationByEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,8 +23,24 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     private JobAdvertisementDao _jobAdvertisementDao;
     private JobAdvertisementActivationByEmployeeDao _jobAdvertisementActivationByEmployeeDao;
     private HrmsEmployeeDao _hrmsEmployeeDao;
+    private EmployerDao _employerDao;
+    private JobTypeDao _jobTypeDao;
+    private WorkPlaceDao _workPlaceDao;
+    private CityDao _cityDao;
+    private JobDao _jobDao;
 
 
+    @Autowired
+    public JobAdvertisementManager(JobAdvertisementDao _jobAdvertisementDao, JobAdvertisementActivationByEmployeeDao _jobAdvertisementActivationByEmployeeDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerDao _employerDao, JobTypeDao _jobTypeDao, WorkPlaceDao _workPlaceDao, CityDao _cityDao, JobDao _jobDao) {
+        this._jobAdvertisementDao = _jobAdvertisementDao;
+        this._jobAdvertisementActivationByEmployeeDao = _jobAdvertisementActivationByEmployeeDao;
+        this._hrmsEmployeeDao = _hrmsEmployeeDao;
+        this._employerDao = _employerDao;
+        this._jobTypeDao = _jobTypeDao;
+        this._workPlaceDao = _workPlaceDao;
+        this._cityDao = _cityDao;
+        this._jobDao = _jobDao;
+    }
 
     @Override
     public Result add(JobAdvertisement jobAdvertisement) {
@@ -41,6 +57,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
                jobAdvertisementActivationByEmployee.setJobAdvertisement(jobAdvertisement);
                jobAdvertisementActivationByEmployee.setJobAdvertisementActivationStatus(JobAdvertisementActivationStatus.WaitingActivation);
                jobAdvertisementActivationByEmployee.setAdvertisementActivationDate(LocalDate.now());
+               _jobAdvertisementActivationByEmployeeDao.save(jobAdvertisementActivationByEmployee);
                _jobAdvertisementDao.save(jobAdvertisement);
                return new SuccessResult("İş ilanı sisteme eklendi.");
            }
@@ -48,6 +65,32 @@ public class JobAdvertisementManager implements JobAdvertisementService {
            return new ErrorResult("Ekleme hatası");
        }
 
+    }
+
+    @Override
+    public Result addDto(JobAdvertisementDto jobAdvertisementDto) {
+        //Fiziki olarak çalıştı ancak React'da denenmedi.
+       JobAdvertisement jobAdvertisement = new JobAdvertisement();
+       jobAdvertisement.setAdvertisementNumber(AdvertisementNumberGenerator.generateAdvertisementNumber());
+       JobAdvertisementActivationByEmployee jobAdvertisementActivationByEmployee = new JobAdvertisementActivationByEmployee();
+       jobAdvertisement.setDescription(jobAdvertisementDto.getDescription());
+       jobAdvertisement.setReleaseDate(LocalDate.now());
+       jobAdvertisement.setJob(_jobDao.getById(jobAdvertisementDto.getJobId()));
+       jobAdvertisement.setEmployer(_employerDao.getById(jobAdvertisementDto.getEmployerId()));
+       jobAdvertisement.setCity(_cityDao.getById(jobAdvertisementDto.getCityId()));
+       jobAdvertisement.setMinSalary(jobAdvertisementDto.getMinSalary());
+       jobAdvertisement.setMaxSalary(jobAdvertisementDto.getMaxSalary());
+       jobAdvertisement.setOpenPositions(jobAdvertisementDto.getOpenPosition());
+       jobAdvertisement.setJobAdvertisementStatus(JobAdvertisementStatus.Passive);
+       jobAdvertisement.setJobType(_jobTypeDao.getById(jobAdvertisementDto.getJobTypeId()));
+       jobAdvertisement.setWorkPlace(_workPlaceDao.getById(jobAdvertisementDto.getWorkPlaceId()));
+        jobAdvertisementActivationByEmployee.setHrmsEmployee(null);
+        jobAdvertisementActivationByEmployee.setJobAdvertisement(jobAdvertisement);
+        jobAdvertisementActivationByEmployee.setJobAdvertisementActivationStatus(JobAdvertisementActivationStatus.WaitingActivation);
+        jobAdvertisementActivationByEmployee.setAdvertisementActivationDate(LocalDate.now());
+        _jobAdvertisementActivationByEmployeeDao.save(jobAdvertisementActivationByEmployee);
+        _jobAdvertisementDao.save(jobAdvertisement);
+        return new SuccessResult("İş ilanı sisteme eklendi.");
     }
 
     @Override

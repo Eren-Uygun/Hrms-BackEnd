@@ -24,7 +24,7 @@ public class Skill {
     private String skillName;
 
     @Column(name = "skill_rate")
-    @Max(10) @Min(1)
+    @Max(5) @Min(1)
     private int skillRate;
 
     @JsonIgnore

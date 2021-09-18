@@ -11,6 +11,7 @@ import java.util.List;
 public interface JobAdvertisementService {
 
     Result add(JobAdvertisement jobAdvertisement);
+    Result addDto(JobAdvertisementDto jobAdvertisementDto);
     Result update(JobAdvertisement jobAdvertisement);
     Result delete(int id);
     Result setActivationStatus(int id);

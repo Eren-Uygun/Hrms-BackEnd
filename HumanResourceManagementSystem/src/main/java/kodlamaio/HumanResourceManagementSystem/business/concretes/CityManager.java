@@ -23,7 +23,7 @@ public class CityManager implements CityService {
     @Override
     public Result add(City city) {
         try{
-            var tempCity = _cityDao.existsCityByName(city.getName());
+            var tempCity = _cityDao.existsCityByCityName(city.getCityName());
             if (tempCity)
             {
                 return new ErrorResult("Sistemde kayıtlı bilgi girdiniz.");
@@ -42,10 +42,10 @@ public class CityManager implements CityService {
     public Result update(City city) {
         try{
             var tempCity = _cityDao.getById(city.getId());
-            if (tempCity.getName()==null){
+            if (tempCity.getCityName()==null){
                 return new ErrorResult("Veri bulunamadı.");
             }else{
-                tempCity.setName(city.getName());
+                tempCity.setCityName(city.getCityName());
                 _cityDao.save(tempCity);
                 return new SuccessResult("Veri güncellendi.");
             }
@@ -58,7 +58,7 @@ public class CityManager implements CityService {
     public Result delete(int id) {
         try{
             var tempCity = _cityDao.getById(id);
-            if (tempCity.getName() == null){
+            if (tempCity.getCityName() == null){
                 return new ErrorResult("Veri bulunamadı.");
             }else{
                 _cityDao.deleteById(id);

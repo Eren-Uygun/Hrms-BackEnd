@@ -25,11 +25,10 @@ public class Education {
     @Column(name="school_name")
     private String schoolName;
 
-    @Column(name="start_date")
-    @PastOrPresent
+    @Column(name="start_date") @PastOrPresent
     private LocalDate startingDate;
 
-    @Column(name="graduate_date")
+    @Column(name="graduate_date")@PastOrPresent
     private LocalDate graduateDate;
 
     @Column(name="department_name")

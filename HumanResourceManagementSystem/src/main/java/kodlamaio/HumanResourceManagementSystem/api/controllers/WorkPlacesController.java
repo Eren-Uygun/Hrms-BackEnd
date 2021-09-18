@@ -4,7 +4,6 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.WorkPlaceServi
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.WorkPlace;
-import org.hibernate.jdbc.Work;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.function.EntityResponse;
@@ -14,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/workPlaces/")
 public class WorkPlacesController {
-    private WorkPlaceService _workPlaceService;
+    private final WorkPlaceService _workPlaceService;
 
     public WorkPlacesController(WorkPlaceService workPlaceService) {
         this._workPlaceService = workPlaceService;
@@ -44,7 +43,7 @@ return ResponseEntity.badRequest().body(result.getData());
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(WorkPlace workPlace){
+    public ResponseEntity<?> add(@RequestBody WorkPlace workPlace){
         Result result = _workPlaceService.add(workPlace);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

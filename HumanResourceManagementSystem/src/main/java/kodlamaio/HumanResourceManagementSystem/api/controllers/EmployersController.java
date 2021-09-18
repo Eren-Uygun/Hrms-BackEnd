@@ -6,6 +6,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.HrmsEmployee;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.EmployerAddDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class EmployersController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody Employer employer){
-        Result result=_employerService.add(employer);
+    public ResponseEntity<?> add(@RequestBody EmployerAddDto employerAddDto){
+        Result result=_employerService.add(employerAddDto);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -35,7 +36,7 @@ public class EmployersController {
 
     @GetMapping("/getById")
     public ResponseEntity<?> getById(int employerId){
-        Result result= _employerService.getById(employerId);
+        DataResult<?> result= _employerService.getById(employerId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }

@@ -3,6 +3,7 @@ package kodlamaio.HumanResourceManagementSystem.core.utils.validations.concretes
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.RuleValidationService;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,15 @@ public class RuleValidation implements RuleValidationService {
 
     @Override
     public boolean isEmployerMailRuleOk(String email, String website) {
+        email.toLowerCase(Locale.ROOT);
+        website.toLowerCase(Locale.ROOT);
+
+
+        String[] emailArray = email.split(" ") ;
+        String[] websiteArray = website.split(" ");
+
+
+
 
         return false;
     }

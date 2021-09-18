@@ -23,7 +23,6 @@ public class JobAdvertisementFavorite {
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
-    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "job_advertisement_id")
     private JobAdvertisement jobAdvertisement;

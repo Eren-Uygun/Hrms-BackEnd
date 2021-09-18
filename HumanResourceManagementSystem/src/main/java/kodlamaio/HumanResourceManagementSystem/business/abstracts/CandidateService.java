@@ -4,11 +4,13 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Job;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 
 public interface CandidateService {
-    Result add(Candidate candidate);
+    Result add(CandidateAddDto candidateAddDto);
     Result update(Candidate candidate);
     Result delete(int id);
 

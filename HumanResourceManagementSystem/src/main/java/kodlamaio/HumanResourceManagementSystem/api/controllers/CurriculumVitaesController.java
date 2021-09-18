@@ -23,8 +23,8 @@ public class CurriculumVitaesController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@Valid @RequestBody CurriculumVitaeDto curriculumVitae){
-        Result result = _curriculumVitaeService.add(curriculumVitae);
+    public ResponseEntity<?> add(@Valid @RequestBody CurriculumVitaeDto curriculumVitaeDto){
+        Result result = _curriculumVitaeService.add(curriculumVitaeDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -50,17 +50,58 @@ public class CurriculumVitaesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    public ResponseEntity<?> addPhoto(@RequestBody MultipartFile multipartFile,@RequestParam int id){
-        try{
-            Result result = _curriculumVitaeService.uploadCvPhoto(id,multipartFile);
-            if (result.isSuccess()){
-                return ResponseEntity.ok(result);
-            }
-            return ResponseEntity.badRequest().body(result);
-        }catch(Exception exception){
-             return ResponseEntity.badRequest().body(exception);
+    @PutMapping("/updateGithub")
+    public ResponseEntity<?> updateGithub(@RequestParam String github,@RequestParam int cvId){
+        Result result=this._curriculumVitaeService.updateGithub(github,cvId);
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result);
         }
+        return ResponseEntity.badRequest().body(result);
+    }
 
+    @DeleteMapping("/deleteGithub")
+    public ResponseEntity<?> deleteGithub(@RequestParam int cvId){
+        Result result=this._curriculumVitaeService.deleteGithub(cvId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/updateLinkedin")
+    public ResponseEntity<?> updateLinkedin(@RequestParam String linkedin,@RequestParam int cvId){
+        Result result=this._curriculumVitaeService.updateLinkedin(linkedin,cvId);
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("/deleteLinkedin")
+    public ResponseEntity<?> deleteLinkedin(@RequestParam int cvId){
+        Result result=this._curriculumVitaeService.deleteLinkedin(cvId);
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/updateBiography")
+    public ResponseEntity<?> updateBiography(@RequestParam String biography,@RequestParam int cvId){
+        Result result=this._curriculumVitaeService.updateBiography(biography,cvId);
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @DeleteMapping("/deleteBiography")
+    public ResponseEntity<?> deleteBiography(@RequestParam int cvId){
+        Result result=this._curriculumVitaeService.deleteBiography(cvId);
+        if(result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
     }
 
 

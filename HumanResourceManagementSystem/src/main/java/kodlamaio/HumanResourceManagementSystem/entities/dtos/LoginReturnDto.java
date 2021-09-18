@@ -11,5 +11,6 @@ public class LoginReturnDto {
     private int id;
     private String email;
     private String password;
+    //User type planlaması için bekliyor.
     private int userType;
 }

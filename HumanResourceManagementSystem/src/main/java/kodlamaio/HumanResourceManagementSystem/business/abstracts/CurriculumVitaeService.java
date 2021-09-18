@@ -3,6 +3,7 @@ package kodlamaio.HumanResourceManagementSystem.business.abstracts;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.CurriculumVitae;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CurriculumVitaeDetailsAddDto;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CurriculumVitaeDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,10 +15,18 @@ public interface CurriculumVitaeService {
     Result update(CurriculumVitaeDto curriculumVitaeDto);
     Result delete(int id);
 
-    DataResult<List<CurriculumVitae>> getCurriculumVitaeByCandidate(int candidateId);
+    DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(int candidateId);
     DataResult<CurriculumVitae> findById(int id);
 
-    Result uploadCvPhoto(int cvId, MultipartFile  multipartFile)throws IOException;
+    public Result updateGithub(String github, int cvId);
+    public Result deleteGithub(int cvId);
+
+    public Result updateLinkedin(String linkedin, int cvId);
+    public Result deleteLinkedin(int cvId);
+
+    public Result updateBiography(String biography, int cvId);
+    public Result deleteBiography(int cvId);
+
 
 
 }

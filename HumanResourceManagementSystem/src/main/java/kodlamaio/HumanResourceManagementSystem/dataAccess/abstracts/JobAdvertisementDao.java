@@ -20,11 +20,11 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Inte
 
     JobAdvertisement  getJobAdvertisementByAdvertisementNumber(String advertisementNumber);
 
-    DataResult<List<JobAdvertisement>> getJobAdvertisementByCity(String cityName);
+    DataResult<List<JobAdvertisement>> getJobAdvertisementsByCity_CityName(String cityName);
 
-    DataResult<List<JobAdvertisement>> getJobAdvertisementByJobType(String jobType);
+    DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobType(String jobType);
 
-    DataResult<List<JobAdvertisement>> getJobAdvertisementByWorkPlace(String workPlace);
+    DataResult<List<JobAdvertisement>> getJobAdvertisementsByWorkPlace(String workPlace);
 
     @Query("from JobAdvertisement where  jobAdvertisementStatus = 'Active'")
     DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatus();
@@ -36,7 +36,7 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Inte
     @Query("from JobAdvertisement where jobAdvertisementStatus='Active' and maxSalary between maxSalary and minSalary")
     DataResult<List<JobAdvertisement>> getJobAdvertisementsByMaxSalaryBetweenAndMinSalary(int maxSalary, int minSalary);
 
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByCity_Name(String cityName);
+
 
 
    /*@Query("from JobAdvertisement where JobAdvertisementActivationByEmployee =:employerId and jobAdvertisementStatus = 'Active'")*/

@@ -26,7 +26,7 @@ public class JobManager implements JobService {
         try{
             //Boşluklu ve değişik yazım stilleri ile bypass edilebiliyor.
             //String metotları ile düzeltilebilir.
-            if (_jobDao.existsByJobName(job.getJobName().toLowerCase(Locale.ROOT).trim())){
+            if (_jobDao.existsById(job.getId())){
                 return new ErrorResult("İş sistemde kayıtlı");
             }
             _jobDao.save(job);

@@ -21,6 +21,8 @@ import java.util.List;
 @Table(name = "hrms_employees")
 public class HrmsEmployee extends User {
 
+
+
     @Column(name = "first_name")
     private String firstName;
 

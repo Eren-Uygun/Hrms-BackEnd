@@ -5,6 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.ForeignLanguage;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobExperience;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.ForeignLanguageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +45,8 @@ public class ForeignLanguagesController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ForeignLanguage foreignLanguage){
-        Result result = _foreignLanguageService.add(foreignLanguage);
+    public ResponseEntity<?> add(@RequestBody ForeignLanguageDto foreignLanguageDto){
+        Result result = _foreignLanguageService.add(foreignLanguageDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }

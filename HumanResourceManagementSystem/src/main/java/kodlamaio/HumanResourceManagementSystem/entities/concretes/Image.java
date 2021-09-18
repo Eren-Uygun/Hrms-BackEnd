@@ -12,17 +12,23 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "photos")
+@Table(name = "images")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler","curriculumVitae"})
-public class Photo {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "photo_url")
-    private String photoUrl;
+
     @Column(name = "name")
     private String name;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "image_id")
+    private String imageId;
+
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)

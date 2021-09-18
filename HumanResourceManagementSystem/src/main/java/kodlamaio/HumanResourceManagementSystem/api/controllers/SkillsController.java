@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.SkillService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Skill;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.SkillDto;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,7 @@ public class SkillsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(Skill skill){
+    public ResponseEntity<?> add(@RequestBody SkillDto skill){
         Result result = _skillService.add(skill);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

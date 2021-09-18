@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.entities.concretes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kodlamaio.HumanResourceManagementSystem.entities.abstracts.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 @PrimaryKeyJoinColumn(name = "user_id")
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","user"})
 @Table(name = "employers")
 public class Employer extends User {
+
+
 
 
     @Column(name = "company_name",nullable = false,unique = true)

@@ -25,7 +25,7 @@ public class JobAdvertisementsController {
 
     @GetMapping("/getOne")
     public ResponseEntity<?> getOne(int id){
-        Result result = _jobAdvertisementService.getOne(id);
+        DataResult<?> result = _jobAdvertisementService.getOne(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -41,9 +41,20 @@ public class JobAdvertisementsController {
         return ResponseEntity.badRequest().body(result.getData());
     }
 
-    @PostMapping("/add")
+/*
     public ResponseEntity<?> add(@Valid @RequestBody JobAdvertisement jobAdvertisement){
         Result result = _jobAdvertisementService.add(jobAdvertisement);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.badRequest().body(result);
+    }
+*/
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@Valid @RequestBody JobAdvertisementDto jobAdvertisementDto){
+        Result result = _jobAdvertisementService.addDto(jobAdvertisementDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }

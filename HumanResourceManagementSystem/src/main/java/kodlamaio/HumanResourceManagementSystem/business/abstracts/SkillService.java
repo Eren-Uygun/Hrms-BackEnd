@@ -3,12 +3,13 @@ package kodlamaio.HumanResourceManagementSystem.business.abstracts;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Skill;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.SkillDto;
 
 import java.util.List;
 
 public interface SkillService {
-    Result add(Skill skill);
-    Result update(Skill skill);
+    Result add(SkillDto skillDto);
+    Result update(SkillDto skillDto);
     Result delete(int id);
 
     DataResult<Skill> getOne(int id);

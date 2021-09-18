@@ -2,9 +2,11 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.ForeignLanguageService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.ForeignLanguageDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.ForeignLanguage;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobExperience;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.ForeignLanguageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,22 +16,30 @@ import java.util.List;
 public class ForeignLanguageManager implements ForeignLanguageService {
 
     private ForeignLanguageDao _foreignLanguageDao;
+    private CurriculumVitaeDao _cvDao;
 
     @Autowired
-    public ForeignLanguageManager(ForeignLanguageDao _foreignLanguageDao) {
+    public ForeignLanguageManager(ForeignLanguageDao _foreignLanguageDao, CurriculumVitaeDao _cvDao) {
         this._foreignLanguageDao = _foreignLanguageDao;
+        this._cvDao = _cvDao;
     }
 
     @Override
-    public Result add(ForeignLanguage foreignLanguage) {
+    public Result add(ForeignLanguageDto foreignLanguageDto) {
         try{
-            var temp = _foreignLanguageDao.getById(foreignLanguage.getId());
-            if (temp.getId() == foreignLanguage.getId()){
-                return new ErrorResult("Veri sistemde kayıtlı");
-            }else{
-                _foreignLanguageDao.save(foreignLanguage);
-                return new SuccessResult("Veri sisteme eklendi.");
+            if (!_cvDao.existsById(foreignLanguageDto.getCvId())){
+                return new ErrorResult("Cv mevcut değil");
+            }else if(foreignLanguageDto.getLanguageName().length()<=2){
+                return new ErrorResult("Yabancı dil adı 2 karakterden fazla olmalıdır.");
+            }else if(foreignLanguageDto.getLanguageLevel()<1 && foreignLanguageDto.getLanguageLevel()>5){
+                return new ErrorResult("Seviyeniz 1-5 arasında olmalıdır.");
             }
+            ForeignLanguage foreignLanguage = new ForeignLanguage();
+            foreignLanguage.setCurriculumVitae(_cvDao.getById(foreignLanguageDto.getCvId()));
+            foreignLanguage.setLanguageName(foreignLanguageDto.getLanguageName());
+            foreignLanguage.setLanguageLevel(foreignLanguageDto.getLanguageLevel());
+            _foreignLanguageDao.save(foreignLanguage);
+            return new SuccessResult("Yabancı dil eklendi.");
 
         }catch (Exception ex){
             return new ErrorResult("Veri ekleme hatası"+ex);
@@ -37,29 +47,9 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public Result update(ForeignLanguage foreignLanguage) {
-        try{
-            var temp = _foreignLanguageDao.getById(foreignLanguage.getId());
-            if (temp.getId() != foreignLanguage.getId()){
-                return new ErrorResult("Veri bulunamadı.");
-            }else{
-                temp.setLanguageName(foreignLanguage.getLanguageName());
-                temp.setLanguageLevel(foreignLanguage.getLanguageLevel());
-                temp.setCurriculumVitae(foreignLanguage.getCurriculumVitae());
-                _foreignLanguageDao.save(temp);
-                return new SuccessResult("Veri güncellendi.");
-            }
-
-        }catch (Exception ex){
-            return new ErrorResult("Veri güncelleme hatası"+ex);
-        }
-    }
-
-    @Override
     public Result delete(int id) {
         try{
-            var temp = _foreignLanguageDao.getById(id);
-            if (temp.getId() != id){
+            if (!_foreignLanguageDao.existsById(id)){
                 return new ErrorResult("Silinecek veri bulunamadı.");
             }else{
                 _foreignLanguageDao.deleteById(id);

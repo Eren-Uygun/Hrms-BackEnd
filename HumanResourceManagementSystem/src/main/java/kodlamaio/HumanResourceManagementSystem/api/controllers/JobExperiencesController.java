@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobExperienceS
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobExperience;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobExperienceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class JobExperiencesController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(JobExperience experience){
+    public ResponseEntity<?> add(@RequestBody JobExperienceDto experience){
         Result result = _jobExperienceService.add(experience);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

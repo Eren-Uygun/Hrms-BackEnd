@@ -12,6 +12,7 @@ import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateAct
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.CandidateActivation;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,22 +38,30 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public Result add(Candidate candidate) {
+    public Result add(CandidateAddDto candidateAddDto) {
         try {
-            if (candidate.getNationalIdentityNumber().length()!=11){
+            if (candidateAddDto.getNationalIdentityNumber().length()!=11){
                 return new ErrorResult("11 Haneli Türkiye Cumhuriyeti Kimlik Numaranızı giriniz.");
-            } else if (!_candidateValidationService.isRealPerson(candidate.getBirthDate().getYear(),candidate.getFirstName(),candidate.getLastName(),candidate.getNationalIdentityNumber())) {
+            } else if (!_candidateValidationService.isRealPerson(candidateAddDto.getBirthDate().getYear(),candidateAddDto.getFirstName(),candidateAddDto.getLastName(),candidateAddDto.getNationalIdentityNumber())) {
                 return new ErrorResult("Kimlik doğrulanamadı.");
-            }else if(_userValidationService.isMailAddressExists(candidate.getEmail())){
+            }else if(_userValidationService.isMailAddressExists(candidateAddDto.getEmail())){
                 return new ErrorResult("Bu mail adresi sistemde kayıtlı.");
-            } else if(!_ruleValidationService.isMailRuleOk(candidate.getEmail())&&!_ruleValidationService.isPasswordRuleOk(candidate.getPassword())){
+            } else if(!_ruleValidationService.isMailRuleOk(candidateAddDto.getEmail())&&!_ruleValidationService.isPasswordRuleOk(candidateAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
-            }else if (candidate.getFirstName().length()<=2&&candidate.getLastName().length()<=2){
+            }else if (candidateAddDto.getFirstName().length()<=2&&candidateAddDto.getLastName().length()<=2){
                 return new ErrorResult("Adınız ve soyadınız 2 karakterden fazla olmalıdır.");
-            }else if(!candidate.getPassword().equals(candidate.getPasswordRepeat())){
+            }else if(!candidateAddDto.getPassword().equals(candidateAddDto.getPasswordConfirm())){
                 return new ErrorResult("Şifreniz uyuşmuyor.");
            }
             else {
+                Candidate candidate = new Candidate();
+                candidate.setFirstName(candidateAddDto.getFirstName());
+                candidate.setLastName(candidateAddDto.getLastName());
+                candidate.setBirthDate(candidateAddDto.getBirthDate());
+                candidate.setNationalIdentityNumber(candidateAddDto.getNationalIdentityNumber());
+                candidate.setEmail(candidateAddDto.getEmail());
+                candidate.setPassword(candidateAddDto.getPassword());
+                candidate.setPasswordRepeat(candidateAddDto.getPasswordConfirm());
                 CandidateActivation activation = new CandidateActivation();
                 candidate.setUserStatus(UserStatus.Passive);
                 activation.setCandidate(candidate);
@@ -78,7 +87,6 @@ public class CandidateManager implements CandidateService {
                 return new ErrorResult("Kullanıcı bulunamadı.");
             }
             else {
-
                 tempCandidate.setEmail(candidate.getEmail());
                 tempCandidate.setPassword(candidate.getPassword());
                 tempCandidate.setPasswordRepeat(candidate.getPasswordRepeat());

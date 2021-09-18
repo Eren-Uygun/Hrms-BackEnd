@@ -21,12 +21,10 @@ public class CurriculumVitae {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne()
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
-    @Column(name = "cover_letter")
-    private String coverLetter;
 
     @Column(name = "github_address")
     private String github;
@@ -46,7 +44,7 @@ public class CurriculumVitae {
     private CoverLetter coverLetters;
 
     @OneToOne(mappedBy = "curriculumVitae",cascade = CascadeType.ALL)
-    private Photo photo;
+    private Image photo;
 
     @OneToMany(mappedBy = "curriculumVitae", cascade = CascadeType.ALL )
     private List<ForeignLanguage> foreignLanguage;

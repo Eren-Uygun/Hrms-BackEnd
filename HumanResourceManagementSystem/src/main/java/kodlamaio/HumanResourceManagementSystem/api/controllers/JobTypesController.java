@@ -48,7 +48,7 @@ public class JobTypesController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(JobType  jobType){
+    public ResponseEntity<?> add(@RequestBody JobType  jobType){
 
         Result result = _jobTypeService.add(jobType);
         if (result.isSuccess()){
