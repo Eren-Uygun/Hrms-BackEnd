@@ -5,6 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.City;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Education;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class CitiesController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody City city){
-        Result result =  _cityService.add(city);
+    public ResponseEntity<?> add(@RequestBody CityDto cityDto){
+        Result result =  _cityService.add(cityDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -40,6 +41,15 @@ public class CitiesController {
         {
             return ResponseEntity.badRequest().body(result);
         }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@RequestBody CityDto cityDto, @PathVariable("id") int id){
+        Result result = _cityService.update(cityDto,id);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
     }
 
     @GetMapping("/getCity")

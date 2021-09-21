@@ -43,12 +43,11 @@ public class EmployerManager implements EmployerService {
                 return new ErrorResult("Şirket adınız 2 karakterden fazla olmalıdır.");
             }else if(employerAddDto.getPhoneNumber().length()>15 && employerAddDto.getPhoneNumber().length()<2){
                 return new ErrorResult("Telefon numaranız en az 3 karakter en fazla 15 karakter olmalıdır.");
-            } else if (_userValidationService.isMailAddressExists(employerAddDto.getEmail())){
+            } else if (_employerDao.existsByEmail(employerAddDto.getEmail())){
                 return new ErrorResult("Bu kullanıcı sistemde mevcuttur.");
-            }else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail())&&!_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
+            }else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail())||!_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
             }else{
-                EmployerActivation employerActivation = new EmployerActivation();
                 Employer employer = new Employer();
                 employer.setCompanyName(employerAddDto.getCompanyName());
                 employer.setWebsite(employerAddDto.getWebsite());
@@ -57,12 +56,14 @@ public class EmployerManager implements EmployerService {
                 employer.setPassword(employerAddDto.getPassword());
                 employer.setPasswordRepeat(employerAddDto.getConfirmPassword());
                 employer.setUserStatus(UserStatus.Passive);
+                EmployerActivation employerActivation = new EmployerActivation();
                 employerActivation.setEmployer(employer);
                 employerActivation.setActivationNumber(ActivationNumberGenerator.generateActivationNumber());
                 employerActivation.setActivationDate(LocalDate.now());
                 employerActivation.setUserActivationStatus(UserActivationStatus.Inactivate);
-                _employerActivationDao.save(employerActivation);
                 _employerDao.save(employer);
+                _employerActivationDao.save(employerActivation);
+
                 return new SuccessResult("Kayıt başarılı");
             }
 
@@ -73,28 +74,30 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public Result update(Employer employer) {
+    public Result update(EmployerAddDto employerAddDto,int employerId) {
         try{
-            var tempEmployer = _employerDao.getById(employer.getId());
-            if (tempEmployer.getCompanyName() == null){
-                return new ErrorResult("İşveren bulunamadı.");
-            } if (employer.getCompanyName().length()<2){
-                return new ErrorResult("Şirket adınız 2 karakterden fazla olmalıdır.");
-            }else if(employer.getPhoneNumber().length()>15 && employer.getPhoneNumber().length()<2){
-                return new ErrorResult("Telefon numaranız en az 3 karakter en fazla 15 karakter olmalıdır.");
-            } else if (!_userValidationService.isMailAddressExists(employer.getEmail())){
-                return new ErrorResult("Bu kullanıcı sistemde mevcuttur.");
 
-            }else if (!_ruleValidationService.isMailRuleOk(employer.getEmail())&&!_ruleValidationService.isPasswordRuleOk(employer.getPassword())){
+            if (employerAddDto.getCompanyName().length()<2){
+                return new ErrorResult("Şirket adınız 2 karakterden fazla olmalıdır.");
+            }else if(employerAddDto.getPhoneNumber().length()>15 || employerAddDto.getPhoneNumber().length()<2){
+                return new ErrorResult("Telefon numaranız en az 3 karakter en fazla 15 karakter olmalıdır.");
+            } else if (!_userValidationService.isMailAddressExists(employerAddDto.getEmail())){
+                return new ErrorResult("Bu kullanıcı sistemde mevcut değil.");
+            }else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail()) || !_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
-            }
-            else {
-                tempEmployer.setCompanyName(employer.getCompanyName());
-                tempEmployer.setPhoneNumber(employer.getPhoneNumber());
-                tempEmployer.setWebsite(employer.getWebsite());
-                tempEmployer.setEmail(employer.getEmail());
-                tempEmployer.setPassword(employer.getPassword());
-                tempEmployer.setPasswordRepeat(employer.getPasswordRepeat());
+            } else if (!_employerDao.existsById(employerId)) {
+                return new ErrorResult("İş veren bulunamadı.");
+            } else {
+
+                Employer tempEmployer = _employerDao.getById(employerId);
+
+                tempEmployer.setCompanyName(employerAddDto.getCompanyName());
+                tempEmployer.setPhoneNumber(employerAddDto.getPhoneNumber());
+                tempEmployer.setWebsite(employerAddDto.getWebsite());
+                tempEmployer.setEmail(employerAddDto.getEmail());
+                tempEmployer.setPassword(employerAddDto.getPassword());
+                tempEmployer.setPasswordRepeat(employerAddDto.getConfirmPassword());
+                tempEmployer.setUserStatus(UserStatus.Passive);
                 _employerDao.save(tempEmployer);
                 return new SuccessResult("Güncelleme işlemi yapıldı.");
             }
@@ -106,9 +109,12 @@ public class EmployerManager implements EmployerService {
     @Override
     public Result delete(int id) {
       try{
-          _employerDao.deleteById(id);
-          return new SuccessResult("Veri silindi.");
-
+          if (!_employerDao.existsById(id)){
+              return new ErrorResult("iş veren bulunamadı");
+          }else {
+              _employerDao.deleteById(id);
+              return new SuccessResult("Veri silindi.");
+          }
       }catch (Exception ex){
           return new ErrorResult("Veri silme hatası");
       }

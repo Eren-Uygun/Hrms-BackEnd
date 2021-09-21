@@ -10,7 +10,7 @@ import java.util.List;
 public interface EmployerService {
 
     Result add(EmployerAddDto employerAddDto);
-    Result update(Employer employer);
+    Result update(EmployerAddDto employerAddDto,int employerId);
     Result delete(int id);
 
     DataResult<List<Employer>> getAll();

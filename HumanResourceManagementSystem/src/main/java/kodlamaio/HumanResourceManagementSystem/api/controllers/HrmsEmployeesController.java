@@ -4,9 +4,11 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.EmployerServic
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.HrmsEmployeeService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.HrmsEmployeeDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.HrmsEmployee;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.HrmsEmployeeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +29,22 @@ public class HrmsEmployeesController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<?> add(@Valid @RequestBody HrmsEmployee hrmsEmployee) {
+    public ResponseEntity<?> add(@Valid @RequestBody HrmsEmployeeDto hrmsEmployee) {
         Result result = this._employeeService.add(hrmsEmployee);
         if (result.isSuccess()){
-            return ResponseEntity.ok().body(hrmsEmployee);
+            return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(hrmsEmployee);
+
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody HrmsEmployeeDto hrmsEmployeeDto,int hrmsEmployeeId){
+        Result result = _employeeService.update(hrmsEmployeeDto,hrmsEmployeeId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
 
     }
 
@@ -64,9 +76,9 @@ public class HrmsEmployeesController {
     public ResponseEntity<?> delete(int hrmsEmployeeId) {
         Result result = _employeeService.delete(hrmsEmployeeId);
         if (result.isSuccess()){
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.ok(result);
         }
-        return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.badRequest().body(result);
     }
 
 

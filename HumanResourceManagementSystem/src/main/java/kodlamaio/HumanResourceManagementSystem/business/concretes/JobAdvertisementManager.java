@@ -3,11 +3,10 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobAdvertisementService;
 import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementStatus;
+import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.AdvertisementNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.HrmsEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisementActivationByEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
@@ -21,7 +20,7 @@ import java.util.List;
 public class JobAdvertisementManager implements JobAdvertisementService {
 
     private JobAdvertisementDao _jobAdvertisementDao;
-    private JobAdvertisementActivationByEmployeeDao _jobAdvertisementActivationByEmployeeDao;
+    private JobAdvertisementActivationWithEmployeeDao _jobAdvertisementActivationByEmployeeDao;
     private HrmsEmployeeDao _hrmsEmployeeDao;
     private EmployerDao _employerDao;
     private JobTypeDao _jobTypeDao;
@@ -31,7 +30,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 
 
     @Autowired
-    public JobAdvertisementManager(JobAdvertisementDao _jobAdvertisementDao, JobAdvertisementActivationByEmployeeDao _jobAdvertisementActivationByEmployeeDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerDao _employerDao, JobTypeDao _jobTypeDao, WorkPlaceDao _workPlaceDao, CityDao _cityDao, JobDao _jobDao) {
+    public JobAdvertisementManager(JobAdvertisementDao _jobAdvertisementDao, JobAdvertisementActivationWithEmployeeDao _jobAdvertisementActivationByEmployeeDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerDao _employerDao, JobTypeDao _jobTypeDao, WorkPlaceDao _workPlaceDao, CityDao _cityDao, JobDao _jobDao) {
         this._jobAdvertisementDao = _jobAdvertisementDao;
         this._jobAdvertisementActivationByEmployeeDao = _jobAdvertisementActivationByEmployeeDao;
         this._hrmsEmployeeDao = _hrmsEmployeeDao;
@@ -42,6 +41,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
         this._jobDao = _jobDao;
     }
 
+    /*
     @Override
     public Result add(JobAdvertisement jobAdvertisement) {
        try{
@@ -66,7 +66,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
        }
 
     }
-
+*/
     @Override
     public Result addDto(JobAdvertisementDto jobAdvertisementDto) {
         //Fiziki olarak çalıştı ancak React'da denenmedi.
@@ -75,14 +75,30 @@ public class JobAdvertisementManager implements JobAdvertisementService {
        JobAdvertisementActivationByEmployee jobAdvertisementActivationByEmployee = new JobAdvertisementActivationByEmployee();
        jobAdvertisement.setDescription(jobAdvertisementDto.getDescription());
        jobAdvertisement.setReleaseDate(LocalDate.now());
+       if (!_jobDao.existsById(jobAdvertisementDto.getJobId())){
+           return new ErrorResult("İş bulunamadı.");
+       }
        jobAdvertisement.setJob(_jobDao.getById(jobAdvertisementDto.getJobId()));
+       if (!_employerDao.existsById(jobAdvertisementDto.getEmployerId())){
+           return new ErrorResult("İş veren bulunamadı.");
+       }
        jobAdvertisement.setEmployer(_employerDao.getById(jobAdvertisementDto.getEmployerId()));
+       if (!_cityDao.existsById(jobAdvertisementDto.getCityId())){
+           return new ErrorResult("Şehir bulunamadı.");
+       }
        jobAdvertisement.setCity(_cityDao.getById(jobAdvertisementDto.getCityId()));
        jobAdvertisement.setMinSalary(jobAdvertisementDto.getMinSalary());
        jobAdvertisement.setMaxSalary(jobAdvertisementDto.getMaxSalary());
        jobAdvertisement.setOpenPositions(jobAdvertisementDto.getOpenPosition());
-       jobAdvertisement.setJobAdvertisementStatus(JobAdvertisementStatus.Passive);
+       jobAdvertisement.setIsJobAdvertisementStatusActive(false);
+
+       if (!_jobTypeDao.existsById(jobAdvertisementDto.getJobTypeId())){
+           return new ErrorResult("İş tipi bulunamadı.");
+       }
        jobAdvertisement.setJobType(_jobTypeDao.getById(jobAdvertisementDto.getJobTypeId()));
+       if (!_workPlaceDao.existsById(jobAdvertisementDto.getWorkPlaceId())){
+           return new ErrorResult("Çalışma yeri bulunamadı.");
+       }
        jobAdvertisement.setWorkPlace(_workPlaceDao.getById(jobAdvertisementDto.getWorkPlaceId()));
         jobAdvertisementActivationByEmployee.setHrmsEmployee(null);
         jobAdvertisementActivationByEmployee.setJobAdvertisement(jobAdvertisement);
@@ -94,27 +110,31 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
-    public Result update(JobAdvertisement jobAdvertisement) {
-        var tempAdvertisement = _jobAdvertisementDao.getById(jobAdvertisement.getId());
+    public Result update(JobAdvertisementDto jobAdvertisementDto,int advertisementId) {
+        var tempAdvertisement = _jobAdvertisementDao.getById(advertisementId);
         if (tempAdvertisement.getAdvertisementNumber() == null){
             return new ErrorResult("İlan bulunamadı.");
         }
-        tempAdvertisement.setDescription(jobAdvertisement.getDescription());
-        tempAdvertisement.setMaxSalary(jobAdvertisement.getMaxSalary());
-        tempAdvertisement.setMinSalary(jobAdvertisement.getMinSalary());
-        tempAdvertisement.setOpenPositions(jobAdvertisement.getOpenPositions());
-        tempAdvertisement.setCity(jobAdvertisement.getCity());
-        tempAdvertisement.setReleaseDate(jobAdvertisement.getReleaseDate());
-        tempAdvertisement.setEndDate(jobAdvertisement.getEndDate());
-        tempAdvertisement.setEmployer(jobAdvertisement.getEmployer());
-        return null;
+        tempAdvertisement.setDescription(jobAdvertisementDto.getDescription());
+        tempAdvertisement.setMaxSalary(jobAdvertisementDto.getMaxSalary());
+        tempAdvertisement.setMinSalary(jobAdvertisementDto.getMinSalary());
+        tempAdvertisement.setOpenPositions(jobAdvertisementDto.getOpenPosition());
+        tempAdvertisement.setCity(_cityDao.getById(jobAdvertisementDto.getCityId()));
+        tempAdvertisement.setEndDate(jobAdvertisementDto.getEndDate());
+        tempAdvertisement.setEmployer(_employerDao.getById(jobAdvertisementDto.getEmployerId()));
+        tempAdvertisement.setJobType(_jobTypeDao.getById(jobAdvertisementDto.getJobTypeId()));
+        tempAdvertisement.setWorkPlace(_workPlaceDao.getById(jobAdvertisementDto.getWorkPlaceId()));
+        tempAdvertisement.setJob(_jobDao.getById(jobAdvertisementDto.getJobId()));
+
+        _jobAdvertisementDao.save(tempAdvertisement);
+        return new SuccessResult("İlan güncellendi.");
     }
 
     @Override
     public Result delete(int id) {
         try{
-            var tempDelete = _jobAdvertisementDao.getById(id);
-            if (tempDelete.getId() != id)
+
+            if (!_jobAdvertisementDao.existsById(id))
             {
             return new ErrorResult("İlan bulunamadı");
             }else {
@@ -130,15 +150,18 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     @Override
     public Result setActivationStatus(int id) {
         try{
-            var tempAd=_jobAdvertisementDao.getById(id);
-            if (tempAd==null){
+            if (!_jobAdvertisementDao.existsById(id)){
                 return new ErrorResult("İlan bulunamadı");
             }else {
-                if (tempAd.getJobAdvertisementStatus()== JobAdvertisementStatus.Passive){
-                    tempAd.setJobAdvertisementStatus(JobAdvertisementStatus.Active);
+                JobAdvertisement tempAd=_jobAdvertisementDao.getById(id);
+                if (tempAd.getIsJobAdvertisementStatusActive().equals(false)){
+                    tempAd.setIsJobAdvertisementStatusActive(true);
+                    _jobAdvertisementDao.save(tempAd);
                     return new SuccessResult("İlan aktif hale getirildi.");
                 }else{
-                   tempAd.setJobAdvertisementStatus(JobAdvertisementStatus.Passive);
+
+                   tempAd.setIsJobAdvertisementStatusActive(false);
+                    _jobAdvertisementDao.save(tempAd);
                    return new SuccessResult("İlan pasif duruma çekildi.");
                 }
             }
@@ -180,10 +203,11 @@ public class JobAdvertisementManager implements JobAdvertisementService {
             return new ErrorDataResult<>("İlan getirme hatası");
         }
     }
+
     @Override
     public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatus() {
         try{
-            return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getJobAdvertisementsByJobAdvertisementStatus().getData(),"Durumu aktif olan ilanlar getirildi.");
+            return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getAllByIsJobAdvertisementStatusActive(true),"Durumu aktif olan ilanlar getirildi.");
         }catch (Exception ex){
             return new ErrorDataResult<>("Veriler getirilemedi.");
         }
@@ -191,13 +215,13 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 
     @Override
     public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc() {
-       return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc().getData(),"");
+       return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveOrderByReleaseDate(true),"");
     }
 
 
     @Override
-    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int hrmsEmployerId) {
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getJobAdvertisementsByEmployerAndJobAdvertisementStatus(hrmsEmployerId,JobAdvertisementStatus.Active).getData(),"İş verene ait aktif ilanlar getirildi.");
+    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId ){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(true,employerId),"İş verene ait aktif ilanlar getirildi.");
     }
 
 

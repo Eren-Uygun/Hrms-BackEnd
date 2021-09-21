@@ -5,6 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobType;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.WorkPlace;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +49,9 @@ public class JobTypesController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody JobType  jobType){
+    public ResponseEntity<?> add(@RequestBody JobTypeDto jobTypeDto){
 
-        Result result = _jobTypeService.add(jobType);
+        Result result = _jobTypeService.add(jobTypeDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -65,6 +66,15 @@ public class JobTypesController {
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody JobTypeDto jobTypeDto,int jobTypeId){
+      Result result =  _jobTypeService.update(jobTypeDto,jobTypeId);
+      if (result.isSuccess()){
+          return ResponseEntity.ok(result);
+      }
+      return ResponseEntity.badRequest().body(result);
     }
 
 }

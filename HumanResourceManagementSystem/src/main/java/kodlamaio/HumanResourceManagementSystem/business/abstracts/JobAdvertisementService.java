@@ -10,18 +10,20 @@ import java.util.List;
 
 public interface JobAdvertisementService {
 
-    Result add(JobAdvertisement jobAdvertisement);
+   // Result add(JobAdvertisement jobAdvertisement);
     Result addDto(JobAdvertisementDto jobAdvertisementDto);
-    Result update(JobAdvertisement jobAdvertisement);
+    Result update(JobAdvertisementDto jobAdvertisementDto,int advertisementId);
     Result delete(int id);
     Result setActivationStatus(int id);
     DataResult<List<JobAdvertisement>> getAll();
     DataResult<JobAdvertisement> getOne(int id);//Repository'de var ancak c#'den gelen alışkanlık :)
     DataResult<JobAdvertisement>getByAdvertisementNumber(String advertisementNumber);
+
+
     DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatus();
+
     DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc();
     DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId);
-
 
 
 }

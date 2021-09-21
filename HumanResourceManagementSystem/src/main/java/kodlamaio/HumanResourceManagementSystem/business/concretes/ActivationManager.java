@@ -2,18 +2,15 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.ActivationService;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
+import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementActivationStatus;
+import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.ErrorResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.SuccessResult;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
-import kodlamaio.HumanResourceManagementSystem.entities.abstracts.Activation;
-import kodlamaio.HumanResourceManagementSystem.entities.abstracts.User;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerActivation;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerActivationByEmployee;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.HrmsEmployee;
+import kodlamaio.HumanResourceManagementSystem.entities.concretes.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +25,19 @@ public class ActivationManager implements ActivationService {
     private EmployerDao _employerDao;
     private HrmsEmployeeDao _hrmsEmployeeDao;
     private EmployerActivationDao _employerActivationDao;
+    private JobAdvertisementActivationWithEmployeeDao _JobAdvertisementActivationWithEmployeeDao;
+    private JobAdvertisementDao _JobAdvertisementDao;
 
-@Autowired
-    public ActivationManager(ActivationDao _activationDao, UserDao _userDao, EmployerActivationByEmployeeDao _employerActivationByEmployeeDao, EmployerDao _employerDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerActivationDao _employerActivationDao) {
+    @Autowired
+    public ActivationManager(ActivationDao _activationDao, UserDao _userDao, EmployerActivationByEmployeeDao _employerActivationByEmployeeDao, EmployerDao _employerDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerActivationDao _employerActivationDao, JobAdvertisementActivationWithEmployeeDao _JobAdvertisementActivationWithEmployeeDao, JobAdvertisementDao _JobAdvertisementDao) {
         this._activationDao = _activationDao;
         this._userDao = _userDao;
         this._employerActivationByEmployeeDao = _employerActivationByEmployeeDao;
         this._employerDao = _employerDao;
         this._hrmsEmployeeDao = _hrmsEmployeeDao;
         this._employerActivationDao = _employerActivationDao;
+        this._JobAdvertisementActivationWithEmployeeDao = _JobAdvertisementActivationWithEmployeeDao;
+        this._JobAdvertisementDao = _JobAdvertisementDao;
     }
 
     @Override
@@ -111,6 +112,50 @@ public class ActivationManager implements ActivationService {
 
     @Override
     public Result activateHrmsEmployeeByActivationCode(String activationCode) {
+
         return null;
     }
+
+    @Override
+    public Result jobAdvertisementActivation(int employeeId, int jobAdvertisementId) {
+       try{
+           if (!_hrmsEmployeeDao.existsById(employeeId)){
+               return new ErrorResult("Personel bulunamadı.");
+           }else if (!_JobAdvertisementDao.existsById(jobAdvertisementId)){
+               return new ErrorResult("İlan bulunamadı.");
+           }else{
+               JobAdvertisementActivationByEmployee jobAdvertisementActivationByEmployee = _JobAdvertisementActivationWithEmployeeDao.getById(jobAdvertisementId);
+               jobAdvertisementActivationByEmployee.setHrmsEmployee(_hrmsEmployeeDao.getById(employeeId));
+               jobAdvertisementActivationByEmployee.setAdvertisementActivationDate(LocalDate.now());
+               JobAdvertisement jobAdvertisement = _JobAdvertisementDao.getById(jobAdvertisementId);
+               jobAdvertisement.setIsJobAdvertisementStatusActive(true);
+               _JobAdvertisementDao.save(jobAdvertisement);
+               _JobAdvertisementActivationWithEmployeeDao.save(jobAdvertisementActivationByEmployee);
+
+               return new SuccessResult("Aktivasyon yapıldı.");
+
+           }
+       }catch (Exception ex){
+           return new ErrorResult("İş ilanı aktivasyon hatası "+ex);
+       }
+    }
+
+    /*
+    @Override
+    public Result jobAdvertisementActivationByHrmsEmployee(int hrmsEmployeeId,String activationNumber,int advertisementNumber) {
+    if (!_hrmsEmployeeDao.existsById(hrmsEmployeeId)){
+        return new ErrorResult("Personel bulunamadı.");
+    }
+    JobAdvertisementActivationByEmployee  jobAdvertisementActivationByEmployee = _JobAdvertisementActivationWithEmployeeDao.findByActivationNumber(activationNumber);
+    jobAdvertisementActivationByEmployee.setHrmsEmployee(_hrmsEmployeeDao.getById(hrmsEmployeeId));
+    jobAdvertisementActivationByEmployee.setJobAdvertisementActivationStatus(JobAdvertisementActivationStatus.Active);
+    jobAdvertisementActivationByEmployee.setAdvertisementActivationDate(LocalDate.now());
+    _JobAdvertisementActivationWithEmployeeDao.save(jobAdvertisementActivationByEmployee);
+    JobAdvertisement jobAdvertisement = _JobAdvertisementDao.getById(advertisementNumber);
+    jobAdvertisement.setJobAdvertisementStatus(JobAdvertisementStatus.Active);
+    _JobAdvertisementDao.save(jobAdvertisement);
+    return new  SuccessResult("İlan aktivasyonu yapıldı.");
+    }
+    */
+
 }

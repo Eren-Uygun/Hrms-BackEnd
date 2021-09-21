@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.entities.concretes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","curriculumVitae"})
 @Table(name = "foreign_languages")
 public class ForeignLanguage {
     @Id
@@ -29,7 +31,7 @@ public class ForeignLanguage {
     private int languageLevel;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "curriculumVitae_id")
     private CurriculumVitae curriculumVitae;
 

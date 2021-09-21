@@ -6,7 +6,7 @@ import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class ModelMapperConfig {
     public ModelMapper getModelMapper(){
         ModelMapper modelMapper = new ModelMapper();

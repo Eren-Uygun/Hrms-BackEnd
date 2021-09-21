@@ -13,6 +13,7 @@ import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateDao
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.CandidateActivation;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,8 +69,8 @@ public class CandidateManager implements CandidateService {
                 activation.setActivationDate(LocalDate.now());
                 activation.setActivationNumber(ActivationNumberGenerator.generateActivationNumber());
                 activation.setUserActivationStatus(UserActivationStatus.Inactivate);
-                _candidateActivationDao.save(activation);
-                _candidateDao.save(candidate);
+                    _candidateActivationDao.save(activation);
+                    _candidateDao.save(candidate);
                 return new SuccessResult("Kayıt başarılı "+" Aktivasyon kodunuz "+candidate.getEmail()+" adresinize gönderilmiştir.");
             }
 
@@ -80,20 +81,34 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public Result update(Candidate candidate) {
+    public Result update(CandidateUpdateDto candidateUpdateDto,int id) {
         try{
-            var tempCandidate = _candidateDao.getById(candidate.getId());
-            if (!_userValidationService.isUserExists(tempCandidate.getId())){
+            var tempCandidate = _candidateDao.getById(id);
+            if (!_candidateDao.existsById(tempCandidate.getId())){
                 return new ErrorResult("Kullanıcı bulunamadı.");
             }
             else {
-                tempCandidate.setEmail(candidate.getEmail());
-                tempCandidate.setPassword(candidate.getPassword());
-                tempCandidate.setPasswordRepeat(candidate.getPasswordRepeat());
-                tempCandidate.setFirstName(candidate.getFirstName());
-                tempCandidate.setLastName(candidate.getLastName());
-                tempCandidate.setBirthDate(candidate.getBirthDate());
-                tempCandidate.setNationalIdentityNumber(candidate.getNationalIdentityNumber());
+                if (candidateUpdateDto.getNationalIdentityNumber().length()!=11){
+                    return new ErrorResult("11 Haneli Türkiye Cumhuriyeti Kimlik Numaranızı giriniz.");
+                } else if (!_candidateValidationService.isRealPerson(candidateUpdateDto.getBirthDate().getYear(),candidateUpdateDto.getFirstName(),candidateUpdateDto.getLastName(),candidateUpdateDto.getNationalIdentityNumber())) {
+                    return new ErrorResult("Kimlik doğrulanamadı.");
+                }else if(_userValidationService.isMailAddressExists(candidateUpdateDto.getEmail())){
+                    return new ErrorResult("Bu mail adresi sistemde kayıtlı.");
+                } else if(!_ruleValidationService.isMailRuleOk(candidateUpdateDto.getEmail())&&!_ruleValidationService.isPasswordRuleOk(candidateUpdateDto.getPassword())){
+                    return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
+                }else if (candidateUpdateDto.getFirstName().length()<=2&&candidateUpdateDto.getLastName().length()<=2){
+                    return new ErrorResult("Adınız ve soyadınız 2 karakterden fazla olmalıdır.");
+                }else if(!candidateUpdateDto.getPassword().equals(candidateUpdateDto.getPasswordConfirm())){
+                    return new ErrorResult("Şifreniz uyuşmuyor.");
+                }
+
+                tempCandidate.setEmail(candidateUpdateDto.getEmail());
+                tempCandidate.setPassword(candidateUpdateDto.getPassword());
+                tempCandidate.setPasswordRepeat(candidateUpdateDto.getPasswordConfirm());
+                tempCandidate.setFirstName(candidateUpdateDto.getFirstName());
+                tempCandidate.setLastName(candidateUpdateDto.getLastName());
+                tempCandidate.setBirthDate(candidateUpdateDto.getBirthDate());
+                tempCandidate.setNationalIdentityNumber(candidateUpdateDto.getNationalIdentityNumber());
                 _candidateDao.save(tempCandidate);
                 return new SuccessResult("Güncelleme işlemi yapıldı.");
             }

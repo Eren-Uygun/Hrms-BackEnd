@@ -3,12 +3,13 @@ package kodlamaio.HumanResourceManagementSystem.business.abstracts;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobType;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobTypeDto;
 
 import java.util.List;
 
 public interface JobTypeService {
-    Result add(JobType jobType);
-    Result update(JobType jobType);
+    Result add(JobTypeDto jobTypeDto);
+    Result update(JobTypeDto jobTypeDto,int jobTypeId);
     Result delete(int id);
 
     DataResult<List<JobType>> getAll();

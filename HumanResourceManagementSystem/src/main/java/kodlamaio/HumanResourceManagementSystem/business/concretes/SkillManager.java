@@ -24,19 +24,19 @@ public class SkillManager implements SkillService {
     }
 
     @Override
-    public Result add(SkillDto skillDto) {
+    public Result add(SkillDto skillDto,int cvId) {
        try{
 
-           if (!_cvDao.existsById(skillDto.getCvId())){
+           if (!_cvDao.existsById(cvId)){
                return new ErrorResult("Cv bulunamadı.");
            }else if(skillDto.getSkillName().length()<2){
                return new ErrorResult("Yetenek adı 2 karakterden fazla olmalıdır.");
-           }else if(skillDto.getSkillRate()<1&&skillDto.getSkillRate()>5){
+           }else if(skillDto.getSkillRate()<1 || skillDto.getSkillRate()>5){
                return new ErrorResult("Yetenek seviyeniz 1-5 arasında olmalıdır.");
            }
 
            Skill skill = new Skill();
-           skill.setCurriculumVitae(_cvDao.getById(skillDto.getCvId()));
+           skill.setCurriculumVitae(_cvDao.getById(cvId));
            skill.setSkillName(skillDto.getSkillName());
            skill.setSkillRate(skillDto.getSkillRate());
 
@@ -50,18 +50,33 @@ public class SkillManager implements SkillService {
     }
 
     @Override
-    public Result update(SkillDto skillDto) {
-        return null;
+    public Result update(SkillDto skillDto,int cvId,int skillId) {
+        if (!_cvDao.existsById(cvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }else if(skillDto.getSkillName().length()<2){
+            return new ErrorResult("Yetenek adı 2 karakterden fazla olmalıdır.");
+        }else if(skillDto.getSkillRate()<1 || skillDto.getSkillRate()>5){
+            return new ErrorResult("Yetenek seviyeniz 1-5 arasında olmalıdır.");
+        }
+        Skill skill = _skillDao.getById(skillId);
+        skill.setCurriculumVitae(_cvDao.getById(cvId));
+        skill.setSkillName(skillDto.getSkillName());
+        skill.setSkillRate(skillDto.getSkillRate());
+        _skillDao.save(skill);
+        return new SuccessResult("Yetenek güncellendi.");
     }
 
 
     @Override
-    public Result delete(int id) {
+    public Result delete(int skillId,int cvId) {
         try{
-            if (!_skillDao.existsById(id)) {
-                return new ErrorResult("Silinecek veri bulunamadı.");
-            }else{
-                _skillDao.deleteById(id);
+            if (!_cvDao.existsById(cvId)) {
+                return new ErrorResult("Cv bulununamadı.");
+            }else if (!_skillDao.existsById(skillId)){
+                return new ErrorResult("Yetenek bulunamadı.");
+            }
+            else{
+                _skillDao.deleteById(skillId);
                 return new SuccessResult("Veri silindi.");
             }
         }catch (Exception ex){
@@ -70,6 +85,7 @@ public class SkillManager implements SkillService {
         }
     }
 
+    /*
     @Override
     public DataResult<Skill> getOne(int id) {
         try{
@@ -87,4 +103,6 @@ public class SkillManager implements SkillService {
            return new ErrorDataResult<>("veri getirme hatası");
        }
     }
+
+    */
 }

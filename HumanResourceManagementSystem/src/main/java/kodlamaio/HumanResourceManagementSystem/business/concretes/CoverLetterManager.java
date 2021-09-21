@@ -19,21 +19,22 @@ public class CoverLetterManager implements CovertLetterService {
     private CurriculumVitaeDao _cvDao;
 
     @Autowired
-    public CoverLetterManager(CoverLetterDao _coverLetterDao) {
+    public CoverLetterManager(CoverLetterDao _coverLetterDao, CurriculumVitaeDao _cvDao) {
         this._coverLetterDao = _coverLetterDao;
+        this._cvDao = _cvDao;
     }
 
     @Override
-    public Result add(CoverLetterDto coverLetterDto) {
+    public Result add(CoverLetterDto coverLetterDto,int cvId) {
         try {
-            if (!_coverLetterDao.existsById(coverLetterDto.getCvId())) {
+            if (!_cvDao.existsById(cvId)) {
                 return new ErrorResult("Cv bulunamadı.");
             } else if (coverLetterDto.getCoverLetter().length() <= 2) {
                 return new ErrorResult("Ön yazı boş olmamalıdır.");
             }
 
             CoverLetter coverLetter = new CoverLetter();
-            coverLetter.setCurriculumVitae(_cvDao.getById(coverLetterDto.getCvId()));
+            coverLetter.setCurriculumVitae(_cvDao.getById(cvId));
             coverLetter.setCoverLetter(coverLetterDto.getCoverLetter());
             _coverLetterDao.save(coverLetter);
             return new SuccessResult("Ön yazı eklendi.");
@@ -46,20 +47,42 @@ public class CoverLetterManager implements CovertLetterService {
 
 
     @Override
-    public Result delete(int id) {
+    public Result delete(int cvId,int coverLetterId) {
 
-        if (!_coverLetterDao.existsById(id)) {
+        if (!_cvDao.existsById(cvId)) {
             return new ErrorResult("Veri bulunamadı.");
-        } else {
-            _coverLetterDao.deleteById(id);
+        }else if (!_coverLetterDao.existsById(coverLetterId)){
+            return new ErrorResult("Ön yazı bulunamadı.");
+        }
+        else {
+            _coverLetterDao.deleteById(coverLetterId);
             return new SuccessResult("Veri silindi.");
         }
     }
 
     @Override
-    public DataResult<List<CoverLetter>> getAll() {
+    public Result update(CoverLetterDto coverLetterDto, int cvId,int coverLetterId) {
+        try{
+            if (!_cvDao.existsById(cvId)){
+                return new ErrorResult("Cv bulunamadı.");
+            }else if (!_coverLetterDao.existsById(coverLetterId)){
+                return new ErrorResult("Ön yazı bulunamadı.");
+            }
+            CoverLetter coverLetter = _coverLetterDao.getById(coverLetterId);
+            coverLetter.setCoverLetter(coverLetterDto.getCoverLetter());
+            _coverLetterDao.save(coverLetter);
+
+            return new SuccessResult("Ön yazı güncellendi.");
+        }catch (Exception ex){
+            return new ErrorResult("Veri güncelleme hatası "+ex);
+        }
+
+    }
+
+    @Override
+    public DataResult<List<CoverLetter>> getAll(int cvId) {
         try {
-            return new SuccessDataResult<List<CoverLetter>>(_coverLetterDao.findAll(), "Veriler getirildi.");
+            return new SuccessDataResult<List<CoverLetter>>(_coverLetterDao.getCoverLettersByCurriculumVitae_Id(cvId), "Veriler getirildi.");
         } catch (Exception ex) {
             return new ErrorDataResult<>("Veriler getirilemedi. " + ex);
         }

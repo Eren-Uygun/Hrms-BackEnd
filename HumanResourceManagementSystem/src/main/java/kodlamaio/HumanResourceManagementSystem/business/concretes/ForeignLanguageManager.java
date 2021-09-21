@@ -25,17 +25,17 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public Result add(ForeignLanguageDto foreignLanguageDto) {
+    public Result add(ForeignLanguageDto foreignLanguageDto,int cvId) {
         try{
-            if (!_cvDao.existsById(foreignLanguageDto.getCvId())){
+            if (!_cvDao.existsById(cvId)){
                 return new ErrorResult("Cv mevcut değil");
             }else if(foreignLanguageDto.getLanguageName().length()<=2){
                 return new ErrorResult("Yabancı dil adı 2 karakterden fazla olmalıdır.");
-            }else if(foreignLanguageDto.getLanguageLevel()<1 && foreignLanguageDto.getLanguageLevel()>5){
+            }else if(foreignLanguageDto.getLanguageLevel()<1 || foreignLanguageDto.getLanguageLevel()>5){
                 return new ErrorResult("Seviyeniz 1-5 arasında olmalıdır.");
             }
             ForeignLanguage foreignLanguage = new ForeignLanguage();
-            foreignLanguage.setCurriculumVitae(_cvDao.getById(foreignLanguageDto.getCvId()));
+            foreignLanguage.setCurriculumVitae(_cvDao.getById(cvId));
             foreignLanguage.setLanguageName(foreignLanguageDto.getLanguageName());
             foreignLanguage.setLanguageLevel(foreignLanguageDto.getLanguageLevel());
             _foreignLanguageDao.save(foreignLanguage);
@@ -47,11 +47,14 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(int id,int cvId) {
         try{
-            if (!_foreignLanguageDao.existsById(id)){
-                return new ErrorResult("Silinecek veri bulunamadı.");
-            }else{
+            if (!_cvDao.existsById(cvId)){
+                return new ErrorResult("Cv bulunamadı.");
+            }else if (!_foreignLanguageDao.existsById(id)){
+                return new ErrorResult("Yabancı dil bilgisi bulunamadı.");
+            }
+            else{
                 _foreignLanguageDao.deleteById(id);
                 return new SuccessResult("Veri silindi.");
             }
@@ -59,6 +62,28 @@ public class ForeignLanguageManager implements ForeignLanguageService {
             return new ErrorResult("Veri silme hatası"+ex);
         }
 
+
+    }
+
+    @Override
+    public Result update(ForeignLanguageDto foreignLanguageDto, int cvId, int foreignLanguageId) {
+        try{
+            if (!_cvDao.existsById(cvId)){
+                return new ErrorResult("Cv mevcut değil");
+            }else if(foreignLanguageDto.getLanguageName().length()<=2){
+                return new ErrorResult("Yabancı dil adı 2 karakterden fazla olmalıdır.");
+            }else if(foreignLanguageDto.getLanguageLevel()<1 || foreignLanguageDto.getLanguageLevel()>5){
+                return new ErrorResult("Seviyeniz 1-5 arasında olmalıdır.");
+            }
+            ForeignLanguage foreignLanguage = _foreignLanguageDao.getById(foreignLanguageId);
+            foreignLanguage.setLanguageName(foreignLanguageDto.getLanguageName());
+            foreignLanguage.setLanguageLevel(foreignLanguageDto.getLanguageLevel());
+            _foreignLanguageDao.save(foreignLanguage);
+            return new SuccessResult("Yabancı dil güncellendi.");
+        }catch (Exception ex)
+        {
+            return new ErrorResult("Veri güncelleme hatası");
+        }
 
     }
 

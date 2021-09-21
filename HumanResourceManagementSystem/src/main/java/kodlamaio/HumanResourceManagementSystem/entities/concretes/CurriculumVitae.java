@@ -25,6 +25,8 @@ public class CurriculumVitae {
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
+    @Column(name = "aboutMe")
+    private String aboutMe;
 
     @Column(name = "github_address")
     private String github;
@@ -40,8 +42,8 @@ public class CurriculumVitae {
     @Column(name = "updated_date")
     private LocalDate updatedDate;
 
-    @OneToOne(mappedBy = "curriculumVitae",cascade = CascadeType.ALL)
-    private CoverLetter coverLetters;
+    @OneToMany(mappedBy = "curriculumVitae",cascade = CascadeType.ALL)
+    private List<CoverLetter> coverLetters;
 
     @OneToOne(mappedBy = "curriculumVitae",cascade = CascadeType.ALL)
     private Image photo;

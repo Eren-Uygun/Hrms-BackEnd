@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/experiences")
+@RequestMapping("/api/{cvId}/experiences")
 public class JobExperiencesController {
 
     private JobExperienceService _jobExperienceService;
@@ -22,6 +22,7 @@ public class JobExperiencesController {
         this._jobExperienceService = jobExperienceService;
     }
 
+    /*
     @GetMapping("/getAll")
     public DataResult<List<JobExperience>> getAll(){
         /*
@@ -29,7 +30,7 @@ public class JobExperiencesController {
         if (result.isSuccess()){
             return ResponseEntity.ok(result.getData());
         }
-        return ResponseEntity.badRequest().body(result.getData());*/
+        return ResponseEntity.badRequest().body(result.getData());
         return _jobExperienceService.getAll();
 
     }
@@ -42,11 +43,11 @@ public class JobExperiencesController {
         }
         return ResponseEntity.badRequest().body(result);
     }
-
+*/
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody JobExperienceDto experience){
-        Result result = _jobExperienceService.add(experience);
+    public ResponseEntity<?> add(@RequestBody JobExperienceDto experience,@PathVariable("cvId") int cvId){
+        Result result = _jobExperienceService.add(experience,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -54,13 +55,22 @@ public class JobExperiencesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
-        Result result = _jobExperienceService.delete(id);
+    @DeleteMapping("/delete/{jobExperienceId}")
+    public ResponseEntity<?> delete(@PathVariable("jobExperienceId") int jobExperienceId,@PathVariable("cvId") int cvId){
+        Result result = _jobExperienceService.delete(cvId,jobExperienceId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
 
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/update/{jobExperienceId}")
+    public ResponseEntity<?> update(@RequestBody JobExperienceDto jobExperienceDto,@PathVariable("cvId") int cvId,@PathVariable("jobExperienceId") int jobExperienceId){
+        Result result = _jobExperienceService.update(jobExperienceDto,cvId,jobExperienceId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
         return ResponseEntity.badRequest().body(result);
     }
 

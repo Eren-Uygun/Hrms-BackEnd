@@ -1,8 +1,10 @@
 package kodlamaio.HumanResourceManagementSystem.api.controllers;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobAdvertisementService;
+import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
+import kodlamaio.HumanResourceManagementSystem.core.utils.results.SuccessDataResult;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,27 @@ public class JobAdvertisementsController {
         return ResponseEntity.badRequest().body(result.getData());
     }
 
+
+    @GetMapping("/getActives")
+    public DataResult<List<JobAdvertisement>> getActives(){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatus().getData(),"Aktif ilanlar getirildi.");
+    }
+
+
+ @GetMapping("/getActivesByReleaseDate")
+    public DataResult<List<JobAdvertisement>> getActivesByReleaseDate(){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc().getData(),"Aktif ilanlar getirildi.");
+    }
+
+
+    @GetMapping("/getActivesByEmployerAndStatus")
+    public DataResult<List<JobAdvertisement>> getActivesByEmployerAndStatus(int employerId){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByEmployerAndJobAdvertisementStatus(employerId).getData(),"Aktif ilanlar getirildi.");
+    }
+
+
 /*
+
     public ResponseEntity<?> add(@Valid @RequestBody JobAdvertisement jobAdvertisement){
         Result result = _jobAdvertisementService.add(jobAdvertisement);
         if (result.isSuccess()){
@@ -72,5 +94,28 @@ public class JobAdvertisementsController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @PutMapping("/update/{advertisementId}")
+    public ResponseEntity<?> update(@RequestBody JobAdvertisementDto jobAdvertisementDto,@PathVariable("advertisementId") int advertisementId){
+        Result result = _jobAdvertisementService.update(jobAdvertisementDto,advertisementId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+
+    }
+
+
+
+    /*
+    @PostMapping("/activateJobAdvertisement")
+    public ResponseEntity<?> activateJobAdvertisement(int advertisementId){
+       Result result = _jobAdvertisementService.setActivationStatus(advertisementId);
+       if (result.isSuccess()){
+           return ResponseEntity.ok(result);
+       }
+       return ResponseEntity.badRequest().body(result);
+
+    }
+*/
 
 }

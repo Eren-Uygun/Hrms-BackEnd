@@ -32,9 +32,9 @@ public class CurriculumVitaesController {
 
     }
 
-    @GetMapping("/getOne")
-    public ResponseEntity<?> getOne(int id){
-        Result result = _curriculumVitaeService.findById(id);
+    @DeleteMapping("/delete/{cvId}")
+    public ResponseEntity<?> delete(@PathVariable("cvId") int cvId){
+        Result result = _curriculumVitaeService.delete(cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -88,7 +88,7 @@ public class CurriculumVitaesController {
 
     @PutMapping("/updateBiography")
     public ResponseEntity<?> updateBiography(@RequestParam String biography,@RequestParam int cvId){
-        Result result=this._curriculumVitaeService.updateBiography(biography,cvId);
+        Result result=this._curriculumVitaeService.updateAboutMe(biography,cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -97,7 +97,7 @@ public class CurriculumVitaesController {
 
     @DeleteMapping("/deleteBiography")
     public ResponseEntity<?> deleteBiography(@RequestParam int cvId){
-        Result result=this._curriculumVitaeService.deleteBiography(cvId);
+        Result result=this._curriculumVitaeService.deleteAboutMe(cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }

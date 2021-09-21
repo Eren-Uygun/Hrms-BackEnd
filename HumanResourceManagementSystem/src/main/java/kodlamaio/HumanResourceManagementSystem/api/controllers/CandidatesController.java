@@ -5,6 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,9 @@ public class CandidatesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> update(Candidate candidate){
-        Result  result = _candidateService.update(candidate);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody CandidateUpdateDto candidateUpdateDto){
+        Result  result = _candidateService.update(candidateUpdateDto,id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }

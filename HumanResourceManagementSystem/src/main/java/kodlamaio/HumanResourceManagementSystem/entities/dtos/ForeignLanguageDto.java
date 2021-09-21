@@ -8,9 +8,8 @@ import javax.validation.constraints.Min;
 
 @Data
 public class ForeignLanguageDto {
-    private int cvId;
-    private String languageName;
 
+    private String languageName;
     @Min(1)@Max(5)
     private int languageLevel;
 }

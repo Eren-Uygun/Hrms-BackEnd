@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -19,11 +16,11 @@ import javax.persistence.Table;
 @Table(name = "employer_activation_by_employees")
 public class EmployerActivationByEmployee extends Activation {
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "employer_id")
     private Employer employer;
 
-    @OneToOne
+    @OneToOne()
     @JoinColumn(name = "hrms_employee_id")
     private HrmsEmployee employee;
 }

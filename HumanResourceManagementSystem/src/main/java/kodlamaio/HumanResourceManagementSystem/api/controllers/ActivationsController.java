@@ -3,6 +3,7 @@ package kodlamaio.HumanResourceManagementSystem.api.controllers;
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.ActivationService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,10 @@ public class ActivationsController {
     @PostMapping("/employerActivateByCode")
     public  Result activateEmployerByActivationCode(String activationCode){
         return _activationService.activateEmployerByActivationCode(activationCode);
+    }
+    @PostMapping("/activateJobAdvertisementByEmployee")
+    public Result activateJobAdvertisementByEmployee(int employeeId,int jobAdvertisementId){
+        return _activationService.jobAdvertisementActivation(employeeId,jobAdvertisementId);
     }
 
 }

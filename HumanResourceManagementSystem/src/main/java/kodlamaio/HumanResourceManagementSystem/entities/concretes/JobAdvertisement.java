@@ -62,8 +62,7 @@ public class JobAdvertisement {
     private LocalDate endDate;
 
     @Column(name = "job_advertisement_status")
-    @Enumerated(EnumType.STRING)
-    private JobAdvertisementStatus jobAdvertisementStatus;
+    private Boolean isJobAdvertisementStatusActive;
 
     @ManyToOne()
     @JoinColumn(name = "workplace")

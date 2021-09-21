@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.entities.concretes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","curriculumVitae"})
 @Table(name = "job_experiences")
 public class JobExperience {
     @Id
@@ -34,7 +36,7 @@ public class JobExperience {
 
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "curriculumVitae_id")
     private CurriculumVitae curriculumVitae;
 }

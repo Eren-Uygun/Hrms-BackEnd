@@ -5,6 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.JobValidation;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Job;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +23,15 @@ public class JobManager implements JobService {
     }
 
     @Override
-    public Result add(Job job) {
+    public Result add(JobDto jobDto) {
         try{
             //Boşluklu ve değişik yazım stilleri ile bypass edilebiliyor.
             //String metotları ile düzeltilebilir.
-            if (_jobDao.existsById(job.getId())){
+            if (_jobDao.existsByJobName(jobDto.getJobName().toLowerCase(Locale.ROOT).toLowerCase(Locale.ROOT))){
                 return new ErrorResult("İş sistemde kayıtlı");
             }
+            Job job = new Job();
+            job.setJobName(jobDto.getJobName());
             _jobDao.save(job);
             return new SuccessResult("Ekleme işlemi yapıldı.");
         }catch (Exception ex){
@@ -39,16 +42,22 @@ public class JobManager implements JobService {
     }
 
     @Override
-    public Result update(Job job) {
-        var tempJob = _jobDao.getById(job.getId());
-        tempJob.setJobName(job.getJobName());
-        _jobDao.save(tempJob);
+    public Result update(JobDto jobDto,int jobId) {
+        if (!_jobDao.existsById(jobId)){
+            return new ErrorResult("İş kolu bulunamadı.");
+        }
+        Job job = _jobDao.getById(jobId);
+        job.setJobName(jobDto.getJobName());
+        _jobDao.save(job);
         return new SuccessResult("Güncelleme işlemi yapıldı.");
     }
 
     @Override
     public Result delete(int id) {
        try{
+           if (!_jobDao.existsById(id)){
+               return new ErrorResult("İş kolu bulunamadı.");
+           }
            _jobDao.getById(id);
            return new SuccessResult("Silme işlemi yapıldı.");
        }catch (Exception ex){

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/foreignLanguages")
+@RequestMapping("/api/{cvId}/foreignLanguages")
 public class ForeignLanguagesController {
 
     private ForeignLanguageService _foreignLanguageService;
@@ -22,7 +22,7 @@ public class ForeignLanguagesController {
     public ForeignLanguagesController(ForeignLanguageService _foreignLanguageService) {
         this._foreignLanguageService = _foreignLanguageService;
     }
-
+/*
     @GetMapping("/getAll")
     public DataResult<List<ForeignLanguage>> getAll(){
         /*
@@ -30,23 +30,25 @@ public class ForeignLanguagesController {
         if (result.isSuccess()){
             return ResponseEntity.ok(result.getData());
         }
-        return ResponseEntity.badRequest().body(result.getData());*/
+        return ResponseEntity.badRequest().body(result.getData());
         return _foreignLanguageService.getAll();
     }
 
-    @GetMapping("/getOne")
-    public ResponseEntity<?> getOne(int id){
+    @GetMapping("/getOne/{id}")
+    public ResponseEntity<?> getOne(@PathVariable("id")int id){
         Result result = _foreignLanguageService.getOne(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
     }
+    */
+
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ForeignLanguageDto foreignLanguageDto){
-        Result result = _foreignLanguageService.add(foreignLanguageDto);
+    public ResponseEntity<?> add(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId")int cvId){
+        Result result = _foreignLanguageService.add(foreignLanguageDto,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -54,14 +56,25 @@ public class ForeignLanguagesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
-        Result result = _foreignLanguageService.delete(id);
+    @DeleteMapping("/delete/{foreignLanguageId}")
+    public ResponseEntity<?> delete(@PathVariable("foreignLanguageId") int foreignLanguageId,@PathVariable("cvId")int cvId){
+        Result result = _foreignLanguageService.delete(foreignLanguageId,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
 
         return ResponseEntity.badRequest().body(result);
+    }
+
+
+    @PutMapping("/update/{foreignLanguageId}")
+    public ResponseEntity<?> update(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId") int cvId,@PathVariable("foreignLanguageId") int foreignLanguageId){
+        Result result = _foreignLanguageService.update(foreignLanguageDto,cvId,foreignLanguageId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+
     }
 
 

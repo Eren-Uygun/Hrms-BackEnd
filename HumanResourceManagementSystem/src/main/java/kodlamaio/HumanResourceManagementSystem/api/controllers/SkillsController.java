@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/skills")
+@RequestMapping("/api/{cvId}/skills")
 public class SkillsController {
 
     private SkillService _skillService;
@@ -23,6 +23,7 @@ public class SkillsController {
         this._skillService = _skillService;
     }
 
+    /*
     @GetMapping("/getOne")
     public ResponseEntity<?> getOne(int id){
         Result result = _skillService.getOne(id);
@@ -39,13 +40,15 @@ public class SkillsController {
         if (result.isSuccess()){
             return ResponseEntity.ok(result.getData());
         }
-        return ResponseEntity.badRequest().body(result.getData());*/
+        return ResponseEntity.badRequest().body(result.getData());
         return _skillService.getAll();
     }
+*/
+
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
-        Result result = _skillService.delete(id);
+    public ResponseEntity<?> delete(int skillId,@PathVariable("cvId") int cvId){
+        Result result = _skillService.delete(skillId,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -53,8 +56,17 @@ public class SkillsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody SkillDto skill){
-        Result result = _skillService.add(skill);
+    public ResponseEntity<?> add(@RequestBody SkillDto skill,@PathVariable("cvId") int cvId){
+        Result result = _skillService.add(skill,cvId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+    }
+
+    @PutMapping("/update/{skillId}")
+    public ResponseEntity<?> update(@RequestBody SkillDto skillDto,@PathVariable("cvId") int cvId, @PathVariable("skillId") int skillId){
+        Result result = _skillService.update(skillDto,cvId,skillId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }

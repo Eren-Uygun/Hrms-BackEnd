@@ -10,6 +10,6 @@ import java.util.List;
 public interface EducationDao extends JpaRepository<Education,Integer> {
 
     @Query("select e from Education e where e.curriculumVitae.id =: id")
-    DataResult<List<Education>>  getEducationsByCurriculumVitae_Id(int id);
+    List<Education>  getEducationsByCurriculumVitae_Id(int cvId);
 
 }

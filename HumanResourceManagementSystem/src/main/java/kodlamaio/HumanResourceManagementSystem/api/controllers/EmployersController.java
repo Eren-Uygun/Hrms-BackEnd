@@ -58,8 +58,8 @@ public class EmployersController {
         return _employerService.getAll();
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<?> delete(int employerId){
+    @DeleteMapping("/delete/{employerId}")
+    public ResponseEntity<?> delete(@PathVariable("employerId") int employerId){
         Result result=_employerService.delete(employerId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -67,9 +67,9 @@ public class EmployersController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> update(Employer employer){
-        Result result=_employerService.update(employer);
+    @PutMapping("/update/{employerId}")
+    public ResponseEntity<?> update( @RequestBody EmployerAddDto employerAddDto,@PathVariable("employerId") int employerId){
+        Result result=_employerService.update(employerAddDto,employerId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }

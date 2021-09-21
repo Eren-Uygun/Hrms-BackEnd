@@ -8,8 +8,8 @@ import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobExperienceDto;
 import java.util.List;
 
 public interface JobExperienceService {
-    Result add(JobExperienceDto jobExperienceDto);
-    Result delete(int id);
-    DataResult<JobExperience> getOne(int id);
-    DataResult<List<JobExperience>> getAll();
+    Result add(JobExperienceDto jobExperienceDto,int cvId);
+    Result delete(int cvId,int jobExperienceId);
+    Result update(JobExperienceDto jobExperienceDto,int cvId,int jobExperienceId);
+
 }

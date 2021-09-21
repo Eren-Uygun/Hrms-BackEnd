@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Job;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,19 @@ public class JobsController {
     }
     */
     @PostMapping("/add")
-    public Result add(@RequestBody Job job){
-return _jobService.add(job);
+    public Result add(@RequestBody JobDto jobDto){
+
+return _jobService.add(jobDto);
+    }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(JobDto jobDto,int jobId){
+       Result result = _jobService.update(jobDto,jobId);
+       if (result.isSuccess()){
+           return ResponseEntity.ok(result);
+       }
+       return ResponseEntity.badRequest().body(result);
     }
 
     @DeleteMapping("/delete")

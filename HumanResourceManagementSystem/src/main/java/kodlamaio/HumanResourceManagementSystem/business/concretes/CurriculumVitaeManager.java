@@ -61,7 +61,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result update(CurriculumVitaeDto curriculumVitaeDto) {
+    public Result update(CurriculumVitaeDto curriculumVitaeDto,int CvId) {
         return null;
     }
 
@@ -134,13 +134,27 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result updateBiography(String biography, int cvId) {
-        return null;
+    public Result updateAboutMe(String biography, int cvId) {
+        if (!_curriculumVitaeDao.existsById(cvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }
+        CurriculumVitae curriculumVitae = _curriculumVitaeDao.getById(cvId);
+        curriculumVitae.setAboutMe(biography);
+        _curriculumVitaeDao.save(curriculumVitae);
+
+        return new SuccessResult("About Me kısmı güncellendi.");
     }
 
     @Override
-    public Result deleteBiography(int cvId) {
-        return null;
+    public Result deleteAboutMe(int cvId) {
+        if (_curriculumVitaeDao.existsById(cvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }
+        CurriculumVitae curriculumVitae = _curriculumVitaeDao.getById(cvId);
+        curriculumVitae.setAboutMe("");
+        _curriculumVitaeDao.save(curriculumVitae);
+
+        return new SuccessResult("About Me Silindi.");
     }
 
 

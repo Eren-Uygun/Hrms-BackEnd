@@ -2,8 +2,11 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobTypeService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobAdvertisementDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobTypeDao;
+import kodlamaio.HumanResourceManagementSystem.entities.concretes.Job;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobType;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +16,19 @@ import java.util.List;
 public class JobTypeManager implements JobTypeService {
 
     private JobTypeDao _jobTypeDao;
+    private JobAdvertisementDao _jobAdvertisementDao;
 
     @Autowired
-    public JobTypeManager(JobTypeDao _jobTypeDao) {
+    public JobTypeManager(JobTypeDao _jobTypeDao, JobAdvertisementDao _jobAdvertisementDao) {
         this._jobTypeDao = _jobTypeDao;
+        this._jobAdvertisementDao = _jobAdvertisementDao;
     }
 
     @Override
-    public Result add(JobType jobType) {
+    public Result add(JobTypeDto jobTypeDto) {
         try{
+            JobType jobType = new JobType();
+            jobType.setJobType(jobTypeDto.getJobType());
            _jobTypeDao.save(jobType);
            return new SuccessResult("Ekleme işlemi başarılı");
         }catch (Exception ex){
@@ -30,14 +37,12 @@ public class JobTypeManager implements JobTypeService {
     }
 
     @Override
-    public Result update(JobType jobType) {
-        var temp = _jobTypeDao.getById(jobType.getId());
-        if (temp.getId() != jobType.getId()){
+    public Result update(JobTypeDto jobTypeDto,int jobTypeId) {
+        if (!_jobTypeDao.existsById(jobTypeId)){
             return new ErrorResult("Veri bulunamadı.");
         }else {
-            JobType tempType = new JobType();
-            tempType.setJobType(jobType.getJobType());
-            tempType.setJobAdvertisements(jobType.getJobAdvertisements());
+            JobType tempType = _jobTypeDao.getById(jobTypeId);
+            tempType.setJobType(jobTypeDto.getJobType());
             _jobTypeDao.save(tempType);
             return new SuccessResult("Veri güncellendi.");
         }
@@ -45,11 +50,9 @@ public class JobTypeManager implements JobTypeService {
 
     @Override
     public Result delete(int id) {
-        var temp = _jobTypeDao.getById(id);
-        if (temp.getId()!=id){
+        if (!_jobTypeDao.existsById(id)){
             return new ErrorResult("Kullanıcı bulunamadı.");
         }
-
         else{
             _jobTypeDao.deleteById(id);
             return new SuccessResult("Veri silindi.");

@@ -8,10 +8,8 @@ import kodlamaio.HumanResourceManagementSystem.entities.dtos.SkillDto;
 import java.util.List;
 
 public interface SkillService {
-    Result add(SkillDto skillDto);
-    Result update(SkillDto skillDto);
-    Result delete(int id);
+    Result add(SkillDto skillDto,int cvId);
+    Result update(SkillDto skillDto,int cvId,int skillId);
+    Result delete(int skillId,int cvId);
 
-    DataResult<Skill> getOne(int id);
-    DataResult<List<Skill>> getAll();
 }

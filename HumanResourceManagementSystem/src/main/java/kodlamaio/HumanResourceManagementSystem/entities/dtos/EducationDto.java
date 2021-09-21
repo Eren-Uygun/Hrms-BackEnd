@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 @Data
 public class EducationDto {
-    private int cvId;
 
     private String schoolName;
 

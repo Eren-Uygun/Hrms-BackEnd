@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface CurriculumVitaeService {
     Result add(CurriculumVitaeDto curriculumVitaeDto );
-    Result update(CurriculumVitaeDto curriculumVitaeDto);
+    Result update(CurriculumVitaeDto curriculumVitaeDto,int cvId);
     Result delete(int id);
 
     DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(int candidateId);
@@ -24,8 +24,9 @@ public interface CurriculumVitaeService {
     public Result updateLinkedin(String linkedin, int cvId);
     public Result deleteLinkedin(int cvId);
 
-    public Result updateBiography(String biography, int cvId);
-    public Result deleteBiography(int cvId);
+    public Result updateAboutMe(String biography, int cvId);
+    public Result deleteAboutMe(int cvId);
+
 
 
 

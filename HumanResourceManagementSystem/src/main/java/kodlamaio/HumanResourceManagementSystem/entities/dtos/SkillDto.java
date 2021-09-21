@@ -7,7 +7,6 @@ import javax.validation.constraints.Min;
 
 @Data
 public class SkillDto {
-    private int cvId;
     private String skillName;
     @Min(1) @Max(5)
     private int SkillRate;

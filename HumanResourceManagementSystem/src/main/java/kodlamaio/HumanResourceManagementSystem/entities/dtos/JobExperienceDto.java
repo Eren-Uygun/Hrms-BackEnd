@@ -10,7 +10,6 @@ import java.time.LocalDate;
 
 @Data
 public class JobExperienceDto {
-    private int cvId;
 
     private String companyName;
 

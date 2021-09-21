@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.CityService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CityDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.City;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.CityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +22,20 @@ public class CityManager implements CityService {
     }
 
     @Override
-    public Result add(City city) {
+    public Result add(CityDto cityDto) {
         try{
-            var tempCity = _cityDao.existsCityByCityName(city.getCityName());
-            if (tempCity)
+            if (_cityDao.existsCityByCityName(cityDto.getCityName()))
             {
                 return new ErrorResult("Sistemde kayıtlı bilgi girdiniz.");
             }
             else{
+                if (cityDto.getCityName().length()<2){
+                    return new ErrorResult("Şehir adı 2 karaterden fazla olmalıdır.");
+                }
+                City city = new City();
+                city.setCityName(cityDto.getCityName());
                 _cityDao.save(city);
-                return new SuccessResult("Ekleme işlemi yapıldı");
+                return new SuccessResult("Şehir eklendi. işlemi yapıldı");
             }
 
         }catch (Exception ex) {
@@ -39,13 +44,16 @@ public class CityManager implements CityService {
     }
 
     @Override
-    public Result update(City city) {
+    public Result update(CityDto cityDto,int id) {
         try{
-            var tempCity = _cityDao.getById(city.getId());
-            if (tempCity.getCityName()==null){
+            var tempCity = _cityDao.getById(id);
+            if (!_cityDao.existsById(tempCity.getId())){
                 return new ErrorResult("Veri bulunamadı.");
             }else{
-                tempCity.setCityName(city.getCityName());
+                if (_cityDao.existsCityByCityName(cityDto.getCityName().toLowerCase(Locale.ROOT))){
+                    return new ErrorResult("Bu şehir zaten mevcut");
+                }
+                tempCity.setCityName(cityDto.getCityName());
                 _cityDao.save(tempCity);
                 return new SuccessResult("Veri güncellendi.");
             }

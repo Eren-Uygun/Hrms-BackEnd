@@ -26,22 +26,22 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Inte
 
     DataResult<List<JobAdvertisement>> getJobAdvertisementsByWorkPlace(String workPlace);
 
-    @Query("from JobAdvertisement where  jobAdvertisementStatus = 'Active'")
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatus();
-
-
-    @Query("from JobAdvertisement where jobAdvertisementStatus = 'Active' order by releaseDate desc ")
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc();
-
-    @Query("from JobAdvertisement where jobAdvertisementStatus='Active' and maxSalary between maxSalary and minSalary")
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByMaxSalaryBetweenAndMinSalary(int maxSalary, int minSalary);
+   // DataResult<List<JobAdvertisement>> getJobAdvertisementsByMaxSalaryBetweenAndMinSalary(int maxSalary, int minSalary);
 
 
 
 
-   /*@Query("from JobAdvertisement where JobAdvertisementActivationByEmployee =:employerId and jobAdvertisementStatus = 'Active'")*/
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId, JobAdvertisementStatus jobAdvertisementStatus);
 
+
+    List<JobAdvertisement> getAllByIsJobAdvertisementStatusActive(boolean status);
+
+
+
+   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveOrderByReleaseDate(boolean status);
+
+
+   @Query("select j from JobAdvertisement j where j.isJobAdvertisementStatusActive = ?1 and j.employer.id = ?2")
+   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(boolean status,int employerId);
 
 
 

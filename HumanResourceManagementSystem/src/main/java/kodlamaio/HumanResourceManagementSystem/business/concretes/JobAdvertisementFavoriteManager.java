@@ -1,8 +1,9 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobAdvertisementFavoriteService;
-import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
-import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
+import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateDao;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobAdvertisementDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobAdvertisementFavoriteDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisementFavorite;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +15,49 @@ import java.util.List;
 public class JobAdvertisementFavoriteManager implements JobAdvertisementFavoriteService {
 
     private JobAdvertisementFavoriteDao _jobAdvertisementFavoriteDao;
+    private CandidateDao _candidateDao;
+    private JobAdvertisementDao _jobAdvertisementDao;
 
     @Autowired
-    public JobAdvertisementFavoriteManager(JobAdvertisementFavoriteDao jobAdvertisementFavoriteDao) {
-        this._jobAdvertisementFavoriteDao = jobAdvertisementFavoriteDao;
+    public JobAdvertisementFavoriteManager(JobAdvertisementFavoriteDao _jobAdvertisementFavoriteDao, CandidateDao _candidateDao, JobAdvertisementDao _jobAdvertisementDao) {
+        this._jobAdvertisementFavoriteDao = _jobAdvertisementFavoriteDao;
+        this._candidateDao = _candidateDao;
+        this._jobAdvertisementDao = _jobAdvertisementDao;
     }
 
     @Override
     public DataResult<List<JobAdvertisementFavorite>> getByCandidateId(int candidateId) {
-        return null;
+        if (!_candidateDao.existsById(candidateId)){
+            return new ErrorDataResult<>("Kullanıcı bulunamadı.");
+        }
+        return new SuccessDataResult<List<JobAdvertisementFavorite>>(_jobAdvertisementFavoriteDao.findByCandidate_Id(candidateId),"Kullanıcıya ait favori ilanlar getirildi.");
     }
 
     @Override
     public Result addFavorite(int candidateId, int jobAdId) {
-        return null;
+        if (!_candidateDao.existsById(candidateId)) {
+            return new ErrorResult("Kullanıcı bulunamadı.");
+        } else if (!_jobAdvertisementDao.existsById(jobAdId)) {
+            return new ErrorResult("İlan bulunamadı.");
+        }else if (_jobAdvertisementFavoriteDao.existsByCandidate_IdAndJobAdvertisement_Id(candidateId,jobAdId)){
+            return new ErrorResult("İlan favorilerde");
+        }
+        JobAdvertisementFavorite jobAdvertisementFavorite = new JobAdvertisementFavorite();
+        jobAdvertisementFavorite.setCandidate(_candidateDao.getById(candidateId));
+        jobAdvertisementFavorite.setJobAdvertisement(_jobAdvertisementDao.getById(jobAdId));
+        _jobAdvertisementFavoriteDao.save(jobAdvertisementFavorite);
+        return new SuccessResult("İlan favorilere eklendi.");
     }
+
+
 
     @Override
     public Result removeFavorite(int favoriteId) {
-        return null;
+        if (!_jobAdvertisementFavoriteDao.existsById(favoriteId)){
+            return new ErrorResult("İlan bulunamadı.");
+        }else{
+            _jobAdvertisementFavoriteDao.deleteById(favoriteId);
+            return new ErrorResult("İlan favorilerden kaldırıldı.");
+        }
     }
 }

@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.WorkPlaceServi
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.WorkPlace;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.WorkPlaceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.function.EntityResponse;
@@ -43,11 +44,21 @@ return ResponseEntity.badRequest().body(result.getData());
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody WorkPlace workPlace){
-        Result result = _workPlaceService.add(workPlace);
+    public ResponseEntity<?> add(@RequestBody WorkPlaceDto workPlaceDto){
+        Result result = _workPlaceService.add(workPlaceDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
 
+        }
+        return ResponseEntity.badRequest().body(result);
+
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody WorkPlaceDto workPlaceDto,int workPlaceId){
+        Result result = _workPlaceService.update(workPlaceDto,workPlaceId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
 

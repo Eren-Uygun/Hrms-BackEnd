@@ -14,7 +14,7 @@ import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/educations")
+@RequestMapping("/api/{cvId}/educations")
 public class EducationsController {
 
     private EducationService _educationService;
@@ -25,8 +25,28 @@ public class EducationsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody EducationDto education){
-        Result result = _educationService.add(education);
+    public ResponseEntity<?> add(@RequestBody EducationDto education,@PathVariable("cvId") int cvId){
+        Result result = _educationService.add(education,cvId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }else{
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    @PutMapping("/update/{educationId}")
+    public ResponseEntity<?> update(@RequestBody EducationDto educationDto,@PathVariable("cvId") int cvId,@PathVariable("educationId") int educationId){
+        Result result = _educationService.update(educationDto,cvId,educationId);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") int id,@PathVariable("cvId") int cvId){
+        Result result = _educationService.delete(id,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }else{
@@ -35,15 +55,16 @@ public class EducationsController {
     }
 
 
-    @GetMapping("/getEducation")
-    public ResponseEntity<?> getOne(int id){
+    /*
+    @GetMapping("/getEducation/{id}")
+    public ResponseEntity<?> getOne(@PathVariable("educationId") int educationId,@PathVariable("cvId") int cvId){
 
-        DataResult<Education> result = _educationService.getOne(id);
+        DataResult<Education> result = _educationService.getOne(educationId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
-    }
+    }*/
 
     /*
     public ResponseEntity<List<?>> getAll(){
@@ -54,21 +75,6 @@ public class EducationsController {
         return ResponseEntity.badRequest().body(result.getData());
     }
     */
-
-    @GetMapping("/getAll")
-    public DataResult<List<Education>> getAll(){
-        return _educationService.getAll();
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
-        Result result = _educationService.delete(id);
-        if (result.isSuccess()){
-            return ResponseEntity.ok(result);
-        }else{
-            return ResponseEntity.badRequest().body(result);
-        }
-    }
 
 
 

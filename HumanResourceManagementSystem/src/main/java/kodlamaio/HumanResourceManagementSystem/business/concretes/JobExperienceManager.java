@@ -24,10 +24,10 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public Result add(JobExperienceDto jobExperienceDto) {
+    public Result add(JobExperienceDto jobExperienceDto,int cvId) {
         try{
 
-            if (!_cvDao.existsById(jobExperienceDto.getCvId())){
+            if (!_cvDao.existsById(cvId)){
                 return new ErrorResult("Cv bulunamadı.");
             }else if(jobExperienceDto.getCompanyName().length()<=2) {
                 return new ErrorResult("Şirket Adı en az 2 karakter olmalıdır.");
@@ -41,7 +41,7 @@ public class JobExperienceManager implements JobExperienceService {
                 return new ErrorResult("Çalıştığınız departman adı en az 2 karakter olmalıdır.");
             }
             JobExperience jobExperience = new JobExperience();
-            jobExperience.setCurriculumVitae(_cvDao.getById(jobExperienceDto.getCvId()));
+            jobExperience.setCurriculumVitae(_cvDao.getById(cvId));
             jobExperience.setCompanyName(jobExperienceDto.getCompanyName());
             jobExperience.setPositionName(jobExperienceDto.getPositionName());
             jobExperience.setStartDate(jobExperienceDto.getStartDate());
@@ -59,13 +59,16 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(int cvId,int jobExperienceId) {
         try{
 
-            if (!_jobExperienceDao.existsById(id)){
-                return new ErrorResult("Silinecek veri bulunamadı.");
-            }else {
-                _jobExperienceDao.deleteById(id);
+            if (!_cvDao.existsById(cvId)){
+                return new ErrorResult("Cv bulunamadı.");
+            }else if (!_jobExperienceDao.existsById(jobExperienceId)){
+                return new ErrorResult("İş tecrübe bilgisi bulunamadı.");
+            }
+            else {
+                _jobExperienceDao.deleteById(jobExperienceId);
                 return new SuccessResult("Veri silindi.");
             }
 
@@ -75,21 +78,20 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public DataResult<JobExperience> getOne(int id) {
-
-        try{
-            return new SuccessDataResult<JobExperience>(_jobExperienceDao.getById(id),"Veri getirildi.");
-        }catch (Exception ex){
-            return new ErrorDataResult<>("Veri getirme hatası");
+    public Result update(JobExperienceDto jobExperienceDto, int cvId, int jobExperienceId) {
+        if (!_cvDao.existsById(cvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }else if (!_jobExperienceDao.existsById(jobExperienceId)){
+            return new ErrorResult("Veri bulunamadı.");
         }
-    }
+        JobExperience jobExperience = _jobExperienceDao.getById(jobExperienceId);
 
-    @Override
-    public DataResult<List<JobExperience>> getAll() {
-        try{
-            return new SuccessDataResult<List<JobExperience>>(_jobExperienceDao.findAll(),"Veriler getirildi.");
-        }catch (Exception ex){
-            return new ErrorDataResult<>("Veri getirme hatası");
-        }
+        jobExperience.setCompanyName(jobExperienceDto.getCompanyName());
+        jobExperience.setJobInformation(jobExperienceDto.getJobInformation());
+        jobExperience.setStartDate(jobExperienceDto.getStartDate());
+        jobExperience.setEndDate(jobExperienceDto.getEndDate());
+
+        _jobExperienceDao.save(jobExperience);
+        return new SuccessResult("İş tecrübesi eklendi.");
     }
 }

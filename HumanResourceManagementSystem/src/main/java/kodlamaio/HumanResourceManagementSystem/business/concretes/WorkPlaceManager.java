@@ -4,6 +4,8 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.WorkPlaceServi
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.WorkPlaceDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.WorkPlace;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.WorkPlaceDto;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,29 +22,30 @@ public class WorkPlaceManager implements WorkPlaceService {
     }
 
     @Override
-    public Result add(WorkPlace workPlace) {
+    public Result add(WorkPlaceDto workPlaceDto) {
+        WorkPlace workPlace = new WorkPlace();
+        workPlace.setWorkPlace(workPlaceDto.getWorkPlace());
         _workPlaceDao.save(workPlace);
         return new SuccessResult("Veri eklendi");
     }
 
     @Override
-    public Result update(WorkPlace workPlace) {
-        var temp = _workPlaceDao.getById(workPlace.getId());
-        if (temp.getId() != workPlace.getId()){
+    public Result update(WorkPlaceDto workPlaceDto,int workPlaceId) {
+
+        if (!_workPlaceDao.existsById(workPlaceId)){
             return new ErrorResult("Çalışma yeri bulunamadı.");
 
         }else {
-            temp.setWorkPlace(workPlace.getWorkPlace());
-            temp.setJobAdvertisements(workPlace.getJobAdvertisements());
-            _workPlaceDao.save(temp);
+           WorkPlace workPlace = _workPlaceDao.getById(workPlaceId);
+            workPlace.setWorkPlace(workPlace.getWorkPlace());
+            _workPlaceDao.save(workPlace);
             return new SuccessResult("Veri güncellendi.");
         }
     }
 
     @Override
     public Result delete(int id) {
-        var temp = _workPlaceDao.getById(id);
-        if (temp.getId() != id) {
+        if (!_workPlaceDao.existsById(id)) {
             return new ErrorResult("Veri bulunamadı.");
         } else {
             return new SuccessResult("Veri silindi.");
