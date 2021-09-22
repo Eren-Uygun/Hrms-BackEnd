@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class JobAdvertisementFilter {
     private List<Integer> cityId;
-    private List<Integer> jobPositionId;
+    private List<Integer> jobId;
     private List<Integer> workPlaceId;
-    private List<Integer> workTimeId;
+    private List<Integer> jobTypeId;
 }

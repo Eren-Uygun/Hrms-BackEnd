@@ -10,7 +10,10 @@ import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisementActivationByEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -223,6 +226,22 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId ){
         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(true,employerId),"İş verene ait aktif ilanlar getirildi.");
     }
+
+    @Override
+    public DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize,JobAdvertisementFilter jobAdvertisementFilter) {
+        Pageable pageable = PageRequest.of(pageNo -1,pageSize);
+
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getContent(),_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getTotalElements()+"Sayfalamış ilanlar getirildi.");
+    }
+
+    /*
+    @Override
+    public DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize, JobAdvertisementFilter jobAdvertisementFilter) {
+        Pageable pageable = PageRequest.of(pageNo -1,pageSize);
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getByCity_IdOrWorkPlace_IdOrJob_IdOrJobType_IdAndIsJobAdvertisementStatusActive(jobAdvertisementFilter,pageable).getContent(),"İş ilanları getirildi.");
+    }
+*/
+
 
 
 }

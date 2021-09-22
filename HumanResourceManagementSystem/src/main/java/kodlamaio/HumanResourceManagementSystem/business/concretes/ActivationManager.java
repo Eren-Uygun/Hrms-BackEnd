@@ -27,9 +27,10 @@ public class ActivationManager implements ActivationService {
     private EmployerActivationDao _employerActivationDao;
     private JobAdvertisementActivationWithEmployeeDao _JobAdvertisementActivationWithEmployeeDao;
     private JobAdvertisementDao _JobAdvertisementDao;
+    private EmployerUpdateDao _employerUpdateDao;
 
     @Autowired
-    public ActivationManager(ActivationDao _activationDao, UserDao _userDao, EmployerActivationByEmployeeDao _employerActivationByEmployeeDao, EmployerDao _employerDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerActivationDao _employerActivationDao, JobAdvertisementActivationWithEmployeeDao _JobAdvertisementActivationWithEmployeeDao, JobAdvertisementDao _JobAdvertisementDao) {
+    public ActivationManager(ActivationDao _activationDao, UserDao _userDao, EmployerActivationByEmployeeDao _employerActivationByEmployeeDao, EmployerDao _employerDao, HrmsEmployeeDao _hrmsEmployeeDao, EmployerActivationDao _employerActivationDao, JobAdvertisementActivationWithEmployeeDao _JobAdvertisementActivationWithEmployeeDao, JobAdvertisementDao _JobAdvertisementDao, EmployerUpdateDao _employerUpdateDao) {
         this._activationDao = _activationDao;
         this._userDao = _userDao;
         this._employerActivationByEmployeeDao = _employerActivationByEmployeeDao;
@@ -38,6 +39,7 @@ public class ActivationManager implements ActivationService {
         this._employerActivationDao = _employerActivationDao;
         this._JobAdvertisementActivationWithEmployeeDao = _JobAdvertisementActivationWithEmployeeDao;
         this._JobAdvertisementDao = _JobAdvertisementDao;
+        this._employerUpdateDao = _employerUpdateDao;
     }
 
     @Override
@@ -113,6 +115,7 @@ public class ActivationManager implements ActivationService {
     @Override
     public Result activateHrmsEmployeeByActivationCode(String activationCode) {
 
+        //Planned , but later !!!
         return null;
     }
 
@@ -138,6 +141,25 @@ public class ActivationManager implements ActivationService {
        }catch (Exception ex){
            return new ErrorResult("İş ilanı aktivasyon hatası "+ex);
        }
+    }
+
+    @Override
+    public Result employerUpdateConfirmation(int employeeId, int employerId) {
+        if (!_employerUpdateDao.existsByEmployerId(employerId)){
+            return new ErrorResult("Güncellenecek firma bulunamadı.");
+        }else if (!_hrmsEmployeeDao.existsById(employeeId)){
+            return new ErrorResult("Personel bulunamadı.");
+        }
+        var tempEmployerUpdate = _employerUpdateDao.getByEmployerId(employerId);
+        var updatedEmployer = _employerDao.getById(employerId);
+
+        updatedEmployer.setCompanyName(tempEmployerUpdate.getCompanyName());
+        updatedEmployer.setPhoneNumber(tempEmployerUpdate.getPhoneNumber());
+        updatedEmployer.setWebsite(tempEmployerUpdate.getWebsite());
+        updatedEmployer.setUserStatus(UserStatus.Active);
+        _employerDao.save(updatedEmployer);
+        _employerUpdateDao.delete(tempEmployerUpdate);
+        return new SuccessResult("Şirket bilgilerinin güncelleme onaylama işlemi "+employeeId+" No'lu personel tarafından yapılmıştır.");
     }
 
     /*

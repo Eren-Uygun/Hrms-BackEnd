@@ -7,6 +7,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.SuccessDataResult;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
+import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +62,17 @@ public class JobAdvertisementsController {
         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByEmployerAndJobAdvertisementStatus(employerId).getData(),"Aktif ilanlar getirildi.");
     }
 
+    /*
+    @PostMapping("/getByActiveAndFilteredAdvertisement")
+    public DataResult<List<JobAdvertisement>> getJobAdvertisementByFilterAndPage(@RequestParam int pageNo, @RequestParam int pageSize,@RequestBody JobAdvertisementFilter jobAdvertisementFilter){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getByIsActiveAndPageNumber(pageNo,pageSize,jobAdvertisementFilter).getData(),"Veriler getirildi.");
+    }
+*/
+
+    @PostMapping("/getByActiveAndFilteredAdvertisement")
+    public Result getJobAdvertisementByFilterAndPage(@RequestParam int pageNo, @RequestParam int pageSize,@RequestBody JobAdvertisementFilter jobAdvertisementFilter){
+        return _jobAdvertisementService.getByIsActiveAndPageNumber(pageNo,pageSize,jobAdvertisementFilter);
+    }
 
 /*
 

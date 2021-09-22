@@ -9,6 +9,7 @@ public interface ActivationService {
     Result activateEmployerByActivationCode(String activationCode);
     Result activateHrmsEmployeeByActivationCode(String activationCode);
     Result jobAdvertisementActivation(int employeeId,int jobAdvertisementId);
+    Result employerUpdateConfirmation(int employeeId,int employerId);
 
     //Result jobAdvertisementActivationByHrmsEmployee(int hrmsEmployeeId,String activationNumber,int advertisementNumber);
 

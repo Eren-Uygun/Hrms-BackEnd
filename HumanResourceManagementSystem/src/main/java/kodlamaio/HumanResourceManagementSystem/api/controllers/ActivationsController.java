@@ -24,19 +24,23 @@ public class ActivationsController {
       return  _activationService.activateByActivationCode(activationCode);
     }
 
-    @PostMapping(value = "/manualActivation")
+    @PostMapping(value = "/manualEmployerActivation")
     public Result manualEmployerActivation(int employerId,int hrmsPersonelId){
       return _activationService.manualEmployerActivation(employerId,hrmsPersonelId);
-
     }
 
-    @PostMapping("/employerActivateByCode")
+    @PostMapping("/activeEmployerByActivationCode")
     public  Result activateEmployerByActivationCode(String activationCode){
         return _activationService.activateEmployerByActivationCode(activationCode);
     }
     @PostMapping("/activateJobAdvertisementByEmployee")
     public Result activateJobAdvertisementByEmployee(int employeeId,int jobAdvertisementId){
         return _activationService.jobAdvertisementActivation(employeeId,jobAdvertisementId);
+    }
+
+    @PostMapping("/employerUpdateConfirmationByEmployee")
+    public Result employerUpdateConfirmationByEmployee(int employeeId,int employerId){
+        return _activationService.employerUpdateConfirmation(employeeId,employerId);
     }
 
 }

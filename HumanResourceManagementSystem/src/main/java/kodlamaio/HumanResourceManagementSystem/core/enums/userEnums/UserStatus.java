@@ -12,5 +12,11 @@ public enum UserStatus {
         public String toString() {
             return "Passive";
         }
+    },
+    WaitingUpdateConfirmation{
+        @Override
+        public String toString() {
+            return "WaitingUpdateConfirmation";
+        }
     }
 }
