@@ -7,13 +7,13 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.Activa
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.AdvertisementNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
+import kodlamaio.HumanResourceManagementSystem.entities.concretes.Job;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisementActivationByEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -177,7 +177,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     @Override
     public DataResult<List<JobAdvertisement>> getAll() {
      try{
-         return new SuccessDataResult<List<JobAdvertisement>>(   _jobAdvertisementDao.findAll(),"İlanlar listelendi");
+         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findAll(),"İlanlar listelendi");
      }catch (Exception ex){
          return new ErrorDataResult<>("Veriler getirilemedi");
      }
@@ -210,7 +210,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     @Override
     public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatus() {
         try{
-            return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getAllByIsJobAdvertisementStatusActive(true),"Durumu aktif olan ilanlar getirildi.");
+            return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getJobAdvertisementsByIsJobAdvertisementStatusActive(),"Durumu aktif olan ilanlar getirildi.");
         }catch (Exception ex){
             return new ErrorDataResult<>("Veriler getirilemedi.");
         }
@@ -233,14 +233,6 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 
         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getContent(),_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getTotalElements()+"Sayfalamış ilanlar getirildi.");
     }
-
-    /*
-    @Override
-    public DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize, JobAdvertisementFilter jobAdvertisementFilter) {
-        Pageable pageable = PageRequest.of(pageNo -1,pageSize);
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getByCity_IdOrWorkPlace_IdOrJob_IdOrJobType_IdAndIsJobAdvertisementStatusActive(jobAdvertisementFilter,pageable).getContent(),"İş ilanları getirildi.");
-    }
-*/
 
 
 

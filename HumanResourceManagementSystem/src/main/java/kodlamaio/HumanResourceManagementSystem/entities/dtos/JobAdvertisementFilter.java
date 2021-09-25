@@ -10,8 +10,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JobAdvertisementFilter {
+
     private List<Integer> cityId;
-    private List<Integer> jobId;
-    private List<Integer> workPlaceId;
+  //  private List<Integer> jobId;
+ //   private List<Integer> workPlaceId;
     private List<Integer> jobTypeId;
+
+
 }

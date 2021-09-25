@@ -8,6 +8,8 @@ import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementFilter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -29,6 +31,7 @@ public interface JobAdvertisementService {
     DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId);
 
     DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize,JobAdvertisementFilter jobAdvertisementFilter);
+
 
 
 }

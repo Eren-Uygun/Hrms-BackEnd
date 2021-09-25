@@ -35,13 +35,11 @@ public class RuleValidation implements RuleValidationService {
         email.toLowerCase(Locale.ROOT);
         website.toLowerCase(Locale.ROOT);
 
+        String[] websiteArray = website.split("www.");
+        String domain = websiteArray[1];
+        System.out.println(domain);
 
-        String[] emailArray = email.split(" ") ;
-        String[] websiteArray = website.split(" ");
-
-
-
-
+        if (email.endsWith(domain)) return true;
         return false;
     }
 

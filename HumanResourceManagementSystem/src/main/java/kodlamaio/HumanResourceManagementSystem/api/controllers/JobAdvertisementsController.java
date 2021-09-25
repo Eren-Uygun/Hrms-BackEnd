@@ -74,6 +74,11 @@ public class JobAdvertisementsController {
         return _jobAdvertisementService.getByIsActiveAndPageNumber(pageNo,pageSize,jobAdvertisementFilter);
     }
 
+    @PostMapping("/getByCustomFilter")
+    public DataResult<List<JobAdvertisement>> getByCustomFilter(@RequestParam int pageNo, @RequestParam int pageSize, @RequestBody JobAdvertisementFilter jobAdvertisementFilter){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByCity_IdOrWorkPlace_IdOrJob_IdOrJobType_Id(jobAdvertisementFilter,pageNo,pageSize).getData(),"") ;
+    }
+
 /*
 
     public ResponseEntity<?> add(@Valid @RequestBody JobAdvertisement jobAdvertisement){

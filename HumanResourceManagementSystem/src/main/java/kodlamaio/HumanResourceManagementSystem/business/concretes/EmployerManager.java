@@ -51,6 +51,8 @@ public class EmployerManager implements EmployerService {
                 return new ErrorResult("Bu kullanıcı sistemde mevcuttur.");
             }else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail())||!_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
+            } else if (!_ruleValidationService.isEmployerMailRuleOk(employerAddDto.getEmail(),employerAddDto.getWebsite())){
+                return new ErrorResult("Websiteniz ve email domaininiz aynı olmalıdır.");
             }else{
                 Employer employer = new Employer();
                 employer.setCompanyName(employerAddDto.getCompanyName());
@@ -90,7 +92,10 @@ public class EmployerManager implements EmployerService {
                 return new ErrorResult("Telefon numaranız en az 3 karakter en fazla 15 karakter olmalıdır.");
             } else if (_userValidationService.isMailAddressExists(employerAddDto.getEmail())){
                 return new ErrorResult("Bu kullanıcı sistemde mevcut değil.");
-            }else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail()) || !_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
+            }else if (!_ruleValidationService.isEmployerMailRuleOk(employerAddDto.getEmail(),employerAddDto.getWebsite())){
+                return new ErrorResult("Websiteniz ve email domaininiz aynı olmalıdır.");
+            }
+            else if (!_ruleValidationService.isMailRuleOk(employerAddDto.getEmail()) || !_ruleValidationService.isPasswordRuleOk(employerAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
             }else if (!tempEmployer.getUserStatus().equals(UserStatus.Active)){
                 return new ErrorResult("Aktivasyon işlemi yapılmadan güncelleme yapamassınız.");
