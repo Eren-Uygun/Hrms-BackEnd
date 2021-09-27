@@ -45,7 +45,13 @@ public class JobExperienceManager implements JobExperienceService {
             jobExperience.setCompanyName(jobExperienceDto.getCompanyName());
             jobExperience.setPositionName(jobExperienceDto.getPositionName());
             jobExperience.setStartDate(jobExperienceDto.getStartDate());
-            jobExperience.setEndDate(jobExperienceDto.getEndDate());
+            if (jobExperienceDto.getEndDate() != null){
+                jobExperience.setEndDate(jobExperienceDto.getEndDate());
+                jobExperience.setStillWorking(true);
+            }else {
+                jobExperience.setStillWorking(false);
+                jobExperience.setEndDate(null);
+            }
             jobExperience.setJobInformation(jobExperienceDto.getJobInformation());
 
             _jobExperienceDao.save(jobExperience);
@@ -89,8 +95,13 @@ public class JobExperienceManager implements JobExperienceService {
         jobExperience.setCompanyName(jobExperienceDto.getCompanyName());
         jobExperience.setJobInformation(jobExperienceDto.getJobInformation());
         jobExperience.setStartDate(jobExperienceDto.getStartDate());
-        jobExperience.setEndDate(jobExperienceDto.getEndDate());
-
+        if (jobExperienceDto.getEndDate() != null){
+            jobExperience.setEndDate(jobExperienceDto.getEndDate());
+            jobExperience.setStillWorking(true);
+        }else {
+            jobExperience.setStillWorking(false);
+            jobExperience.setEndDate(null);
+        }
         _jobExperienceDao.save(jobExperience);
         return new SuccessResult("İş tecrübesi eklendi.");
     }

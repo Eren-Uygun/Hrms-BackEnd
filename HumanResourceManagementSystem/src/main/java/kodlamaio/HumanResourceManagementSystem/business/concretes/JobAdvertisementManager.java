@@ -1,13 +1,11 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobAdvertisementService;
+import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementActivationStatus;
-import kodlamaio.HumanResourceManagementSystem.core.enums.jobAdvertisementEnums.JobAdvertisementStatus;
-import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.AdvertisementNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
-import kodlamaio.HumanResourceManagementSystem.entities.concretes.Job;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisement;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.JobAdvertisementActivationByEmployee;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.JobAdvertisementDto;
@@ -22,14 +20,14 @@ import java.util.List;
 @Service
 public class JobAdvertisementManager implements JobAdvertisementService {
 
-    private JobAdvertisementDao _jobAdvertisementDao;
-    private JobAdvertisementActivationWithEmployeeDao _jobAdvertisementActivationByEmployeeDao;
-    private HrmsEmployeeDao _hrmsEmployeeDao;
-    private EmployerDao _employerDao;
-    private JobTypeDao _jobTypeDao;
-    private WorkPlaceDao _workPlaceDao;
-    private CityDao _cityDao;
-    private JobDao _jobDao;
+    private final JobAdvertisementDao _jobAdvertisementDao;
+    private final JobAdvertisementActivationWithEmployeeDao _jobAdvertisementActivationByEmployeeDao;
+    private final HrmsEmployeeDao _hrmsEmployeeDao;
+    private final EmployerDao _employerDao;
+    private final JobTypeDao _jobTypeDao;
+    private final WorkPlaceDao _workPlaceDao;
+    private final CityDao _cityDao;
+    private final JobDao _jobDao;
 
 
     @Autowired
@@ -43,36 +41,8 @@ public class JobAdvertisementManager implements JobAdvertisementService {
         this._cityDao = _cityDao;
         this._jobDao = _jobDao;
     }
-
-    /*
-    @Override
-    public Result add(JobAdvertisement jobAdvertisement) {
-       try{
-           var tempAdv = _jobAdvertisementDao.getJobAdvertisementByAdvertisementNumber(jobAdvertisement.getAdvertisementNumber());
-           if (tempAdv.getAdvertisementNumber()!=null){
-               return new ErrorResult("bu ilan numarası mevcut");
-           }else{
-               JobAdvertisementActivationByEmployee jobAdvertisementActivationByEmployee = new JobAdvertisementActivationByEmployee();
-               jobAdvertisement.setAdvertisementNumber(AdvertisementNumberGenerator.generateAdvertisementNumber());
-               jobAdvertisement.setJobAdvertisementStatus(JobAdvertisementStatus.Passive);
-               jobAdvertisement.setReleaseDate(LocalDate.now());
-               jobAdvertisementActivationByEmployee.setHrmsEmployee(null);
-               jobAdvertisementActivationByEmployee.setJobAdvertisement(jobAdvertisement);
-               jobAdvertisementActivationByEmployee.setJobAdvertisementActivationStatus(JobAdvertisementActivationStatus.WaitingActivation);
-               jobAdvertisementActivationByEmployee.setAdvertisementActivationDate(LocalDate.now());
-               _jobAdvertisementActivationByEmployeeDao.save(jobAdvertisementActivationByEmployee);
-               _jobAdvertisementDao.save(jobAdvertisement);
-               return new SuccessResult("İş ilanı sisteme eklendi.");
-           }
-       }catch (Exception ex){
-           return new ErrorResult("Ekleme hatası");
-       }
-
-    }
-*/
     @Override
     public Result addDto(JobAdvertisementDto jobAdvertisementDto) {
-        //Fiziki olarak çalıştı ancak React'da denenmedi.
        JobAdvertisement jobAdvertisement = new JobAdvertisement();
        jobAdvertisement.setAdvertisementNumber(AdvertisementNumberGenerator.generateAdvertisementNumber());
        JobAdvertisementActivationByEmployee jobAdvertisementActivationByEmployee = new JobAdvertisementActivationByEmployee();
@@ -208,30 +178,32 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
-    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatus() {
+    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatus(int pageNo,int pageSize) {
         try{
-            return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getJobAdvertisementsByIsJobAdvertisementStatusActive(),"Durumu aktif olan ilanlar getirildi.");
+            Pageable pageable = PageRequest.of(pageNo -1,pageSize);
+            return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getJobAdvertisementsByIsJobAdvertisementStatusActive(pageable),"Durumu aktif olan ilanlar getirildi.");
         }catch (Exception ex){
             return new ErrorDataResult<>("Veriler getirilemedi.");
         }
     }
 
     @Override
-    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc() {
-       return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveOrderByReleaseDate(true),"");
+    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc(int pageNo,int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo -1,pageSize);
+       return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveOrderByReleaseDate(true,pageable),"");
     }
 
 
     @Override
-    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId ){
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(true,employerId),"İş verene ait aktif ilanlar getirildi.");
+    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId,int pageNo,int pageSize){
+        Pageable pageable = PageRequest.of(pageNo -1,pageSize);
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(true,employerId,pageable),"İş verene ait aktif ilanlar getirildi.");
     }
 
     @Override
     public DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize,JobAdvertisementFilter jobAdvertisementFilter) {
         Pageable pageable = PageRequest.of(pageNo -1,pageSize);
-
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getContent(),_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getTotalElements()+"Sayfalamış ilanlar getirildi.");
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getContent(),_jobAdvertisementDao.getByFilter(jobAdvertisementFilter,pageable).getTotalElements()+" "+BusinessMessage.getOperationSuccess);
     }
 
 

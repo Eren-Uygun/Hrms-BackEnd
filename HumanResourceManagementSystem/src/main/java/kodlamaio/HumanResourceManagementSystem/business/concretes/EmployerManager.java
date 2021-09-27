@@ -1,9 +1,11 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.EmployerService;
+import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
+import kodlamaio.HumanResourceManagementSystem.core.utils.emailSender.abstracts.EmailSenderService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.RuleValidationService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.UserValidationService;
@@ -27,14 +29,17 @@ public class EmployerManager implements EmployerService {
     private EmployerActivationDao _employerActivationDao;
     private UserValidationService _userValidationService;
     private EmployerUpdateDao _employerUpdateDao;
+    private EmailSenderService _emailSenderService;
 
     @Autowired
-    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, RuleValidationService _ruleValidationService) {
+    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService emailSenderService, RuleValidationService _ruleValidationService) {
         this._employerDao = _employerDao;
         this._employerActivationDao = _employerActivationDao;
         this._userValidationService = _userValidationService;
         this._employerUpdateDao = _employerUpdateDao;
+        this._emailSenderService = emailSenderService;
         this._ruleValidationService = _ruleValidationService;
+
     }
 
     private RuleValidationService _ruleValidationService;
@@ -69,12 +74,12 @@ public class EmployerManager implements EmployerService {
                 employerActivation.setUserActivationStatus(UserActivationStatus.Inactivate);
                 _employerDao.save(employer);
                 _employerActivationDao.save(employerActivation);
-
-                return new SuccessResult("Kayıt başarılı");
+                _emailSenderService.sendMail(employer.getEmail());
+                return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 
         }catch (Exception ex){
-            return new ErrorResult("Kayıt yapılamadı.");
+            return new ErrorResult(BusinessMessage.addOperationFailed+ex);
         }
 
     }
@@ -124,10 +129,10 @@ public class EmployerManager implements EmployerService {
 
 
 
-                return new SuccessResult("Güncelleme işlemi yapıldı.");
+                return new SuccessResult(BusinessMessage.updateOperationSuccess);
             }
         }catch (Exception ex){
-            return new ErrorResult("Güncelleme işlemi yapılamadı.");
+            return new ErrorResult(BusinessMessage.updateOperationFailed+ex);
         }
     }
 
@@ -138,10 +143,10 @@ public class EmployerManager implements EmployerService {
               return new ErrorResult("iş veren bulunamadı");
           }else {
               _employerDao.deleteById(id);
-              return new SuccessResult("Veri silindi.");
+              return new SuccessResult(BusinessMessage.deleteOperationSuccess);
           }
       }catch (Exception ex){
-          return new ErrorResult("Veri silme hatası");
+          return new ErrorResult(BusinessMessage.deleteOperationFailed+ex);
       }
     }
 

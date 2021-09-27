@@ -33,6 +33,8 @@ public class JobExperience {
     private LocalDate startDate;
     @Column(name = "job_ended_date")
     private LocalDate endDate;
+    @Column(name = "work_status")
+    public boolean isStillWorking=false;
 
 
     @JsonIgnore

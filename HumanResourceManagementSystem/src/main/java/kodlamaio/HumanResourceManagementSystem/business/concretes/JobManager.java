@@ -25,9 +25,7 @@ public class JobManager implements JobService {
     @Override
     public Result add(JobDto jobDto) {
         try{
-            //Boşluklu ve değişik yazım stilleri ile bypass edilebiliyor.
-            //String metotları ile düzeltilebilir.
-            if (_jobDao.existsByJobName(jobDto.getJobName().toLowerCase(Locale.ROOT).toLowerCase(Locale.ROOT))){
+            if (_jobDao.existsByJobName(jobDto.getJobName())){
                 return new ErrorResult("İş sistemde kayıtlı");
             }
             Job job = new Job();
@@ -45,6 +43,10 @@ public class JobManager implements JobService {
     public Result update(JobDto jobDto,int jobId) {
         if (!_jobDao.existsById(jobId)){
             return new ErrorResult("İş kolu bulunamadı.");
+        }
+
+        if (_jobDao.existsByJobName(jobDto.getJobName().toLowerCase(Locale.ROOT))){
+            return new ErrorResult("İş adı sistemde mevcut");
         }
         Job job = _jobDao.getById(jobId);
         job.setJobName(jobDto.getJobName());

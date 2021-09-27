@@ -25,10 +25,10 @@ public interface JobAdvertisementService {
     DataResult<JobAdvertisement>getByAdvertisementNumber(String advertisementNumber);
 
 
-    DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatus();
+    DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatus(int pageNo, int pageSize);
 
-    DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc();
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId);
+    DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc(int pageNo, int pageSize);
+    DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId,int pageNo, int pageSize);
 
     DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize,JobAdvertisementFilter jobAdvertisementFilter);
 

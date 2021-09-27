@@ -1,9 +1,11 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CandidateService;
+import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
+import kodlamaio.HumanResourceManagementSystem.core.utils.emailSender.abstracts.EmailSenderService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.mernisPersonValidations.abstracts.CandidateValidationService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.RuleValidationService;
@@ -28,14 +30,16 @@ public class CandidateManager implements CandidateService {
     private CandidateValidationService _candidateValidationService;
     private UserValidationService _userValidationService;
     private RuleValidationService _ruleValidationService;
+    private EmailSenderService _emailSenderService;
 
     @Autowired
-    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService) {
+    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService) {
         this._candidateDao = _candidateDao;
         this._candidateActivationDao = _candidateActivationDao;
         this._candidateValidationService = _candidateValidationService;
         this._userValidationService = _userValidationService;
         this._ruleValidationService = _ruleValidationService;
+        this._emailSenderService = _emailSenderService;
     }
 
     @Override
@@ -71,12 +75,13 @@ public class CandidateManager implements CandidateService {
                 activation.setUserActivationStatus(UserActivationStatus.Inactivate);
                     _candidateActivationDao.save(activation);
                     _candidateDao.save(candidate);
-                return new SuccessResult("Kayıt başarılı "+" Aktivasyon kodunuz "+candidate.getEmail()+" adresinize gönderilmiştir.");
+                    _emailSenderService.sendMail(candidate.getEmail());
+                return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 
 
         }catch (Exception ex){
-            return new ErrorResult("Kayıt yapılamadı. "+ex);
+            return new ErrorResult(BusinessMessage.addOperationFailed +" "+ ex);
         }
     }
 

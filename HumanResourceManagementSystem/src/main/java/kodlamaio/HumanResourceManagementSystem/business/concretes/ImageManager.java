@@ -2,6 +2,7 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.ImageService;
+import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.utils.Claudinary.abstracts.CustomImageService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
@@ -70,18 +71,35 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Result delete(int id) {
-        return null;
+    public Result delete(int id){
+        if (!_imageDao.existsById(id)){
+            return new ErrorResult("Resim bulunamadı.");
+        }
+        try{
+            Image image = _imageDao.getById(id);
+            Map result = _cloudinaryImageService.delete(image.getImageId());
+            image.setName(null);
+            image.setImageId(null);
+            image.setImageUrl("https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg");
+            _imageDao.save(image);
+            return new SuccessResult(BusinessMessage.deleteOperationSuccess);
+        }catch (IOException ex){
+            return new ErrorResult(BusinessMessage.deleteOperationFailed);
+        }
+
     }
 
     @Override
     public DataResult<Image> getById(int id) {
-        return null;
+        if(!this._imageDao.existsById(id)){
+            return new ErrorDataResult<Image>("Bu idye ait resim bulunamadı");
+        }
+        return new SuccessDataResult<Image>(this._imageDao.getById(id),"Verilen id ye ait resim listelendi");
     }
 
     @Override
     public Boolean isExist(int id) {
-        return null;
+        return _imageDao.existsById(id);
     }
 }
 

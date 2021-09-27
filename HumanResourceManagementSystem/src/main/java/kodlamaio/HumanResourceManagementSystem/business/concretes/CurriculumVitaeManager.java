@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CurriculumVitaeService;
+import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.utils.Claudinary.abstracts.CustomImageService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.*;
@@ -62,13 +63,17 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
 
     @Override
     public Result update(CurriculumVitaeDto curriculumVitaeDto,int CvId) {
+        if (!_curriculumVitaeDao.existsById(CvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }else if (!_candidateDao.existsById(curriculumVitaeDto.getCandidateId())){
+            return new ErrorResult("Kullanıcı bulunamadı.");
+        }
         return null;
     }
 
     @Override
     public Result delete(int id) {
-        var temp = _curriculumVitaeDao.getById(id);
-        if (temp.getId()!=id){
+        if (_curriculumVitaeDao.existsById(id)){
             return new ErrorResult("Silinecek veri bulunamadı.");
         }else{
             _curriculumVitaeDao.deleteById(id);
@@ -79,6 +84,9 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
 
     @Override
     public DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(int candidateId) {
+        if (!_candidateDao.existsById(candidateId)){
+            return new ErrorDataResult<>("Aday bulunamadı.");
+        }
         return new SuccessDataResult<CurriculumVitae>(_curriculumVitaeDao.findCurriculumVitaeByCandidate_Id(candidateId),"Kullanıcıya ait cv getirildi.");
     }
 
@@ -90,7 +98,16 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
 
     @Override
     public Result updateGithub(String github, int cvId) {
-        return null;
+        if (!_curriculumVitaeDao.existsById(cvId)){
+            return new ErrorResult("Cv bulunamadı.");
+        }
+        if (!github.startsWith("www.gittub.com")||!github.startsWith("github.com")||!github.startsWith("https://github.com")){
+            return new ErrorResult("Github linki geçerli değil");
+        }
+        CurriculumVitae tempCurriculumVitae = _curriculumVitaeDao.getById(cvId);
+        tempCurriculumVitae.setGithub(github);
+        _curriculumVitaeDao.save(tempCurriculumVitae);
+        return new SuccessResult(BusinessMessage.updateOperationSuccess);
     }
 
     @Override
@@ -103,7 +120,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
         curriculumVitae.setGithub(null);
         _curriculumVitaeDao.save(curriculumVitae);
 
-        return new SuccessResult("Github adresi silindi.");
+        return new SuccessResult(BusinessMessage.deleteOperationSuccess);
     }
 
     @Override

@@ -41,15 +41,15 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Inte
 
 
     @Query("select j from JobAdvertisement j where j.isJobAdvertisementStatusActive = true ")
-    List<JobAdvertisement> getJobAdvertisementsByIsJobAdvertisementStatusActive();
+    List<JobAdvertisement> getJobAdvertisementsByIsJobAdvertisementStatusActive(Pageable pageable);
 
 
 
-   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveOrderByReleaseDate(boolean status);
+   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveOrderByReleaseDate(boolean status,Pageable pageable);
 
 
    @Query("select j from JobAdvertisement j where j.isJobAdvertisementStatusActive = ?1 and j.employer.id = ?2")
-   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(boolean status,int employerId);
+   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(boolean status,int employerId,Pageable pageable);
 
     @Query("select j from JobAdvertisement j where j.isJobAdvertisementStatusActive=true " +
             "and ((:#{#filter.cityId}) IS NULL OR j.city.id IN (:#{#filter.cityId}))"+

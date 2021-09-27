@@ -46,20 +46,21 @@ public class JobAdvertisementsController {
 
 
     @GetMapping("/getActives")
-    public DataResult<List<JobAdvertisement>> getActives(){
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatus().getData(),"Aktif ilanlar getirildi.");
+    public DataResult<List<JobAdvertisement>> getActives(@RequestParam int pageNo, @RequestParam int pageSize){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatus(pageNo,pageSize).getData(),"Aktif ilanlar getirildi.");
     }
 
 
  @GetMapping("/getActivesByReleaseDate")
-    public DataResult<List<JobAdvertisement>> getActivesByReleaseDate(){
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc().getData(),"Aktif ilanlar getirildi.");
+    public DataResult<List<JobAdvertisement>> getActivesByReleaseDate(@RequestParam int pageNo ,@RequestParam int pageSize){
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc(pageNo,pageSize).getData(),"Aktif ilanlar getirildi.");
     }
 
 
     @GetMapping("/getActivesByEmployerAndStatus")
-    public DataResult<List<JobAdvertisement>> getActivesByEmployerAndStatus(int employerId){
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByEmployerAndJobAdvertisementStatus(employerId).getData(),"Aktif ilanlar getirildi.");
+    public DataResult<List<JobAdvertisement>> getActivesByEmployerAndStatus(@RequestParam int employerId,@RequestParam int pageNo,@RequestParam int pageSize){
+
+        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByEmployerAndJobAdvertisementStatus(employerId, pageNo,pageSize).getData(),"Aktif ilanlar getirildi.");
     }
 
     /*
@@ -72,11 +73,6 @@ public class JobAdvertisementsController {
     @PostMapping("/getByActiveAndFilteredAdvertisement")
     public Result getJobAdvertisementByFilterAndPage(@RequestParam int pageNo, @RequestParam int pageSize,@RequestBody JobAdvertisementFilter jobAdvertisementFilter){
         return _jobAdvertisementService.getByIsActiveAndPageNumber(pageNo,pageSize,jobAdvertisementFilter);
-    }
-
-    @PostMapping("/getByCustomFilter")
-    public DataResult<List<JobAdvertisement>> getByCustomFilter(@RequestParam int pageNo, @RequestParam int pageSize, @RequestBody JobAdvertisementFilter jobAdvertisementFilter){
-        return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByCity_IdOrWorkPlace_IdOrJob_IdOrJobType_Id(jobAdvertisementFilter,pageNo,pageSize).getData(),"") ;
     }
 
 /*
