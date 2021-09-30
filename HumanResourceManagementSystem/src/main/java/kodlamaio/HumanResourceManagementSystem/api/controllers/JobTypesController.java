@@ -68,8 +68,8 @@ public class JobTypesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody JobTypeDto jobTypeDto,int jobTypeId){
+    @PutMapping(value = "/update/{jobTypeId}",headers = {"content-type=application/json"})
+    public ResponseEntity<?> update(@RequestBody JobTypeDto jobTypeDto,@PathVariable("jobTypeId") int jobTypeId){
       Result result =  _jobTypeService.update(jobTypeDto,jobTypeId);
       if (result.isSuccess()){
           return ResponseEntity.ok(result);

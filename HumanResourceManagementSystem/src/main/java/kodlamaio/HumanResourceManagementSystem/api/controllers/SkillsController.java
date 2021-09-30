@@ -64,7 +64,7 @@ public class SkillsController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/update/{skillId}")
+    @PutMapping(value = "/update/{skillId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@RequestBody SkillDto skillDto,@PathVariable("cvId") int cvId, @PathVariable("skillId") int skillId){
         Result result = _skillService.update(skillDto,cvId,skillId);
         if (result.isSuccess()){

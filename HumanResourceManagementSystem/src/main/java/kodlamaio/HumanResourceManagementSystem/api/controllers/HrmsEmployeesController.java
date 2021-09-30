@@ -38,8 +38,8 @@ public class HrmsEmployeesController {
 
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody HrmsEmployeeDto hrmsEmployeeDto,int hrmsEmployeeId){
+    @PutMapping(value = "/update/{hrmsEmployeeId}",headers = {"content-type=application/json"})
+    public ResponseEntity<?> update(@RequestBody HrmsEmployeeDto hrmsEmployeeDto,@PathVariable("hrmsEmployeeId") int hrmsEmployeeId){
         Result result = _employeeService.update(hrmsEmployeeDto,hrmsEmployeeId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

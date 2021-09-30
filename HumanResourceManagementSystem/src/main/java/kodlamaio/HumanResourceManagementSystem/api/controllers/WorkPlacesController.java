@@ -54,8 +54,8 @@ return ResponseEntity.badRequest().body(result.getData());
 
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody WorkPlaceDto workPlaceDto,int workPlaceId){
+    @PutMapping("/update/{workPlaceId}")
+    public ResponseEntity<?> update(@RequestBody WorkPlaceDto workPlaceDto,@PathVariable("workPlaceId") int workPlaceId){
         Result result = _workPlaceService.update(workPlaceDto,workPlaceId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

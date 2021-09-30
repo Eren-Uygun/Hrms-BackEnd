@@ -86,7 +86,7 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public Result update(CandidateUpdateDto candidateUpdateDto,int id) {
+    public Result update(int id,CandidateUpdateDto candidateUpdateDto) {
         try{
             var tempCandidate = _candidateDao.getById(id);
             if (!_candidateDao.existsById(tempCandidate.getId())){
@@ -142,6 +142,42 @@ public class CandidateManager implements CandidateService {
             return new ErrorResult("Silme işlemi yapılamadı");
         }
 
+    }
+
+    @Override
+    public Result updateTest(Candidate candidate) {
+       try{
+           if (!_candidateDao.existsById(candidate.getId())){
+               return new ErrorResult("Kullanıcı bulunamadı.");
+           }else{
+               if (candidate.getNationalIdentityNumber().length()!=11){
+                   return new ErrorResult("11 Haneli Türkiye Cumhuriyeti Kimlik Numaranızı giriniz.");
+               } else if (!_candidateValidationService.isRealPerson(candidate.getBirthDate().getYear(),candidate.getFirstName(),candidate.getLastName(),candidate.getNationalIdentityNumber())) {
+                   return new ErrorResult("Kimlik doğrulanamadı.");
+               }else if(_userValidationService.isMailAddressExists(candidate.getEmail())){
+                   return new ErrorResult("Bu mail adresi sistemde kayıtlı.");
+               } else if(!_ruleValidationService.isMailRuleOk(candidate.getEmail())&&!_ruleValidationService.isPasswordRuleOk(candidate.getPassword())){
+                   return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
+               }else if (candidate.getFirstName().length()<=2&&candidate.getLastName().length()<=2){
+                   return new ErrorResult("Adınız ve soyadınız 2 karakterden fazla olmalıdır.");
+               }/*else if(!candidate.getPassword().equals(candidate.getPasswordRepeat())){
+                   return new ErrorResult("Şifreniz uyuşmuyor.");
+               }
+               */
+               var candidateTest = _candidateDao.getById(candidate.getId());
+               candidateTest.setFirstName(candidate.getFirstName());
+               candidateTest.setLastName(candidate.getLastName());
+               candidateTest.setEmail(candidate.getEmail());
+               candidateTest.setPassword(candidate.getPassword());
+               candidateTest.setPasswordRepeat(candidate.getPasswordRepeat());
+               candidateTest.setBirthDate(candidate.getBirthDate());
+               candidateTest.setNationalIdentityNumber(candidate.getNationalIdentityNumber());
+               _candidateDao.save(candidateTest);
+               return new SuccessResult(BusinessMessage.updateOperationSuccess);
+           }
+       }catch (Exception ex){
+           return new ErrorResult(BusinessMessage.updateOperationFailed+ex);
+       }
     }
 
     @Override

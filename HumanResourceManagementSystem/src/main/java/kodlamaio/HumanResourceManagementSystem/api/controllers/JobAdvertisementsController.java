@@ -107,7 +107,7 @@ public class JobAdvertisementsController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/update/{advertisementId}")
+    @PutMapping(value = "/update/{advertisementId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@RequestBody JobAdvertisementDto jobAdvertisementDto,@PathVariable("advertisementId") int advertisementId){
         Result result = _jobAdvertisementService.update(jobAdvertisementDto,advertisementId);
         if (result.isSuccess()){

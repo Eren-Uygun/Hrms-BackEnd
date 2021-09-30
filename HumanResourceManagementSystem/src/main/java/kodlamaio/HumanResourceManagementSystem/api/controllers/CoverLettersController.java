@@ -27,7 +27,7 @@ public class CoverLettersController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/update/{coverLetterId}")
+    @PutMapping(value = "/update/{coverLetterId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@RequestBody CoverLetterDto coverLetterDto, @PathVariable("cvId") int cvId, @PathVariable("coverLetterId") int coverLetterId){
         Result result = _covertLetterService.update(coverLetterDto,cvId,coverLetterId);
         if (result.isSuccess()){

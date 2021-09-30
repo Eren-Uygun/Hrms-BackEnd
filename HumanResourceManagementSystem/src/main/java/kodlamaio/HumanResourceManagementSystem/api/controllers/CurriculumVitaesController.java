@@ -50,7 +50,7 @@ public class CurriculumVitaesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/updateGithub")
+    @PutMapping(value = "/updateGithub",headers = {"content-type=application/json"})
     public ResponseEntity<?> updateGithub(@RequestParam String github,@RequestParam int cvId){
         Result result=this._curriculumVitaeService.updateGithub(github,cvId);
         if(result.isSuccess()){
@@ -68,7 +68,7 @@ public class CurriculumVitaesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/updateLinkedin")
+    @PutMapping(value = "/updateLinkedin",headers = {"content-type=application/json"})
     public ResponseEntity<?> updateLinkedin(@RequestParam String linkedin,@RequestParam int cvId){
         Result result=this._curriculumVitaeService.updateLinkedin(linkedin,cvId);
         if(result.isSuccess()){
@@ -86,7 +86,7 @@ public class CurriculumVitaesController {
         return ResponseEntity.badRequest().body(result);
     }
 
-    @PutMapping("/updateBiography")
+    @PutMapping(value = "/updateBiography",headers = {"content-type=application/json"})
     public ResponseEntity<?> updateBiography(@RequestParam String biography,@RequestParam int cvId){
         Result result=this._curriculumVitaeService.updateAboutMe(biography,cvId);
         if(result.isSuccess()){

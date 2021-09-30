@@ -7,13 +7,14 @@ import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/candidates")
-@CrossOrigin
 public class CandidatesController {
 
 
@@ -25,16 +26,27 @@ public class CandidatesController {
     }
 
 
-   // @PutMapping("/update/{id}/")
-    @PutMapping(value = "/update/{id}")
+    //@RequestMapping(method = RequestMethod.PUT,path = "update/{id}",)
+    @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody CandidateUpdateDto candidateUpdateDto){
-        Result  result = _candidateService.update(candidateUpdateDto,id);
+        Result  result = _candidateService.update(id,candidateUpdateDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
 
     }
+/*
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateTest(@RequestBody Candidate candidate){
+        Result result = _candidateService.updateTest(candidate);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+
+    }
+*/
 
 /*
     @CrossOrigin

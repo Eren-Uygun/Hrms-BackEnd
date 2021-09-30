@@ -34,7 +34,7 @@ public class EducationsController {
         }
     }
 
-    @PutMapping("/update/{educationId}")
+    @PutMapping(value = "/update/{educationId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@RequestBody EducationDto educationDto,@PathVariable("cvId") int cvId,@PathVariable("educationId") int educationId){
         Result result = _educationService.update(educationDto,cvId,educationId);
         if (result.isSuccess()){

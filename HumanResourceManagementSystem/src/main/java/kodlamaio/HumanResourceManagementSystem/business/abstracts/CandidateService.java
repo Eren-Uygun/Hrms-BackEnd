@@ -12,8 +12,11 @@ import java.util.List;
 
 public interface CandidateService {
     Result add(CandidateAddDto candidateAddDto);
-    Result update(CandidateUpdateDto candidateUpdateDto,int id);
+    Result update(int id,CandidateUpdateDto candidateUpdateDto);
     Result delete(int id);
+    Result updateTest(Candidate candidate);
+
+
 
     DataResult<List<Candidate>> getAll();
     DataResult<Candidate> getById(int id);

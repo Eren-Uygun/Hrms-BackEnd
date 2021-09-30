@@ -43,7 +43,7 @@ public class CitiesController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@RequestBody CityDto cityDto, @PathVariable("id") int id){
         Result result = _cityService.update(cityDto,id);
         if (result.isSuccess()){

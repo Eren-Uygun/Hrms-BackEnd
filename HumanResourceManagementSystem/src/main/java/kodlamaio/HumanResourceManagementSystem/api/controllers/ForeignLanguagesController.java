@@ -67,7 +67,7 @@ public class ForeignLanguagesController {
     }
 
 
-    @PutMapping("/update/{foreignLanguageId}")
+    @PutMapping(value = "/update/{foreignLanguageId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId") int cvId,@PathVariable("foreignLanguageId") int foreignLanguageId){
         Result result = _foreignLanguageService.update(foreignLanguageDto,cvId,foreignLanguageId);
         if (result.isSuccess()){
