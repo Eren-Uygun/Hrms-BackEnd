@@ -67,7 +67,7 @@ public class HrmsEmployeesController {
     }
     */
 
-    @GetMapping("/getall")
+    @GetMapping("/getAll")
     public DataResult<List<HrmsEmployee>> getAll(){
         return _employeeService.getAll();
     }

@@ -50,6 +50,7 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
                 employee.setBirthDate(employeeDto.getBirthDate());
                 employee.setEmail(employeeDto.getEmail());
                 employee.setPassword(employeeDto.getPassword());
+                employee.setDepartment(employeeDto.getDepartment());
                 employee.setPasswordRepeat(employeeDto.getPasswordConfirm());
                 employee.setUserStatus(UserStatus.Active);
                 _hrmsEmployeeDao.save(employee);
@@ -112,10 +113,8 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     @Override
     public DataResult<List<HrmsEmployee>> getAll() {
         try {
-
             return new SuccessDataResult<List<HrmsEmployee>>(_hrmsEmployeeDao.findAll(),"Veriler getirildi.");
         }catch (Exception ex){
-
             return new ErrorDataResult<>("Veriler getirilemedi.");
         }
     }

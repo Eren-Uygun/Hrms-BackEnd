@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Table(name = "employer_activation_by_employees")
 public class EmployerActivationByEmployee extends Activation {
 
-    @OneToOne(cascade = CascadeType.DETACH)
+    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     @JoinColumn(name = "employer_id")
     private Employer employer;
 

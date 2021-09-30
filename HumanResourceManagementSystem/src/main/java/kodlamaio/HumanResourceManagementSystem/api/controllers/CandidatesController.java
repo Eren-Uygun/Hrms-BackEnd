@@ -25,17 +25,8 @@ public class CandidatesController {
     }
 
 
-
-    @GetMapping("/getForUpdate")
-    public ResponseEntity<?> update(int id){
-        Result result = _candidateService.getById(id);
-        if (result.isSuccess()){
-            return ResponseEntity.ok(result);
-        }
-        return ResponseEntity.badRequest().body(result);
-    }
-
-    @PutMapping("/update/{id}")
+   // @PutMapping("/update/{id}/")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody CandidateUpdateDto candidateUpdateDto){
         Result  result = _candidateService.update(candidateUpdateDto,id);
         if (result.isSuccess()){
@@ -45,7 +36,20 @@ public class CandidatesController {
 
     }
 
+/*
+    @CrossOrigin
 
+    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody CandidateUpdateDto candidateUpdateDto){
+        Result  result = _candidateService.update(candidateUpdateDto,id);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().body(result);
+
+    }
+*/
+
+    @CrossOrigin
     @GetMapping("/getByNationalIdentityNumber")
     public ResponseEntity<?> findByNationalIdentityNumber(String nationalIdentityNumber){
         DataResult<Candidate> result = _candidateService.getByNationalIdentityNumber(nationalIdentityNumber);
@@ -55,6 +59,7 @@ public class CandidatesController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @CrossOrigin
     @GetMapping("/getById")
     public ResponseEntity<?> getOne(int id){
 
@@ -65,11 +70,13 @@ public class CandidatesController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @CrossOrigin
     @GetMapping("/getCandidateById")
     public DataResult<Candidate> getById(int id){
         return _candidateService.getById(id);
     }
 
+    @CrossOrigin
     @GetMapping("/getAll")
     public DataResult<List<Candidate>> getAllThem(){
         return _candidateService.getAll();
@@ -77,6 +84,7 @@ public class CandidatesController {
     }
 
 
+    @CrossOrigin
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody CandidateAddDto candidate){
 
@@ -87,6 +95,7 @@ public class CandidatesController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(int  id){
         Result result = _candidateService.delete(id);

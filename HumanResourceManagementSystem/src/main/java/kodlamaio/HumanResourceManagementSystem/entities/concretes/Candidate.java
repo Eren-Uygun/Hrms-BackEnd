@@ -46,11 +46,11 @@ public class Candidate extends User {
     private CandidateActivation candidateActivation;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate",fetch = FetchType.LAZY)
     private List<CurriculumVitae> curriculumVitaes;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "candidate")
+    @OneToMany(mappedBy = "candidate",fetch = FetchType.LAZY)
     private List<JobAdvertisementFavorite> jobAdvertisementFavorites;
 
 
