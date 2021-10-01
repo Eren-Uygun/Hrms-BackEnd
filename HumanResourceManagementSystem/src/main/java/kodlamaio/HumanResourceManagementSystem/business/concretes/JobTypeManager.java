@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobTypeService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobAdvertisementDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobTypeDao;
@@ -27,10 +28,16 @@ public class JobTypeManager implements JobTypeService {
     @Override
     public Result add(JobTypeDto jobTypeDto) {
         try{
+            if (_jobTypeDao.existsByJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()))){
+
+                return new ErrorResult("Bu çalışma tipi sistemde mevcut");
+            }else{
+
             JobType jobType = new JobType();
-            jobType.setJobType(jobTypeDto.getJobType());
+            jobType.setJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()));
            _jobTypeDao.save(jobType);
            return new SuccessResult("Ekleme işlemi başarılı");
+            }
         }catch (Exception ex){
             return new ErrorResult("Ekleme işlemi hatalı");
         }
@@ -40,9 +47,13 @@ public class JobTypeManager implements JobTypeService {
     public Result update(JobTypeDto jobTypeDto,int jobTypeId) {
         if (!_jobTypeDao.existsById(jobTypeId)){
             return new ErrorResult("Veri bulunamadı.");
-        }else {
+        }else if (_jobTypeDao.existsByJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()))){
+            return new ErrorResult("Bu çalışma tipi sistemde mevcut");
+        }
+        else {
+
             JobType tempType = _jobTypeDao.getById(jobTypeId);
-            tempType.setJobType(jobTypeDto.getJobType());
+            tempType.setJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()));
             _jobTypeDao.save(tempType);
             return new SuccessResult("Veri güncellendi.");
         }

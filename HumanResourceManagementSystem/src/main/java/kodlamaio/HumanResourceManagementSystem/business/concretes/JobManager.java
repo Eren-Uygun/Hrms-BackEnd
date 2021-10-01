@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.JobValidation;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobDao;
@@ -25,11 +26,11 @@ public class JobManager implements JobService {
     @Override
     public Result add(JobDto jobDto) {
         try{
-            if (_jobDao.existsByJobName(jobDto.getJobName())){
+            if (_jobDao.existsByJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()))){
                 return new ErrorResult("İş sistemde kayıtlı");
             }
             Job job = new Job();
-            job.setJobName(jobDto.getJobName());
+            job.setJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()));
             _jobDao.save(job);
             return new SuccessResult("Ekleme işlemi yapıldı.");
         }catch (Exception ex){
@@ -45,11 +46,11 @@ public class JobManager implements JobService {
             return new ErrorResult("İş kolu bulunamadı.");
         }
 
-        if (_jobDao.existsByJobName(jobDto.getJobName().toLowerCase(Locale.ROOT))){
+        if (_jobDao.existsByJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()))){
             return new ErrorResult("İş adı sistemde mevcut");
         }
         Job job = _jobDao.getById(jobId);
-        job.setJobName(jobDto.getJobName());
+        job.setJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()));
         _jobDao.save(job);
         return new SuccessResult("Güncelleme işlemi yapıldı.");
     }

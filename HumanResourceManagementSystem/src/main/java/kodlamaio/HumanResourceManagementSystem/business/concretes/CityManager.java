@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CityService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CityDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.City;
@@ -24,7 +25,7 @@ public class CityManager implements CityService {
     @Override
     public Result add(CityDto cityDto) {
         try{
-            if (_cityDao.existsCityByCityName(cityDto.getCityName()))
+            if (_cityDao.existsCityByCityName(TextEditOperation.makeAllWordsCapitalLetter(cityDto.getCityName())))
             {
                 return new ErrorResult("Sistemde kayıtlı bilgi girdiniz.");
             }
@@ -33,7 +34,10 @@ public class CityManager implements CityService {
                     return new ErrorResult("Şehir adı 2 karaterden fazla olmalıdır.");
                 }
                 City city = new City();
-                city.setCityName(cityDto.getCityName());
+
+
+                city.setCityName(TextEditOperation.makeAllWordsCapitalLetter(cityDto.getCityName()));
+
                 _cityDao.save(city);
                 return new SuccessResult("Şehir eklendi. işlemi yapıldı");
             }
@@ -50,10 +54,11 @@ public class CityManager implements CityService {
             if (!_cityDao.existsById(tempCity.getId())){
                 return new ErrorResult("Veri bulunamadı.");
             }else{
-                if (_cityDao.existsCityByCityName(cityDto.getCityName().toLowerCase(Locale.ROOT))){
+                if (_cityDao.existsCityByCityName(TextEditOperation.makeAllWordsCapitalLetter(cityDto.getCityName()))){
                     return new ErrorResult("Bu şehir zaten mevcut");
                 }
-                tempCity.setCityName(cityDto.getCityName());
+
+                tempCity.setCityName(TextEditOperation.makeAllWordsCapitalLetter(cityDto.getCityName()));
                 _cityDao.save(tempCity);
                 return new SuccessResult("Veri güncellendi.");
             }
@@ -95,4 +100,5 @@ public class CityManager implements CityService {
             return new  ErrorDataResult<>("Veri getirme hatası");
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.SkillService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.SkillDao;
@@ -37,7 +38,7 @@ public class SkillManager implements SkillService {
 
            Skill skill = new Skill();
            skill.setCurriculumVitae(_cvDao.getById(cvId));
-           skill.setSkillName(skillDto.getSkillName());
+           skill.setSkillName(TextEditOperation.makeAllWordsCapitalLetter(skillDto.getSkillName()));
            skill.setSkillRate(skillDto.getSkillRate());
 
            _skillDao.save(skill);
@@ -60,7 +61,7 @@ public class SkillManager implements SkillService {
         }
         Skill skill = _skillDao.getById(skillId);
         skill.setCurriculumVitae(_cvDao.getById(cvId));
-        skill.setSkillName(skillDto.getSkillName());
+        skill.setSkillName(TextEditOperation.makeAllWordsCapitalLetter(skillDto.getSkillName()));
         skill.setSkillRate(skillDto.getSkillRate());
         _skillDao.save(skill);
         return new SuccessResult("Yetenek güncellendi.");

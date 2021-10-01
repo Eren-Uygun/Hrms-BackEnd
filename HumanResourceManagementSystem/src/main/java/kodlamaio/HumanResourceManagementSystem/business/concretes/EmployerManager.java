@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.EmployerServic
 import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.emailSender.abstracts.EmailSenderService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
@@ -60,7 +61,7 @@ public class EmployerManager implements EmployerService {
                 return new ErrorResult("Websiteniz ve email domaininiz aynı olmalıdır.");
             }else{
                 Employer employer = new Employer();
-                employer.setCompanyName(employerAddDto.getCompanyName());
+                employer.setCompanyName(TextEditOperation.makeAllWordsCapitalLetter(employerAddDto.getCompanyName()));
                 employer.setWebsite(employerAddDto.getWebsite());
                 employer.setPhoneNumber(employerAddDto.getPhoneNumber());
                 employer.setEmail(employerAddDto.getEmail());
@@ -120,7 +121,7 @@ public class EmployerManager implements EmployerService {
 */
                 EmployerUpdate employerUpdate = new EmployerUpdate();
                 employerUpdate.setEmployerId(employerId);
-                employerUpdate.setCompanyName(employerAddDto.getCompanyName());
+                employerUpdate.setCompanyName(TextEditOperation.makeAllWordsCapitalLetter(employerAddDto.getCompanyName()));
                 employerUpdate.setWebsite(employerAddDto.getWebsite());
                 employerUpdate.setPhoneNumber(employerAddDto.getPhoneNumber());
                 tempEmployer.setUserStatus(UserStatus.WaitingUpdateConfirmation);

@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.EducationService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EducationDao;
@@ -39,8 +40,8 @@ public class EducationManager implements EducationService {
 
             Education edu = new Education();
             edu.setCurriculumVitae(_curriculumVitaeDao.getById(cvId));
-            edu.setSchoolName(educationDto.getSchoolName());
-            edu.setDepartmentName(educationDto.getDepartmentName());
+            edu.setSchoolName(TextEditOperation.makeCapitalLetter(educationDto.getSchoolName()));
+            edu.setDepartmentName(TextEditOperation.makeCapitalLetter(educationDto.getDepartmentName()));
             edu.setStartingDate(educationDto.getStartingDate());
             edu.setGraduateDate(educationDto.getGraduateDate());
 
@@ -71,8 +72,8 @@ public class EducationManager implements EducationService {
         }
 
         Education education = _educationDao.getById(educationId);
-        education.setSchoolName(educationDto.getSchoolName());
-        education.setDepartmentName(educationDto.getDepartmentName());
+        education.setSchoolName(TextEditOperation.makeAllWordsCapitalLetter(educationDto.getSchoolName()));
+        education.setDepartmentName(TextEditOperation.makeAllWordsCapitalLetter(educationDto.getDepartmentName()));
         education.setStartingDate(educationDto.getStartingDate());
         education.setGraduateDate(educationDto.getGraduateDate());
 

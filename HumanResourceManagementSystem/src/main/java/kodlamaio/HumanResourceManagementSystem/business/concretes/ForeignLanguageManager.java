@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.ForeignLanguageService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.ForeignLanguageDao;
@@ -36,7 +37,7 @@ public class ForeignLanguageManager implements ForeignLanguageService {
             }
             ForeignLanguage foreignLanguage = new ForeignLanguage();
             foreignLanguage.setCurriculumVitae(_cvDao.getById(cvId));
-            foreignLanguage.setLanguageName(foreignLanguageDto.getLanguageName());
+            foreignLanguage.setLanguageName(TextEditOperation.makeAllWordsCapitalLetter(foreignLanguageDto.getLanguageName()));
             foreignLanguage.setLanguageLevel(foreignLanguageDto.getLanguageLevel());
             _foreignLanguageDao.save(foreignLanguage);
             return new SuccessResult("Yabancı dil eklendi.");
@@ -76,7 +77,7 @@ public class ForeignLanguageManager implements ForeignLanguageService {
                 return new ErrorResult("Seviyeniz 1-5 arasında olmalıdır.");
             }
             ForeignLanguage foreignLanguage = _foreignLanguageDao.getById(foreignLanguageId);
-            foreignLanguage.setLanguageName(foreignLanguageDto.getLanguageName());
+            foreignLanguage.setLanguageName(TextEditOperation.makeAllWordsCapitalLetter(foreignLanguageDto.getLanguageName()));
             foreignLanguage.setLanguageLevel(foreignLanguageDto.getLanguageLevel());
             _foreignLanguageDao.save(foreignLanguage);
             return new SuccessResult("Yabancı dil güncellendi.");

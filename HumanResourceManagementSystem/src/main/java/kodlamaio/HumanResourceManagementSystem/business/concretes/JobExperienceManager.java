@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.JobExperienceService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CurriculumVitaeDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobExperienceDao;
@@ -42,8 +43,8 @@ public class JobExperienceManager implements JobExperienceService {
             }
             JobExperience jobExperience = new JobExperience();
             jobExperience.setCurriculumVitae(_cvDao.getById(cvId));
-            jobExperience.setCompanyName(jobExperienceDto.getCompanyName());
-            jobExperience.setPositionName(jobExperienceDto.getPositionName());
+            jobExperience.setCompanyName(TextEditOperation.makeAllWordsCapitalLetter(jobExperienceDto.getCompanyName()));
+            jobExperience.setPositionName(TextEditOperation.makeAllWordsCapitalLetter(jobExperienceDto.getPositionName()));
             jobExperience.setStartDate(jobExperienceDto.getStartDate());
             if (jobExperienceDto.getEndDate() != null){
                 jobExperience.setEndDate(jobExperienceDto.getEndDate());

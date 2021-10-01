@@ -23,19 +23,13 @@ public class JobsController {
         this._jobService = jobService;
     }
 
-/*
-    public ResponseEntity<?> add(@RequestBody Job job){
-        Result result=this._jobService.add(job);
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestBody JobDto jobDto){
+        Result result=this._jobService.add(jobDto);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.badRequest().body(result);
-    }
-    */
-    @PostMapping("/add")
-    public Result add(@RequestBody JobDto jobDto){
-
-return _jobService.add(jobDto);
     }
 
 

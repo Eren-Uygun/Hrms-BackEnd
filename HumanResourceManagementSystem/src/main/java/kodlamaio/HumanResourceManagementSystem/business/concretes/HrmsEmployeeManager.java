@@ -2,6 +2,7 @@ package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.HrmsEmployeeService;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.RuleValidationService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.UserValidationService;
@@ -45,12 +46,12 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
             }
             else{
                 HrmsEmployee employee = new HrmsEmployee();
-                employee.setFirstName(employeeDto.getFirstName());
-                employee.setLastName(employeeDto.getLastName());
+                employee.setFirstName(TextEditOperation.makeAllWordsCapitalLetter(employeeDto.getFirstName()));
+                employee.setLastName(TextEditOperation.makeAllWordsCapitalLetter(employeeDto.getLastName()));
                 employee.setBirthDate(employeeDto.getBirthDate());
                 employee.setEmail(employeeDto.getEmail());
                 employee.setPassword(employeeDto.getPassword());
-                employee.setDepartment(employeeDto.getDepartment());
+                employee.setDepartment(TextEditOperation.makeAllWordsCapitalLetter(employeeDto.getDepartment()));
                 employee.setPasswordRepeat(employeeDto.getPasswordConfirm());
                 employee.setUserStatus(UserStatus.Active);
                 _hrmsEmployeeDao.save(employee);
@@ -80,9 +81,9 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
                 temp.setEmail(employeeDto.getEmail());
                 temp.setPassword(employeeDto.getPassword());
                 temp.setPasswordRepeat(employeeDto.getPasswordConfirm());
-                temp.setFirstName(employeeDto.getFirstName());
-                temp.setLastName(employeeDto.getLastName());
-                temp.setDepartment(employeeDto.getDepartment());
+                temp.setFirstName(TextEditOperation.makeAllWordsCapitalLetter(employeeDto.getFirstName()));
+                temp.setLastName(TextEditOperation.makeAllWordsCapitalLetter(employeeDto.getLastName()));
+                temp.setDepartment(TextEditOperation.makeAllWordsCapitalLetter(employeeDto.getDepartment()));
                 temp.setBirthDate(employeeDto.getBirthDate());
                 temp.setUserStatus(UserStatus.Active);
                 _hrmsEmployeeDao.save(temp);

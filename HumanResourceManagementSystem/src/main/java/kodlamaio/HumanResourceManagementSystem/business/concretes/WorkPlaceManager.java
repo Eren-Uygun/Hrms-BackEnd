@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.WorkPlaceService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.WorkPlaceDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.WorkPlace;
@@ -23,8 +24,11 @@ public class WorkPlaceManager implements WorkPlaceService {
 
     @Override
     public Result add(WorkPlaceDto workPlaceDto) {
+        if (_workPlaceDao.existsByWorkPlace(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()))){
+            return new ErrorResult("Çalışma yeri sistemde mevcut");
+        }
         WorkPlace workPlace = new WorkPlace();
-        workPlace.setWorkPlace(workPlaceDto.getWorkPlace());
+        workPlace.setWorkPlace(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()));
         _workPlaceDao.save(workPlace);
         return new SuccessResult("Veri eklendi");
     }
@@ -37,7 +41,7 @@ public class WorkPlaceManager implements WorkPlaceService {
 
         }else {
            WorkPlace workPlace = _workPlaceDao.getById(workPlaceId);
-            workPlace.setWorkPlace(workPlace.getWorkPlace());
+            workPlace.setWorkPlace(TextEditOperation.makeAllWordsCapitalLetter(workPlace.getWorkPlace()));
             _workPlaceDao.save(workPlace);
             return new SuccessResult("Veri güncellendi.");
         }

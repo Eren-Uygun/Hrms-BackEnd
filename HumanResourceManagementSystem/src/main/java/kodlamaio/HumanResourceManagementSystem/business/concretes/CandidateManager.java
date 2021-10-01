@@ -4,6 +4,7 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.CandidateServi
 import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
+import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.activationUtils.ActivationNumberGenerator;
 import kodlamaio.HumanResourceManagementSystem.core.utils.emailSender.abstracts.EmailSenderService;
 import kodlamaio.HumanResourceManagementSystem.core.utils.mernisPersonValidations.abstracts.CandidateValidationService;
@@ -60,8 +61,8 @@ public class CandidateManager implements CandidateService {
            }
             else {
                 Candidate candidate = new Candidate();
-                candidate.setFirstName(candidateAddDto.getFirstName());
-                candidate.setLastName(candidateAddDto.getLastName());
+                candidate.setFirstName(TextEditOperation.makeAllWordsCapitalLetter(candidateAddDto.getFirstName()));
+                candidate.setLastName(TextEditOperation.makeAllWordsCapitalLetter(candidateAddDto.getLastName()));
                 candidate.setBirthDate(candidateAddDto.getBirthDate());
                 candidate.setNationalIdentityNumber(candidateAddDto.getNationalIdentityNumber());
                 candidate.setEmail(candidateAddDto.getEmail());
@@ -110,8 +111,8 @@ public class CandidateManager implements CandidateService {
                 tempCandidate.setEmail(candidateUpdateDto.getEmail());
                 tempCandidate.setPassword(candidateUpdateDto.getPassword());
                 tempCandidate.setPasswordRepeat(candidateUpdateDto.getPasswordConfirm());
-                tempCandidate.setFirstName(candidateUpdateDto.getFirstName());
-                tempCandidate.setLastName(candidateUpdateDto.getLastName());
+                tempCandidate.setFirstName(TextEditOperation.makeCapitalLetter(candidateUpdateDto.getFirstName()));
+                tempCandidate.setLastName(TextEditOperation.makeCapitalLetter(candidateUpdateDto.getLastName()));
                 tempCandidate.setBirthDate(candidateUpdateDto.getBirthDate());
                 tempCandidate.setNationalIdentityNumber(candidateUpdateDto.getNationalIdentityNumber());
                 _candidateDao.save(tempCandidate);
@@ -129,7 +130,7 @@ public class CandidateManager implements CandidateService {
             var temp = _candidateDao.getById(id);
 
             //Tc kimlik benzersiz ve girilmek zorunda olduğu için daima kayıtlı olmak zorunda veri silirken kontrol amacıyla kullanılabilir.
-            if (temp.getNationalIdentityNumber() != null)
+            if (_candidateDao.existsById(temp.getId()))
             {
                 _candidateDao.delete(temp);
                 return new SuccessResult("Silme işlemi yapıldı.");
