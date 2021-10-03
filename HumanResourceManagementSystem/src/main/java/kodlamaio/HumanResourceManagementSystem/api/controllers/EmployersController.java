@@ -53,7 +53,7 @@ public class EmployersController {
         return ResponseEntity.badRequest().body(result.getData());
     }
 */
-    @GetMapping("/getall")
+    @GetMapping("/getAll")
     public DataResult<List<Employer>> getAll(){
         return _employerService.getAll();
     }

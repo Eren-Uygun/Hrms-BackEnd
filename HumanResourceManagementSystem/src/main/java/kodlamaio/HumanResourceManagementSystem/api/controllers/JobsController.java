@@ -34,7 +34,7 @@ public class JobsController {
 
 
     @PutMapping(value = "/update/{jobId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(JobDto jobDto,@PathVariable("jobId") int jobId){
+    public ResponseEntity<?> update(@RequestBody JobDto jobDto,@PathVariable("jobId") int jobId){
        Result result = _jobService.update(jobDto,jobId);
        if (result.isSuccess()){
            return ResponseEntity.ok(result);

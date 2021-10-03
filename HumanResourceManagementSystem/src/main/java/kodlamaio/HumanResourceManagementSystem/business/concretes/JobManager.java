@@ -28,6 +28,8 @@ public class JobManager implements JobService {
         try{
             if (_jobDao.existsByJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()))){
                 return new ErrorResult("İş sistemde kayıtlı");
+            }else if(jobDto.getJobName().length()<2){
+                return new ErrorResult("İş adı boş olamaz.");
             }
             Job job = new Job();
             job.setJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()));
@@ -81,7 +83,7 @@ public class JobManager implements JobService {
     @Override
     public DataResult<Job> getById(int id) {
         try{
-            return new SuccessDataResult<Job>(_jobDao.getById(id),"Veri getirildi.");
+            return new SuccessDataResult<Job>(_jobDao.findById(id).get(),"Veri getirildi.");
         }catch (Exception ex){
             return new ErrorDataResult<>("Veri getirme hatası");
         }

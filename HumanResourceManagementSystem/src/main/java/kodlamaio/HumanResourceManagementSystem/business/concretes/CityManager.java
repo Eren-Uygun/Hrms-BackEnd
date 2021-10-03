@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CityService;
+import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CityDao;
@@ -39,11 +40,11 @@ public class CityManager implements CityService {
                 city.setCityName(TextEditOperation.makeAllWordsCapitalLetter(cityDto.getCityName()));
 
                 _cityDao.save(city);
-                return new SuccessResult("Şehir eklendi. işlemi yapıldı");
+                return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 
         }catch (Exception ex) {
-            return new ErrorResult("Kayıt işleminde hata mevcut");
+            return new ErrorResult(BusinessMessage.addOperationFailed+ex);
         }
     }
 
@@ -95,7 +96,7 @@ public class CityManager implements CityService {
     @Override
     public DataResult<City> getOne(int id) {
         try{
-            return new SuccessDataResult<City>(_cityDao.getById(id),"Veri getirildi.");
+            return new SuccessDataResult<City>(_cityDao.findById(id).get(),"Veri getirildi.");
         }catch (Exception ex) {
             return new  ErrorDataResult<>("Veri getirme hatası");
         }
