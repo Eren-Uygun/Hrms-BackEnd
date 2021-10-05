@@ -86,7 +86,7 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public Result update(EmployerAddDto employerAddDto,int employerId) {
+    public Result update(int employerId,EmployerAddDto employerAddDto) {
         try{
             if (!_employerDao.existsById(employerId)) {
                 return new ErrorResult("İş veren bulunamadı.");
@@ -127,9 +127,6 @@ public class EmployerManager implements EmployerService {
                 tempEmployer.setUserStatus(UserStatus.WaitingUpdateConfirmation);
                 _employerUpdateDao.save(employerUpdate);
                 _employerDao.save(tempEmployer);
-
-
-
                 return new SuccessResult(BusinessMessage.updateOperationSuccess);
             }
         }catch (Exception ex){

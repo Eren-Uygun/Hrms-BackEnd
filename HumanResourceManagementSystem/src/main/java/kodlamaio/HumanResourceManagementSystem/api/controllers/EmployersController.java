@@ -69,7 +69,7 @@ public class EmployersController {
 
     @PutMapping(value = "/update/{employerId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update( @RequestBody EmployerAddDto employerAddDto,@PathVariable("employerId") int employerId){
-        Result result=_employerService.update(employerAddDto,employerId);
+        Result result=_employerService.update(employerId,employerAddDto);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }

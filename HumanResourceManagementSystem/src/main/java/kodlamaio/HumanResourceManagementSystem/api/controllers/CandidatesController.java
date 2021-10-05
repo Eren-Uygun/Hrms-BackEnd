@@ -36,30 +36,6 @@ public class CandidatesController {
         return ResponseEntity.badRequest().body(result);
 
     }
-/*
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateTest(@RequestBody Candidate candidate){
-        Result result = _candidateService.updateTest(candidate);
-        if (result.isSuccess()){
-            return ResponseEntity.ok(result);
-        }
-        return ResponseEntity.badRequest().body(result);
-
-    }
-*/
-
-/*
-    @CrossOrigin
-
-    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody CandidateUpdateDto candidateUpdateDto){
-        Result  result = _candidateService.update(candidateUpdateDto,id);
-        if (result.isSuccess()){
-            return ResponseEntity.ok(result);
-        }
-        return ResponseEntity.badRequest().body(result);
-
-    }
-*/
 
     @CrossOrigin
     @GetMapping("/getByNationalIdentityNumber")

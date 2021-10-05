@@ -38,9 +38,9 @@ public class HrmsEmployeesController {
 
     }
 
-    @PutMapping(value = "/update/{hrmsEmployeeId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody HrmsEmployeeDto hrmsEmployeeDto,@PathVariable("hrmsEmployeeId") int hrmsEmployeeId){
-        Result result = _employeeService.update(hrmsEmployeeDto,hrmsEmployeeId);
+    @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
+    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody HrmsEmployeeDto hrmsEmployeeDto){
+        Result result = _employeeService.update(id,hrmsEmployeeDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -49,8 +49,8 @@ public class HrmsEmployeesController {
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<?> getById(int employerId){
-        Result result= _employeeService.getById(employerId);
+    public ResponseEntity<?> getById(int id){
+        Result result= _employeeService.getById(id);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
         }
@@ -73,8 +73,8 @@ public class HrmsEmployeesController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int hrmsEmployeeId) {
-        Result result = _employeeService.delete(hrmsEmployeeId);
+    public ResponseEntity<?> delete(int id) {
+        Result result = _employeeService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
         }

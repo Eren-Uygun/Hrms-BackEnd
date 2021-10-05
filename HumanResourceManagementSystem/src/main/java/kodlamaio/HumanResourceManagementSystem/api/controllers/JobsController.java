@@ -16,7 +16,7 @@ import java.util.List;
 @CrossOrigin
 public class JobsController {
 
-    private JobService _jobService;
+    private final JobService _jobService;
 
     @Autowired
     public JobsController(JobService jobService) {
@@ -33,17 +33,17 @@ public class JobsController {
     }
 
 
-    @PutMapping(value = "/update/{jobId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody JobDto jobDto,@PathVariable("jobId") int jobId){
-       Result result = _jobService.update(jobDto,jobId);
+    @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
+    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody JobDto jobDto){
+       Result result = _jobService.update(id,jobDto);
        if (result.isSuccess()){
            return ResponseEntity.ok(result);
        }
        return ResponseEntity.badRequest().body(result);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") int id){
         Result result = this._jobService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -53,12 +53,13 @@ public class JobsController {
 
 
     @GetMapping("/getOne")
-    public ResponseEntity<Job> getOne(int id){
+    public ResponseEntity<?> getOne(int id){
         DataResult<Job> result = _jobService.getById(id);
+
         if (result.isSuccess()){
-            return ResponseEntity.ok(result.getData());
+            return ResponseEntity.ok(result);
         }
-        return ResponseEntity.badRequest().body(result.getData());
+        return ResponseEntity.badRequest().body(result);
     }
 
     /*

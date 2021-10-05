@@ -44,7 +44,7 @@ public class CitiesController {
     }
 
     @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody CityDto cityDto, @PathVariable("id") int id){
+    public ResponseEntity<?> update( @PathVariable("id") int id,@RequestBody CityDto cityDto){
         Result result = _cityService.update(cityDto,id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

@@ -64,10 +64,10 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     }
 
     @Override
-    public Result update(HrmsEmployeeDto employeeDto,int hrmsEmployeeId) {
+    public Result update(int id,HrmsEmployeeDto employeeDto) {
         try{
 
-            if (!_hrmsEmployeeDao.existsById(hrmsEmployeeId)){
+            if (!_hrmsEmployeeDao.existsById(id)){
                 return new ErrorResult("Kullanıcı sistemde mevcut değil");
             } else if(employeeDto.getFirstName().length()<2||employeeDto.getLastName().length()<2){
                 return new ErrorResult("Adınız ve soyadınız 2 karakterden fazla olmalıdır.");
@@ -77,7 +77,7 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
                 return new ErrorResult("Girdiğiniz şifreler uyuşmuyor.");
             }
             else{
-                HrmsEmployee temp = _hrmsEmployeeDao.getById(hrmsEmployeeId);
+                HrmsEmployee temp = _hrmsEmployeeDao.getById(id);
                 temp.setEmail(employeeDto.getEmail());
                 temp.setPassword(employeeDto.getPassword());
                 temp.setPasswordRepeat(employeeDto.getPasswordConfirm());

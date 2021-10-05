@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface JobService {
     Result add(JobDto jobDto);
-    Result update(JobDto jobDto,int jobId);
+    Result update(int id,JobDto jobDto);
     Result delete(int id);
 
     DataResult<List<Job>> getAll();

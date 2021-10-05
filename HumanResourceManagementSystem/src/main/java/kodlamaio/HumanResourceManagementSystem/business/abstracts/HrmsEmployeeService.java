@@ -10,7 +10,7 @@ import java.util.List;
 public interface HrmsEmployeeService {
 
     Result add(HrmsEmployeeDto employeeDto);
-    Result update(HrmsEmployeeDto employeeDto,int hrmsEmployeeId);
+    Result update(int id,HrmsEmployeeDto employeeDto);
     Result delete(int id);
 
     DataResult<List<HrmsEmployee>> getAll();

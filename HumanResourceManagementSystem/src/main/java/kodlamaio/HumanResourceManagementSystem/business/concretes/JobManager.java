@@ -43,15 +43,15 @@ public class JobManager implements JobService {
     }
 
     @Override
-    public Result update(JobDto jobDto,int jobId) {
-        if (!_jobDao.existsById(jobId)){
+    public Result update(int id,JobDto jobDto) {
+        if (!_jobDao.existsById(id)){
             return new ErrorResult("İş kolu bulunamadı.");
         }
 
         if (_jobDao.existsByJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()))){
             return new ErrorResult("İş adı sistemde mevcut");
         }
-        Job job = _jobDao.getById(jobId);
+        Job job = _jobDao.findById(id).get();
         job.setJobName(TextEditOperation.makeAllWordsCapitalLetter(jobDto.getJobName()));
         _jobDao.save(job);
         return new SuccessResult("Güncelleme işlemi yapıldı.");
