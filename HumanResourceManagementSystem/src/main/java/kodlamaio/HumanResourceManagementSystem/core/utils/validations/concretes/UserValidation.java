@@ -22,7 +22,7 @@ public class UserValidation implements UserValidationService {
 
 
     @Override
-    public boolean isUserExists(int id) {
+    public boolean isUserExists(Long id) {
             if (_userDao.findById(id).isEmpty()){
                 return true;
             }

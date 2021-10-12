@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDao extends JpaRepository<User, Integer> {
+public interface UserDao extends JpaRepository<User, Long> {
 
     User findUserByEmailEquals(String email);
-
+    User findByEmail(String email);
     boolean existsByEmailEqualsAndPasswordEquals(String email,String password);
+    boolean existsByEmail(String email);
 }

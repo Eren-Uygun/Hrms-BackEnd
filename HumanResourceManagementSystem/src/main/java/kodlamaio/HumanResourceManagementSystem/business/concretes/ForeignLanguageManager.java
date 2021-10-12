@@ -26,7 +26,7 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public Result add(ForeignLanguageDto foreignLanguageDto,int cvId) {
+    public Result add(ForeignLanguageDto foreignLanguageDto,Long cvId) {
         try{
             if (!_cvDao.existsById(cvId)){
                 return new ErrorResult("Cv mevcut değil");
@@ -48,7 +48,7 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public Result delete(int id,int cvId) {
+    public Result delete(Long id,Long cvId) {
         try{
             if (!_cvDao.existsById(cvId)){
                 return new ErrorResult("Cv bulunamadı.");
@@ -67,7 +67,7 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public Result update(ForeignLanguageDto foreignLanguageDto, int cvId, int foreignLanguageId) {
+    public Result update(ForeignLanguageDto foreignLanguageDto, Long cvId, Long foreignLanguageId) {
         try{
             if (!_cvDao.existsById(cvId)){
                 return new ErrorResult("Cv mevcut değil");
@@ -89,7 +89,7 @@ public class ForeignLanguageManager implements ForeignLanguageService {
     }
 
     @Override
-    public DataResult<ForeignLanguage> getOne(int id) {
+    public DataResult<ForeignLanguage> getOne(Long id) {
        try{
            return new SuccessDataResult<ForeignLanguage>(_foreignLanguageDao.getById(id),"Veri getirildi.");
        }catch (Exception ex){

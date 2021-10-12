@@ -25,7 +25,7 @@ public class CoverLetterManager implements CovertLetterService {
     }
 
     @Override
-    public Result add(CoverLetterDto coverLetterDto,int cvId) {
+    public Result add(CoverLetterDto coverLetterDto,Long cvId) {
         try {
             if (!_cvDao.existsById(cvId)) {
                 return new ErrorResult("Cv bulunamadı.");
@@ -47,7 +47,7 @@ public class CoverLetterManager implements CovertLetterService {
 
 
     @Override
-    public Result delete(int cvId,int coverLetterId) {
+    public Result delete(Long cvId,Long coverLetterId) {
 
         if (!_cvDao.existsById(cvId)) {
             return new ErrorResult("Veri bulunamadı.");
@@ -61,7 +61,7 @@ public class CoverLetterManager implements CovertLetterService {
     }
 
     @Override
-    public Result update(CoverLetterDto coverLetterDto, int cvId,int coverLetterId) {
+    public Result update(CoverLetterDto coverLetterDto, Long cvId,Long coverLetterId) {
         try{
             if (!_cvDao.existsById(cvId)){
                 return new ErrorResult("Cv bulunamadı.");
@@ -80,7 +80,7 @@ public class CoverLetterManager implements CovertLetterService {
     }
 
     @Override
-    public DataResult<List<CoverLetter>> getAll(int cvId) {
+    public DataResult<List<CoverLetter>> getAll(Long cvId) {
         try {
             return new SuccessDataResult<List<CoverLetter>>(_coverLetterDao.getCoverLettersByCurriculumVitae_Id(cvId), "Veriler getirildi.");
         } catch (Exception ex) {
@@ -89,7 +89,7 @@ public class CoverLetterManager implements CovertLetterService {
     }
 
     @Override
-    public DataResult<CoverLetter> getOne(int id) {
+    public DataResult<CoverLetter> getOne(Long id) {
         try {
 
             return new SuccessDataResult<CoverLetter>(_coverLetterDao.getById(id), "Veri getirildi.");

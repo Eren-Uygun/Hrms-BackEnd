@@ -19,7 +19,7 @@ public class CoverLettersController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody CoverLetterDto coverLetterDto,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> add(@RequestBody CoverLetterDto coverLetterDto,@PathVariable("cvId") Long cvId){
         Result result = _covertLetterService.add(coverLetterDto,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -28,7 +28,7 @@ public class CoverLettersController {
     }
 
     @PutMapping(value = "/update/{coverLetterId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody CoverLetterDto coverLetterDto, @PathVariable("cvId") int cvId, @PathVariable("coverLetterId") int coverLetterId){
+    public ResponseEntity<?> update(@RequestBody CoverLetterDto coverLetterDto, @PathVariable("cvId") Long cvId, @PathVariable("coverLetterId") Long coverLetterId){
         Result result = _covertLetterService.update(coverLetterDto,cvId,coverLetterId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -38,7 +38,7 @@ public class CoverLettersController {
     }
 
     @DeleteMapping("/delete/{coverLetterId}")
-    public ResponseEntity<?> delete(@PathVariable("cvId") int cvId,@PathVariable("coverLetterId") int coverLetterId){
+    public ResponseEntity<?> delete(@PathVariable("cvId") Long cvId,@PathVariable("coverLetterId") Long coverLetterId){
         Result result = _covertLetterService.delete(cvId,coverLetterId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

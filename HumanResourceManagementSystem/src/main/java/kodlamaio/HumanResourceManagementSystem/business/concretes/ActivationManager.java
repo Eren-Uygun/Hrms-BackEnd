@@ -63,7 +63,7 @@ public class ActivationManager implements ActivationService {
     }
 
     @Override
-    public Result manualEmployerActivation(int employerId, int employeeId) {
+    public Result manualEmployerActivation(Long employerId, Long employeeId) {
         try{
             var employerActivation = _employerDao.getById(employerId);
             var employee = _hrmsEmployeeDao.getById(employeeId);
@@ -120,7 +120,7 @@ public class ActivationManager implements ActivationService {
     }
 
     @Override
-    public Result jobAdvertisementActivation(int employeeId, int jobAdvertisementId) {
+    public Result jobAdvertisementActivation(Long employeeId, Long jobAdvertisementId) {
        try{
            if (!_hrmsEmployeeDao.existsById(employeeId)){
                return new ErrorResult("Personel bulunamadı.");
@@ -144,7 +144,7 @@ public class ActivationManager implements ActivationService {
     }
 
     @Override
-    public Result employerUpdateConfirmation(int employeeId, int employerId) {
+    public Result employerUpdateConfirmation(Long employeeId, Long employerId) {
         if (!_employerUpdateDao.existsByEmployerId(employerId)){
             return new ErrorResult("Güncellenecek firma bulunamadı.");
         }else if (!_hrmsEmployeeDao.existsById(employeeId)){

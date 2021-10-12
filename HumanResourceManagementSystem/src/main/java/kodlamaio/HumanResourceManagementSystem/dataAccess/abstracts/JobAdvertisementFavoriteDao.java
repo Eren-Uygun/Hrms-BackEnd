@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface JobAdvertisementFavoriteDao extends JpaRepository<JobAdvertisementFavorite,Integer> {
-    boolean existsByCandidate_IdAndJobAdvertisement_Id(int candidateId,int jobAdvertisementId);
+public interface JobAdvertisementFavoriteDao extends JpaRepository<JobAdvertisementFavorite,Long> {
+    boolean existsByCandidate_IdAndJobAdvertisement_Id(Long candidateId,Long jobAdvertisementId);
 
-    List<JobAdvertisementFavorite> findByCandidate_Id(int candidateId);
+    List<JobAdvertisementFavorite> findByCandidate_Id(Long candidateId);
 }

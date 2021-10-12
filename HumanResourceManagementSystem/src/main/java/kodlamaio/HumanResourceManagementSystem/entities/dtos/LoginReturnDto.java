@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginReturnDto {
-    private int id;
+    private Long id;
     private String email;
     private String password;
     //User type planlaması için bekliyor.

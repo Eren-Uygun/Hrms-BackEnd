@@ -43,7 +43,7 @@ public class JobManager implements JobService {
     }
 
     @Override
-    public Result update(int id,JobDto jobDto) {
+    public Result update(Long id,JobDto jobDto) {
         if (!_jobDao.existsById(id)){
             return new ErrorResult("İş kolu bulunamadı.");
         }
@@ -58,7 +58,7 @@ public class JobManager implements JobService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
        try{
            if (!_jobDao.existsById(id)){
                return new ErrorResult("İş kolu bulunamadı.");
@@ -81,7 +81,7 @@ public class JobManager implements JobService {
     }
 
     @Override
-    public DataResult<Job> getById(int id) {
+    public DataResult<Job> getById(Long id) {
         try{
             return new SuccessDataResult<Job>(_jobDao.findById(id).get(),"Veri getirildi.");
         }catch (Exception ex){

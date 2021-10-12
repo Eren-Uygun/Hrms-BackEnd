@@ -13,16 +13,15 @@ import javax.persistence.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","jobAdvertisement"})
-@EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","jobAdvertisement","hrmsEmployee"})
 @Table(name = "job_advertisements_activation_by_hrmsemployees")
 public class JobAdvertisementActivationByEmployee extends JobAdvertisementActivation {
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "hrms_employee_id")
     private HrmsEmployee hrmsEmployee;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name = "job_advertisement_id")
     private JobAdvertisement jobAdvertisement;
 }

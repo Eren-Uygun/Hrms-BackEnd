@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/jobAdvertisements")
 public class JobAdvertisementsController {
@@ -27,7 +28,7 @@ public class JobAdvertisementsController {
     }
 
     @GetMapping("/getOne")
-    public ResponseEntity<?> getOne(int id){
+    public ResponseEntity<?> getOne(Long id){
         DataResult<?> result = _jobAdvertisementService.getOne(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -36,18 +37,26 @@ public class JobAdvertisementsController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<?>> getAll(){
-        DataResult<List<JobAdvertisement>> result = _jobAdvertisementService.getAll();
-        if (result.isSuccess()){
-            return ResponseEntity.ok(result.getData());
-        }
-        return ResponseEntity.badRequest().body(result.getData());
+    public DataResult<List<JobAdvertisement>> getAll(){
+      return _jobAdvertisementService.getAll();
     }
 
 
     @GetMapping("/getActives")
     public DataResult<List<JobAdvertisement>> getActives(@RequestParam int pageNo, @RequestParam int pageSize){
         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByJobAdvertisementStatus(pageNo,pageSize).getData(),"Aktif ilanlar getirildi.");
+    }
+
+    @GetMapping("/getByAdvertisementNumber")
+    public ResponseEntity<?> getByAdvertisementNumber(String advertisementNumber){
+        var result = _jobAdvertisementService.getByAdvertisementNumber(advertisementNumber);
+        if (result.isSuccess()){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.badRequest().body(result);
+        }
+
     }
 
 
@@ -58,7 +67,7 @@ public class JobAdvertisementsController {
 
 
     @GetMapping("/getActivesByEmployerAndStatus")
-    public DataResult<List<JobAdvertisement>> getActivesByEmployerAndStatus(@RequestParam int employerId,@RequestParam int pageNo,@RequestParam int pageSize){
+    public DataResult<List<JobAdvertisement>> getActivesByEmployerAndStatus(@RequestParam Long employerId,@RequestParam int pageNo,@RequestParam int pageSize){
 
         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementService.getJobAdvertisementsByEmployerAndJobAdvertisementStatus(employerId, pageNo,pageSize).getData(),"Aktif ilanlar getirildi.");
     }
@@ -99,7 +108,7 @@ public class JobAdvertisementsController {
 
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
+    public ResponseEntity<?> delete(Long id){
         Result result = _jobAdvertisementService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -108,7 +117,7 @@ public class JobAdvertisementsController {
     }
 
     @PutMapping(value = "/update/{advertisementId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody JobAdvertisementDto jobAdvertisementDto,@PathVariable("advertisementId") int advertisementId){
+    public ResponseEntity<?> update(@RequestBody JobAdvertisementDto jobAdvertisementDto,@PathVariable("advertisementId") Long advertisementId){
         Result result = _jobAdvertisementService.update(jobAdvertisementDto,advertisementId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

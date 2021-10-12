@@ -13,15 +13,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class JobAdvertisementDto {
 
-    private int jobId;
-    private int employerId;
+    private Long jobId;
+    private Long employerId;
     private String description;
-    private int cityId;
+    private Long cityId;
     private int minSalary;
     private int maxSalary;
     private int openPosition;
-    private int workPlaceId;
-    private int jobTypeId;
+    private Long workPlaceId;
+    private Long jobTypeId;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate endDate;
 

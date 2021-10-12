@@ -23,7 +23,7 @@ public class JobAdvertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @ManyToOne()
     @JoinColumn(name = "employer_id")
@@ -64,11 +64,11 @@ public class JobAdvertisement {
     @Column(name = "job_advertisement_status")
     private Boolean isJobAdvertisementStatusActive;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workplace")
     private WorkPlace workPlace;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_type")
     private JobType jobType;
 

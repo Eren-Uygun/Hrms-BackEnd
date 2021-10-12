@@ -20,7 +20,7 @@ public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "skill_name")
     private String skillName;

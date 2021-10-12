@@ -20,7 +20,7 @@ public abstract class JobAdvertisementActivation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "advertisement_activation_date")
     private LocalDate advertisementActivationDate;

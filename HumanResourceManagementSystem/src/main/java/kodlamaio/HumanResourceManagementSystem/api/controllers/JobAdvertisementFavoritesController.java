@@ -21,7 +21,7 @@ public class JobAdvertisementFavoritesController {
     }
 
     @PostMapping("/addFavorite")
-    public ResponseEntity<?> addFavorite(int candidateId, int jobAdvertisementId){
+    public ResponseEntity<?> addFavorite(Long candidateId, Long jobAdvertisementId){
         Result result = _jobAdvertisementFavoriteService.addFavorite(candidateId,jobAdvertisementId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -30,7 +30,7 @@ public class JobAdvertisementFavoritesController {
     }
 
     @DeleteMapping("/removeFavorite")
-    public ResponseEntity<?> removeFavorite(int favoriteId){
+    public ResponseEntity<?> removeFavorite(Long favoriteId){
         Result result = _jobAdvertisementFavoriteService.removeFavorite(favoriteId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -39,7 +39,7 @@ public class JobAdvertisementFavoritesController {
     }
 
     @GetMapping("/getFavorites")
-    public DataResult<List<JobAdvertisementFavorite>> getFavorites(int candidateId){
+    public DataResult<List<JobAdvertisementFavorite>> getFavorites(Long candidateId){
         return _jobAdvertisementFavoriteService.getByCandidateId(candidateId);
 
     }

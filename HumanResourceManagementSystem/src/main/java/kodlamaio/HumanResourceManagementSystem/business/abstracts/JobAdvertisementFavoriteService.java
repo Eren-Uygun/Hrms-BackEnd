@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface JobAdvertisementFavoriteService {
 
-    public DataResult<List<JobAdvertisementFavorite>> getByCandidateId(int candidateId);
-    public Result addFavorite(int candidateId, int jobAdId);
-    public Result removeFavorite(int favoriteId);
+    public DataResult<List<JobAdvertisementFavorite>> getByCandidateId(Long candidateId);
+    public Result addFavorite(Long candidateId, Long jobAdId);
+    public Result removeFavorite(Long favoriteId);
 
 }

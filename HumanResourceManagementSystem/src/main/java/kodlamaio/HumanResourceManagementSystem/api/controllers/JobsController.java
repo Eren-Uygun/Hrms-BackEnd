@@ -34,7 +34,7 @@ public class JobsController {
 
 
     @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody JobDto jobDto){
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@RequestBody JobDto jobDto){
        Result result = _jobService.update(id,jobDto);
        if (result.isSuccess()){
            return ResponseEntity.ok(result);
@@ -43,7 +43,7 @@ public class JobsController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
         Result result = this._jobService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -53,7 +53,7 @@ public class JobsController {
 
 
     @GetMapping("/getOne")
-    public ResponseEntity<?> getOne(int id){
+    public ResponseEntity<?> getOne(Long id){
         DataResult<Job> result = _jobService.getById(id);
 
         if (result.isSuccess()){

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface JobExperienceDao extends JpaRepository<JobExperience,Integer> {
+public interface JobExperienceDao extends JpaRepository<JobExperience,Long> {
 
     @Query("select j from JobExperience j where j.curriculumVitae.id =: cvId")
-    DataResult<List<JobExperience>> getJobExperiencesByCurriculumVitae_Id(int cvId);
+    DataResult<List<JobExperience>> getJobExperiencesByCurriculumVitae_Id(Long cvId);
 }

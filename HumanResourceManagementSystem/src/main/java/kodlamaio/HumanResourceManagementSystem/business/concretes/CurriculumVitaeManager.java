@@ -62,7 +62,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result update(CurriculumVitaeDto curriculumVitaeDto,int CvId) {
+    public Result update(CurriculumVitaeDto curriculumVitaeDto,Long CvId) {
         if (!_curriculumVitaeDao.existsById(CvId)){
             return new ErrorResult("Cv bulunamadı.");
         }else if (!_candidateDao.existsById(curriculumVitaeDto.getCandidateId())){
@@ -72,7 +72,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         if (_curriculumVitaeDao.existsById(id)){
             return new ErrorResult("Silinecek veri bulunamadı.");
         }else{
@@ -83,7 +83,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
 
 
     @Override
-    public DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(int candidateId) {
+    public DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(Long candidateId) {
         if (!_candidateDao.existsById(candidateId)){
             return new ErrorDataResult<>("Aday bulunamadı.");
         }
@@ -91,13 +91,13 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public DataResult<CurriculumVitae> findById(int id) {
+    public DataResult<CurriculumVitae> findById(Long id) {
 
         return new SuccessDataResult<CurriculumVitae>(_curriculumVitaeDao.getById(id),"Veri getirildi.");
     }
 
     @Override
-    public Result updateGithub(String github, int cvId) {
+    public Result updateGithub(String github, Long cvId) {
         if (!_curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
         }
@@ -111,7 +111,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result deleteGithub(int cvId) {
+    public Result deleteGithub(Long cvId) {
 
         if (!_curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
@@ -124,7 +124,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result updateLinkedin(String linkedin, int cvId) {
+    public Result updateLinkedin(String linkedin, Long cvId) {
         if(!this._curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Böyle bir cv yok");
         }else if(!linkedin.startsWith("https://www.linkedin.com") &&
@@ -140,7 +140,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result deleteLinkedin(int cvId) {
+    public Result deleteLinkedin(Long cvId) {
         if(!this._curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Böyle bir cv yok");
         }
@@ -151,7 +151,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result updateAboutMe(String biography, int cvId) {
+    public Result updateAboutMe(String biography, Long cvId) {
         if (!_curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
         }
@@ -163,7 +163,7 @@ public class CurriculumVitaeManager implements CurriculumVitaeService {
     }
 
     @Override
-    public Result deleteAboutMe(int cvId) {
+    public Result deleteAboutMe(Long cvId) {
         if (_curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
         }

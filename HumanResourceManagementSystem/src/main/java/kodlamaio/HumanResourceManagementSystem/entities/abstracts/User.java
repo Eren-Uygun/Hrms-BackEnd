@@ -7,6 +7,8 @@ import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -14,12 +16,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name="email_address",unique = true)
     private String email;
@@ -28,8 +30,16 @@ public abstract class User {
     private String password;
 
 
-    @Column(name = "password_repeat")
+    @Transient
     private String passwordRepeat;
+
+    @ManyToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
+    private Collection<Role> roles;
+
+    {
+        roles = new ArrayList<>();
+    }
+
 
     @Column(name = "user_status")
     @Enumerated(EnumType.STRING)

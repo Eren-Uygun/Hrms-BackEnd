@@ -25,7 +25,7 @@ public class SkillManager implements SkillService {
     }
 
     @Override
-    public Result add(SkillDto skillDto,int cvId) {
+    public Result add(SkillDto skillDto,Long cvId) {
        try{
 
            if (!_cvDao.existsById(cvId)){
@@ -51,7 +51,7 @@ public class SkillManager implements SkillService {
     }
 
     @Override
-    public Result update(SkillDto skillDto,int cvId,int skillId) {
+    public Result update(SkillDto skillDto,Long cvId,Long skillId) {
         if (!_cvDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
         }else if(skillDto.getSkillName().length()<2){
@@ -69,7 +69,7 @@ public class SkillManager implements SkillService {
 
 
     @Override
-    public Result delete(int skillId,int cvId) {
+    public Result delete(Long skillId,Long cvId) {
         try{
             if (!_cvDao.existsById(cvId)) {
                 return new ErrorResult("Cv bulununamadı.");

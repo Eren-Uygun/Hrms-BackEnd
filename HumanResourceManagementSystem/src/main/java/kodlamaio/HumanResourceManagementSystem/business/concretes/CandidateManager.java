@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CandidateService;
+import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
@@ -13,11 +14,14 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.UserValidationService;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateActivationDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateDao;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.RoleDao;
+import kodlamaio.HumanResourceManagementSystem.entities.abstracts.Role;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.CandidateActivation;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,15 +36,21 @@ public class CandidateManager implements CandidateService {
     private UserValidationService _userValidationService;
     private RuleValidationService _ruleValidationService;
     private EmailSenderService _emailSenderService;
+    private RoleDao _roleDao;
+    private UserService _userService;
+    private PasswordEncoder _passwordEncoder;
 
     @Autowired
-    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService) {
+    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService, RoleDao _roleDao, UserService _userService, PasswordEncoder _passwordEncoder) {
         this._candidateDao = _candidateDao;
         this._candidateActivationDao = _candidateActivationDao;
         this._candidateValidationService = _candidateValidationService;
         this._userValidationService = _userValidationService;
         this._ruleValidationService = _ruleValidationService;
         this._emailSenderService = _emailSenderService;
+        this._roleDao = _roleDao;
+        this._userService = _userService;
+        this._passwordEncoder = _passwordEncoder;
     }
 
     @Override
@@ -66,8 +76,8 @@ public class CandidateManager implements CandidateService {
                 candidate.setBirthDate(candidateAddDto.getBirthDate());
                 candidate.setNationalIdentityNumber(candidateAddDto.getNationalIdentityNumber());
                 candidate.setEmail(candidateAddDto.getEmail());
-                candidate.setPassword(candidateAddDto.getPassword());
-                candidate.setPasswordRepeat(candidateAddDto.getPasswordConfirm());
+                candidate.setPassword(_passwordEncoder.encode(candidateAddDto.getPassword()));
+                candidate.setPasswordRepeat(_passwordEncoder.encode(candidateAddDto.getPasswordConfirm()));
                 CandidateActivation activation = new CandidateActivation();
                 candidate.setUserStatus(UserStatus.Passive);
                 activation.setCandidate(candidate);
@@ -77,6 +87,9 @@ public class CandidateManager implements CandidateService {
                     _candidateActivationDao.save(activation);
                     _candidateDao.save(candidate);
                     _emailSenderService.sendMail(candidate.getEmail());
+                    _userService.addRoleToUser(candidate.getEmail(),"ROLE_CANDIDATE");
+
+
                 return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 
@@ -87,7 +100,7 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public Result update(int id,CandidateUpdateDto candidateUpdateDto) {
+    public Result update(Long id,CandidateUpdateDto candidateUpdateDto) {
         try{
             var tempCandidate = _candidateDao.getById(id);
             if (!_candidateDao.existsById(tempCandidate.getId())){
@@ -125,7 +138,7 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         try{
             var temp = _candidateDao.getById(id);
 
@@ -192,7 +205,7 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public DataResult<Candidate> getById(int id) {
+    public DataResult<Candidate> getById(Long id) {
        try{
           return new SuccessDataResult<Candidate>(_candidateDao.getById(id),"Veri getirildi.");
        }catch (Exception ex){

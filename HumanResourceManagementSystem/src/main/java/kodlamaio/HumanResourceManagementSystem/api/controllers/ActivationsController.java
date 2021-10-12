@@ -25,7 +25,7 @@ public class ActivationsController {
     }
 
     @PostMapping(value = "/manualEmployerActivation")
-    public Result manualEmployerActivation(int employerId,int hrmsPersonelId){
+    public Result manualEmployerActivation(Long employerId,Long hrmsPersonelId){
       return _activationService.manualEmployerActivation(employerId,hrmsPersonelId);
     }
 
@@ -34,12 +34,12 @@ public class ActivationsController {
         return _activationService.activateEmployerByActivationCode(activationCode);
     }
     @PostMapping("/activateJobAdvertisementByEmployee")
-    public Result activateJobAdvertisementByEmployee(int employeeId,int jobAdvertisementId){
+    public Result activateJobAdvertisementByEmployee(Long employeeId,Long jobAdvertisementId){
         return _activationService.jobAdvertisementActivation(employeeId,jobAdvertisementId);
     }
 
     @PostMapping("/employerUpdateConfirmationByEmployee")
-    public Result employerUpdateConfirmationByEmployee(int employeeId,int employerId){
+    public Result employerUpdateConfirmationByEmployee(Long employeeId,Long employerId){
         return _activationService.employerUpdateConfirmation(employeeId,employerId);
     }
 

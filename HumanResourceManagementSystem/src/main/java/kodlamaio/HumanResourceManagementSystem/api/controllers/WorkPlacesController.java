@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/workPlaces/")
+@CrossOrigin
 public class WorkPlacesController {
     private final WorkPlaceService _workPlaceService;
 
@@ -21,7 +22,7 @@ public class WorkPlacesController {
     }
 
     @GetMapping("/getWorkPlace")
-    public ResponseEntity<?> getOne(int id){
+    public ResponseEntity<?> getOne(Long id){
 
         DataResult<WorkPlace> result = _workPlaceService.getOne(id);
         if (result.isSuccess()){
@@ -55,7 +56,7 @@ return ResponseEntity.badRequest().body(result.getData());
     }
 
     @PutMapping("/update/{workPlaceId}")
-    public ResponseEntity<?> update(@RequestBody WorkPlaceDto workPlaceDto,@PathVariable("workPlaceId") int workPlaceId){
+    public ResponseEntity<?> update(@RequestBody WorkPlaceDto workPlaceDto,@PathVariable("workPlaceId") Long workPlaceId){
         Result result = _workPlaceService.update(workPlaceDto,workPlaceId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -66,7 +67,7 @@ return ResponseEntity.badRequest().body(result.getData());
 
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
+    public ResponseEntity<?> delete(Long id){
         Result result = _workPlaceService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

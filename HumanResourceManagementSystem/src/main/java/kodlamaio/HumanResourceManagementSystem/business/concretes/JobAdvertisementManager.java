@@ -62,6 +62,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
        jobAdvertisement.setCity(_cityDao.getById(jobAdvertisementDto.getCityId()));
        jobAdvertisement.setMinSalary(jobAdvertisementDto.getMinSalary());
        jobAdvertisement.setMaxSalary(jobAdvertisementDto.getMaxSalary());
+       jobAdvertisement.setEndDate(jobAdvertisementDto.getEndDate());
        jobAdvertisement.setOpenPositions(jobAdvertisementDto.getOpenPosition());
        jobAdvertisement.setIsJobAdvertisementStatusActive(false);
 
@@ -83,7 +84,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
-    public Result update(JobAdvertisementDto jobAdvertisementDto,int advertisementId) {
+    public Result update(JobAdvertisementDto jobAdvertisementDto,Long advertisementId) {
         var tempAdvertisement = _jobAdvertisementDao.getById(advertisementId);
         if (tempAdvertisement.getAdvertisementNumber() == null){
             return new ErrorResult("İlan bulunamadı.");
@@ -104,7 +105,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         try{
 
             if (!_jobAdvertisementDao.existsById(id))
@@ -121,7 +122,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
-    public Result setActivationStatus(int id) {
+    public Result setActivationStatus(Long id) {
         try{
             if (!_jobAdvertisementDao.existsById(id)){
                 return new ErrorResult("İlan bulunamadı");
@@ -154,7 +155,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
     }
 
     @Override
-    public DataResult<JobAdvertisement> getOne(int id) {
+    public DataResult<JobAdvertisement> getOne(Long id) {
         try{
          return new SuccessDataResult<>(_jobAdvertisementDao.getById(id),"Veri getirildi.");
         }catch (Exception ex){
@@ -195,7 +196,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 
 
     @Override
-    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId,int pageNo,int pageSize){
+    public DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(Long employerId,int pageNo,int pageSize){
         Pageable pageable = PageRequest.of(pageNo -1,pageSize);
         return new SuccessDataResult<List<JobAdvertisement>>(_jobAdvertisementDao.findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(true,employerId,pageable),"İş verene ait aktif ilanlar getirildi.");
     }

@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface EducationService {
 
-    Result add(EducationDto educationDto,int cvId);
-    Result update(EducationDto educationDto,int cvId,int educationId);
-    Result delete(int id,int cvId);
-    DataResult<List<Education>> getAll(int cvId);
-    DataResult<Education> getOne(int id);
+    Result add(EducationDto educationDto,Long cvId);
+    Result update(EducationDto educationDto,Long cvId,Long educationId);
+    Result delete(Long id,Long cvId);
+    DataResult<List<Education>> getAll(Long cvId);
+    DataResult<Education> getOne(Long id);
 
 
 }

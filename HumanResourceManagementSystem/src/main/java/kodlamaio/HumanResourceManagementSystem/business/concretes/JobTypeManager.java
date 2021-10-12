@@ -28,13 +28,13 @@ public class JobTypeManager implements JobTypeService {
     @Override
     public Result add(JobTypeDto jobTypeDto) {
         try{
-            if (_jobTypeDao.existsByJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()))){
+            if (_jobTypeDao.existsByJobTypeName(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()))){
 
                 return new ErrorResult("Bu çalışma tipi sistemde mevcut");
             }else{
 
             JobType jobType = new JobType();
-            jobType.setJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()));
+            jobType.setJobTypeName(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()));
            _jobTypeDao.save(jobType);
            return new SuccessResult("Ekleme işlemi başarılı");
             }
@@ -44,23 +44,23 @@ public class JobTypeManager implements JobTypeService {
     }
 
     @Override
-    public Result update(JobTypeDto jobTypeDto,int jobTypeId) {
+    public Result update(JobTypeDto jobTypeDto,Long jobTypeId) {
         if (!_jobTypeDao.existsById(jobTypeId)){
             return new ErrorResult("Veri bulunamadı.");
-        }else if (_jobTypeDao.existsByJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()))){
+        }else if (_jobTypeDao.existsByJobTypeName(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()))){
             return new ErrorResult("Bu çalışma tipi sistemde mevcut");
         }
         else {
 
             JobType tempType = _jobTypeDao.getById(jobTypeId);
-            tempType.setJobType(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()));
+            tempType.setJobTypeName(TextEditOperation.makeAllWordsCapitalLetter(jobTypeDto.getJobType()));
             _jobTypeDao.save(tempType);
             return new SuccessResult("Veri güncellendi.");
         }
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         if (!_jobTypeDao.existsById(id)){
             return new ErrorResult("Kullanıcı bulunamadı.");
         }
@@ -81,7 +81,7 @@ public class JobTypeManager implements JobTypeService {
     }
 
     @Override
-    public DataResult<JobType> getOne(int id) {
+    public DataResult<JobType> getOne(Long id) {
         try{
             return new SuccessDataResult<JobType>(_jobTypeDao.getById(id),"Veri getirildi.");
         }catch (Exception ex){

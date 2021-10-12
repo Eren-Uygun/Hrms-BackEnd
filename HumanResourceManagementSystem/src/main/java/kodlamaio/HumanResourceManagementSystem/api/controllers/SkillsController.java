@@ -47,7 +47,7 @@ public class SkillsController {
 
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int skillId,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> delete(Long skillId,@PathVariable("cvId") Long cvId){
         Result result = _skillService.delete(skillId,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -56,7 +56,7 @@ public class SkillsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody SkillDto skill,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> add(@RequestBody SkillDto skill,@PathVariable("cvId") Long cvId){
         Result result = _skillService.add(skill,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -65,7 +65,7 @@ public class SkillsController {
     }
 
     @PutMapping(value = "/update/{skillId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody SkillDto skillDto,@PathVariable("cvId") int cvId, @PathVariable("skillId") int skillId){
+    public ResponseEntity<?> update(@RequestBody SkillDto skillDto,@PathVariable("cvId") Long cvId, @PathVariable("skillId") Long skillId){
         Result result = _skillService.update(skillDto,cvId,skillId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

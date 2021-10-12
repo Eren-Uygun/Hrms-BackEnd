@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface JobService {
     Result add(JobDto jobDto);
-    Result update(int id,JobDto jobDto);
-    Result delete(int id);
+    Result update(Long id,JobDto jobDto);
+    Result delete(Long id);
 
     DataResult<List<Job>> getAll();
-    DataResult<Job> getById(int id);
+    DataResult<Job> getById(Long id);
 }

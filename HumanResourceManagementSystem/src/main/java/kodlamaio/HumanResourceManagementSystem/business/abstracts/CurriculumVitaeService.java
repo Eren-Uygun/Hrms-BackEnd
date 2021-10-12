@@ -12,20 +12,20 @@ import java.util.List;
 
 public interface CurriculumVitaeService {
     Result add(CurriculumVitaeDto curriculumVitaeDto );
-    Result update(CurriculumVitaeDto curriculumVitaeDto,int cvId);
-    Result delete(int id);
+    Result update(CurriculumVitaeDto curriculumVitaeDto,Long cvId);
+    Result delete(Long id);
 
-    DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(int candidateId);
-    DataResult<CurriculumVitae> findById(int id);
+    DataResult<CurriculumVitae> getCurriculumVitaeByCandidate(Long candidateId);
+    DataResult<CurriculumVitae> findById(Long id);
 
-    public Result updateGithub(String github, int cvId);
-    public Result deleteGithub(int cvId);
+    public Result updateGithub(String github, Long cvId);
+    public Result deleteGithub(Long cvId);
 
-    public Result updateLinkedin(String linkedin, int cvId);
-    public Result deleteLinkedin(int cvId);
+    public Result updateLinkedin(String linkedin, Long cvId);
+    public Result deleteLinkedin(Long cvId);
 
-    public Result updateAboutMe(String biography, int cvId);
-    public Result deleteAboutMe(int cvId);
+    public Result updateAboutMe(String biography, Long cvId);
+    public Result deleteAboutMe(Long cvId);
 
 
 

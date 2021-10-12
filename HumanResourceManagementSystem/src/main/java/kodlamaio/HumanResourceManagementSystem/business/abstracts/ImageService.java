@@ -11,9 +11,9 @@ import java.util.List;
 public interface ImageService {
 
     DataResult<List<Image>> getAll();
-    Result update(MultipartFile multipartFile, int cvId) throws IOException;
-    Result delete(int id);
-    DataResult<Image> getById(int id);
-    Boolean isExist(int id);
+    Result update(MultipartFile multipartFile, Long cvId) throws IOException;
+    Result delete(Long id);
+    DataResult<Image> getById(Long id);
+    Boolean isExist(Long id);
 
 }

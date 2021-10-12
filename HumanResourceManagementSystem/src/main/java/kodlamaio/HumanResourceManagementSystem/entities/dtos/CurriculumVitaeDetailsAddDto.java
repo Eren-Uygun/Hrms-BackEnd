@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CurriculumVitaeDetailsAddDto {
 
-    private int cvId;
+    private Long cvId;
     private List<CoverLetter> coverLetters;
     private List<JobExperience> jobExperiences;
     private List<ForeignLanguage> languages;

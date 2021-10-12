@@ -46,7 +46,7 @@ public class JobExperiencesController {
 */
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody JobExperienceDto experience,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> add(@RequestBody JobExperienceDto experience,@PathVariable("cvId") Long cvId){
         Result result = _jobExperienceService.add(experience,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -56,7 +56,7 @@ public class JobExperiencesController {
     }
 
     @DeleteMapping("/delete/{jobExperienceId}")
-    public ResponseEntity<?> delete(@PathVariable("jobExperienceId") int jobExperienceId,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> delete(@PathVariable("jobExperienceId") Long jobExperienceId,@PathVariable("cvId") Long cvId){
         Result result = _jobExperienceService.delete(cvId,jobExperienceId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -66,7 +66,7 @@ public class JobExperiencesController {
     }
 
     @PutMapping(value = "/update/{jobExperienceId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody JobExperienceDto jobExperienceDto,@PathVariable("cvId") int cvId,@PathVariable("jobExperienceId") int jobExperienceId){
+    public ResponseEntity<?> update(@RequestBody JobExperienceDto jobExperienceDto,@PathVariable("cvId") Long cvId,@PathVariable("jobExperienceId") Long jobExperienceId){
         Result result = _jobExperienceService.update(jobExperienceDto,cvId,jobExperienceId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

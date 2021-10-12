@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cities")
+@CrossOrigin
 public class CitiesController {
 
     private CityService _cityService;
@@ -33,7 +34,7 @@ public class CitiesController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id){
+    public ResponseEntity<?> delete(Long id){
         Result result = _cityService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -44,7 +45,7 @@ public class CitiesController {
     }
 
     @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update( @PathVariable("id") int id,@RequestBody CityDto cityDto){
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@RequestBody CityDto cityDto){
         Result result = _cityService.update(cityDto,id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -53,7 +54,7 @@ public class CitiesController {
     }
 
     @GetMapping("/getCity")
-    public ResponseEntity<?> getOne(int id){
+    public ResponseEntity<?> getOne(Long id){
 
         DataResult<City> result = _cityService.getOne(id);
         if (result.isSuccess()){

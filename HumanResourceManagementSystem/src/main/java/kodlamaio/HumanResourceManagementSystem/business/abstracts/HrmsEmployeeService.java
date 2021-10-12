@@ -10,9 +10,9 @@ import java.util.List;
 public interface HrmsEmployeeService {
 
     Result add(HrmsEmployeeDto employeeDto);
-    Result update(int id,HrmsEmployeeDto employeeDto);
-    Result delete(int id);
+    Result update(Long id,HrmsEmployeeDto employeeDto);
+    Result delete(Long id);
 
     DataResult<List<HrmsEmployee>> getAll();
-    DataResult<HrmsEmployee> getById(int id);
+    DataResult<HrmsEmployee> getById(Long id);
 }

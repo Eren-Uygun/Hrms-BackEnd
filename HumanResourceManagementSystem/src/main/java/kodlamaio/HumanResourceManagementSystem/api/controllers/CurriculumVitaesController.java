@@ -33,7 +33,7 @@ public class CurriculumVitaesController {
     }
 
     @DeleteMapping("/delete/{cvId}")
-    public ResponseEntity<?> delete(@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> delete(@PathVariable("cvId") Long cvId){
         Result result = _curriculumVitaeService.delete(cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -42,7 +42,7 @@ public class CurriculumVitaesController {
     }
 
     @GetMapping("/getByCandidateId")
-    public ResponseEntity<?> getByCandidateId(@RequestParam int candidateId){
+    public ResponseEntity<?> getByCandidateId(@RequestParam Long candidateId){
         Result result = _curriculumVitaeService.getCurriculumVitaeByCandidate(candidateId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -51,7 +51,7 @@ public class CurriculumVitaesController {
     }
 
     @PutMapping(value = "/updateGithub",headers = {"content-type=application/json"})
-    public ResponseEntity<?> updateGithub(@RequestParam String github,@RequestParam int cvId){
+    public ResponseEntity<?> updateGithub(@RequestParam String github,@RequestParam Long cvId){
         Result result=this._curriculumVitaeService.updateGithub(github,cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -60,7 +60,7 @@ public class CurriculumVitaesController {
     }
 
     @DeleteMapping("/deleteGithub")
-    public ResponseEntity<?> deleteGithub(@RequestParam int cvId){
+    public ResponseEntity<?> deleteGithub(@RequestParam Long cvId){
         Result result=this._curriculumVitaeService.deleteGithub(cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -69,7 +69,7 @@ public class CurriculumVitaesController {
     }
 
     @PutMapping(value = "/updateLinkedin",headers = {"content-type=application/json"})
-    public ResponseEntity<?> updateLinkedin(@RequestParam String linkedin,@RequestParam int cvId){
+    public ResponseEntity<?> updateLinkedin(@RequestParam String linkedin,@RequestParam Long cvId){
         Result result=this._curriculumVitaeService.updateLinkedin(linkedin,cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -78,7 +78,7 @@ public class CurriculumVitaesController {
     }
 
     @DeleteMapping("/deleteLinkedin")
-    public ResponseEntity<?> deleteLinkedin(@RequestParam int cvId){
+    public ResponseEntity<?> deleteLinkedin(@RequestParam Long cvId){
         Result result=this._curriculumVitaeService.deleteLinkedin(cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -87,7 +87,7 @@ public class CurriculumVitaesController {
     }
 
     @PutMapping(value = "/updateBiography",headers = {"content-type=application/json"})
-    public ResponseEntity<?> updateBiography(@RequestParam String biography,@RequestParam int cvId){
+    public ResponseEntity<?> updateBiography(@RequestParam String biography,@RequestParam Long cvId){
         Result result=this._curriculumVitaeService.updateAboutMe(biography,cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -96,7 +96,7 @@ public class CurriculumVitaesController {
     }
 
     @DeleteMapping("/deleteBiography")
-    public ResponseEntity<?> deleteBiography(@RequestParam int cvId){
+    public ResponseEntity<?> deleteBiography(@RequestParam Long cvId){
         Result result=this._curriculumVitaeService.deleteAboutMe(cvId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);

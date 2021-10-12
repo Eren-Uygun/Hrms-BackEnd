@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface WorkPlaceService {
     Result add(WorkPlaceDto workPlaceDto);
-    Result update(WorkPlaceDto workPlaceDto,int workPlaceId);
-    Result delete(int id);
+    Result update(WorkPlaceDto workPlaceDto,Long workPlaceId);
+    Result delete(Long id);
 
     DataResult<List<WorkPlace>> getAll();
-    DataResult<WorkPlace> getOne(int id);
+    DataResult<WorkPlace> getOne(Long id);
 }

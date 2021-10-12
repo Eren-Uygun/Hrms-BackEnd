@@ -13,13 +13,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Integer> {
+public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Long> {
 
     @Query("select j from JobAdvertisement j where j.job.jobName = ?1")
     JobAdvertisement getJobAdvertisementByJob_JobName(String jobName);
@@ -49,12 +50,12 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Inte
 
 
    @Query("select j from JobAdvertisement j where j.isJobAdvertisementStatusActive = ?1 and j.employer.id = ?2")
-   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(boolean status,int employerId,Pageable pageable);
+   List<JobAdvertisement> findJobAdvertisementsByIsJobAdvertisementStatusActiveAndEmployer_Id(boolean status,Long employerId,Pageable pageable);
 
     @Query("select j from JobAdvertisement j where j.isJobAdvertisementStatusActive=true " +
             "and ((:#{#filter.cityId}) IS NULL OR j.city.id IN (:#{#filter.cityId}))"+
             "or ((:#{#filter.jobTypeId}) IS NULL OR j.jobType.id IN (:#{#filter.jobTypeId})) ")
-    Page<JobAdvertisement> getByFilter(@Param("filter") JobAdvertisementFilter jobAdvertisementFilter, Pageable pageable);
+    Page<JobAdvertisement> getByFilter(@Param("filter")JobAdvertisementFilter jobAdvertisementFilter, Pageable pageable);
 
 /*
     @Query("select j from JobAdvertisement j where j.city.id = ?1 or  j.workPlace.id = ?2 or j.job.id = ?3 or j.jobType.id = ?4 or j.isJobAdvertisementStatusActive = true ")
@@ -64,8 +65,6 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement,Inte
     @Query("select j from JobAdvertisement j where j.city.id = ?1 and j.isJobAdvertisementStatusActive = true ")
     Page<List<JobAdvertisement>> getJobAdvertisementsByCity_IdAndIsJobAdvertisementStatusActive(int city_Id,Pageable pageable);
 */
-
-
 
 
 

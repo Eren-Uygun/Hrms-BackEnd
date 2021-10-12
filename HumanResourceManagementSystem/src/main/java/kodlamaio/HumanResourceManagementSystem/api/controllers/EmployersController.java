@@ -35,7 +35,7 @@ public class EmployersController {
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<?> getById(int employerId){
+    public ResponseEntity<?> getById(Long employerId){
         DataResult<?> result= _employerService.getById(employerId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -59,7 +59,7 @@ public class EmployersController {
     }
 
     @DeleteMapping("/delete/{employerId}")
-    public ResponseEntity<?> delete(@PathVariable("employerId") int employerId){
+    public ResponseEntity<?> delete(@PathVariable("employerId") Long employerId){
         Result result=_employerService.delete(employerId);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -68,7 +68,7 @@ public class EmployersController {
     }
 
     @PutMapping(value = "/update/{employerId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update( @RequestBody EmployerAddDto employerAddDto,@PathVariable("employerId") int employerId){
+    public ResponseEntity<?> update( @RequestBody EmployerAddDto employerAddDto,@PathVariable("employerId") Long employerId){
         Result result=_employerService.update(employerId,employerAddDto);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);

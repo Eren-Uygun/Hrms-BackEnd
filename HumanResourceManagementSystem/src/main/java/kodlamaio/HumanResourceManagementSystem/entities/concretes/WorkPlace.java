@@ -20,10 +20,10 @@ public class WorkPlace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "work_place")
-    private String workPlace;
+    private String workPlaceName;
 
     @JsonIgnore
     @OneToMany(mappedBy = "workPlace")

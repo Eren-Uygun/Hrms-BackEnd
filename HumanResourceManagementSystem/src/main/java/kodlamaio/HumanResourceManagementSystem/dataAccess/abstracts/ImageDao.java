@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import javax.sound.sampled.DataLine;
 import java.util.List;
 
-public interface ImageDao extends JpaRepository<Image,Integer> {
+public interface ImageDao extends JpaRepository<Image,Long> {
 
-    List<Image> getImagesByCurriculumVitae_Id(int id);
-    Image findByCurriculumVitae_Id(int id);
+    List<Image> getImagesByCurriculumVitae_Id(Long id);
+    Image findByCurriculumVitae_Id(Long id);
 
 }

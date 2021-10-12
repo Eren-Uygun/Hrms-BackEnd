@@ -28,7 +28,7 @@ public class CandidatesController {
 
     //@RequestMapping(method = RequestMethod.PUT,path = "update/{id}",)
     @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody CandidateUpdateDto candidateUpdateDto){
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@RequestBody CandidateUpdateDto candidateUpdateDto){
         Result  result = _candidateService.update(id,candidateUpdateDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -49,7 +49,7 @@ public class CandidatesController {
 
     @CrossOrigin
     @GetMapping("/getById")
-    public ResponseEntity<?> getOne(int id){
+    public ResponseEntity<?> getOne(Long id){
 
         DataResult<Candidate> result = _candidateService.getById(id);
         if (result.isSuccess()){
@@ -60,7 +60,7 @@ public class CandidatesController {
 
     @CrossOrigin
     @GetMapping("/getCandidateById")
-    public DataResult<Candidate> getById(int id){
+    public DataResult<Candidate> getById(Long id){
         return _candidateService.getById(id);
     }
 
@@ -85,7 +85,7 @@ public class CandidatesController {
 
     @CrossOrigin
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int  id){
+    public ResponseEntity<?> delete(Long  id){
         Result result = _candidateService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

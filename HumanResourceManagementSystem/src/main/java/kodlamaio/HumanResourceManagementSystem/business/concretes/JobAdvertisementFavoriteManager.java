@@ -26,7 +26,7 @@ public class JobAdvertisementFavoriteManager implements JobAdvertisementFavorite
     }
 
     @Override
-    public DataResult<List<JobAdvertisementFavorite>> getByCandidateId(int candidateId) {
+    public DataResult<List<JobAdvertisementFavorite>> getByCandidateId(Long candidateId) {
         if (!_candidateDao.existsById(candidateId)){
             return new ErrorDataResult<>("Kullanıcı bulunamadı.");
         }
@@ -34,7 +34,7 @@ public class JobAdvertisementFavoriteManager implements JobAdvertisementFavorite
     }
 
     @Override
-    public Result addFavorite(int candidateId, int jobAdId) {
+    public Result addFavorite(Long candidateId, Long jobAdId) {
         if (!_candidateDao.existsById(candidateId)) {
             return new ErrorResult("Kullanıcı bulunamadı.");
         } else if (!_jobAdvertisementDao.existsById(jobAdId)) {
@@ -52,7 +52,7 @@ public class JobAdvertisementFavoriteManager implements JobAdvertisementFavorite
 
 
     @Override
-    public Result removeFavorite(int favoriteId) {
+    public Result removeFavorite(Long favoriteId) {
         if (!_jobAdvertisementFavoriteDao.existsById(favoriteId)){
             return new ErrorResult("İlan bulunamadı.");
         }else{

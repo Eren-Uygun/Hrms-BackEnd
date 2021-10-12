@@ -25,7 +25,7 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public Result add(JobExperienceDto jobExperienceDto,int cvId) {
+    public Result add(JobExperienceDto jobExperienceDto,Long cvId) {
         try{
 
             if (!_cvDao.existsById(cvId)){
@@ -66,7 +66,7 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public Result delete(int cvId,int jobExperienceId) {
+    public Result delete(Long cvId,Long jobExperienceId) {
         try{
 
             if (!_cvDao.existsById(cvId)){
@@ -85,7 +85,7 @@ public class JobExperienceManager implements JobExperienceService {
     }
 
     @Override
-    public Result update(JobExperienceDto jobExperienceDto, int cvId, int jobExperienceId) {
+    public Result update(JobExperienceDto jobExperienceDto, Long cvId, Long jobExperienceId) {
         if (!_cvDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
         }else if (!_jobExperienceDao.existsById(jobExperienceId)){

@@ -47,7 +47,7 @@ public class ForeignLanguagesController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId")int cvId){
+    public ResponseEntity<?> add(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId")Long cvId){
         Result result = _foreignLanguageService.add(foreignLanguageDto,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -57,7 +57,7 @@ public class ForeignLanguagesController {
     }
 
     @DeleteMapping("/delete/{foreignLanguageId}")
-    public ResponseEntity<?> delete(@PathVariable("foreignLanguageId") int foreignLanguageId,@PathVariable("cvId")int cvId){
+    public ResponseEntity<?> delete(@PathVariable("foreignLanguageId") Long foreignLanguageId,@PathVariable("cvId")Long cvId){
         Result result = _foreignLanguageService.delete(foreignLanguageId,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -68,7 +68,7 @@ public class ForeignLanguagesController {
 
 
     @PutMapping(value = "/update/{foreignLanguageId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId") int cvId,@PathVariable("foreignLanguageId") int foreignLanguageId){
+    public ResponseEntity<?> update(@RequestBody ForeignLanguageDto foreignLanguageDto,@PathVariable("cvId") Long cvId,@PathVariable("foreignLanguageId") Long foreignLanguageId){
         Result result = _foreignLanguageService.update(foreignLanguageDto,cvId,foreignLanguageId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

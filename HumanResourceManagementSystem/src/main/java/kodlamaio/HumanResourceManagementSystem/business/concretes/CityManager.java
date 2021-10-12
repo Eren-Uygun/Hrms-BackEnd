@@ -49,7 +49,7 @@ public class CityManager implements CityService {
     }
 
     @Override
-    public Result update(CityDto cityDto,int id) {
+    public Result update(CityDto cityDto,Long id) {
         try{
             var tempCity = _cityDao.getById(id);
             if (!_cityDao.existsById(tempCity.getId())){
@@ -69,7 +69,7 @@ public class CityManager implements CityService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         try{
             var tempCity = _cityDao.getById(id);
             if (tempCity.getCityName() == null){
@@ -94,7 +94,7 @@ public class CityManager implements CityService {
     }
 
     @Override
-    public DataResult<City> getOne(int id) {
+    public DataResult<City> getOne(Long id) {
         try{
             return new SuccessDataResult<City>(_cityDao.findById(id).get(),"Veri getirildi.");
         }catch (Exception ex) {

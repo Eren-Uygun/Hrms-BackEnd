@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.EmployerService;
+import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
@@ -13,6 +14,7 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerActivationDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerUpdateDao;
+import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.RoleDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerActivation;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerUpdate;
@@ -31,16 +33,19 @@ public class EmployerManager implements EmployerService {
     private UserValidationService _userValidationService;
     private EmployerUpdateDao _employerUpdateDao;
     private EmailSenderService _emailSenderService;
+    private RoleDao _roleDao;
+    private UserService _userService;
 
     @Autowired
-    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService emailSenderService, RuleValidationService _ruleValidationService) {
+    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, RoleDao _roleDao, UserService _userService, RuleValidationService _ruleValidationService) {
         this._employerDao = _employerDao;
         this._employerActivationDao = _employerActivationDao;
         this._userValidationService = _userValidationService;
         this._employerUpdateDao = _employerUpdateDao;
-        this._emailSenderService = emailSenderService;
+        this._emailSenderService = _emailSenderService;
+        this._roleDao = _roleDao;
+        this._userService = _userService;
         this._ruleValidationService = _ruleValidationService;
-
     }
 
     private RuleValidationService _ruleValidationService;
@@ -76,6 +81,7 @@ public class EmployerManager implements EmployerService {
                 _employerDao.save(employer);
                 _employerActivationDao.save(employerActivation);
                 _emailSenderService.sendMail(employer.getEmail());
+                _userService.addRoleToUser(employer.getEmail(),"ROLE_EMPLOYER");
                 return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 
@@ -86,7 +92,7 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public Result update(int employerId,EmployerAddDto employerAddDto) {
+    public Result update(Long employerId,EmployerAddDto employerAddDto) {
         try{
             if (!_employerDao.existsById(employerId)) {
                 return new ErrorResult("İş veren bulunamadı.");
@@ -135,7 +141,7 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
       try{
           if (!_employerDao.existsById(id)){
               return new ErrorResult("iş veren bulunamadı");
@@ -158,7 +164,7 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public DataResult<Employer> getById(int id) {
+    public DataResult<Employer> getById(Long id) {
         try{
            return new SuccessDataResult<Employer>(_employerDao.getById(id),"İşveren getirildi.");
         }catch (Exception ex){

@@ -18,8 +18,8 @@ import java.util.List;
 public class CurriculumVitaeDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
-    private int candidateId;
+    private Long id;
+    private Long candidateId;
     private String photo;
     private String githubLink;
     private String linkedIn;

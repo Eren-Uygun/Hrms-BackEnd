@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface EducationDao extends JpaRepository<Education,Integer> {
+public interface EducationDao extends JpaRepository<Education,Long> {
 
     @Query("select e from Education e where e.curriculumVitae.id =: id")
-    List<Education>  getEducationsByCurriculumVitae_Id(int cvId);
+    List<Education>  getEducationsByCurriculumVitae_Id(Long cvId);
 
 }

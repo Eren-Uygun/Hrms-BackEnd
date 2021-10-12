@@ -24,31 +24,31 @@ public class WorkPlaceManager implements WorkPlaceService {
 
     @Override
     public Result add(WorkPlaceDto workPlaceDto) {
-        if (_workPlaceDao.existsByWorkPlace(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()))){
+        if (_workPlaceDao.existsByWorkPlaceName(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()))){
             return new ErrorResult("Çalışma yeri sistemde mevcut");
         }
         WorkPlace workPlace = new WorkPlace();
-        workPlace.setWorkPlace(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()));
+        workPlace.setWorkPlaceName(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()));
         _workPlaceDao.save(workPlace);
         return new SuccessResult("Veri eklendi");
     }
 
     @Override
-    public Result update(WorkPlaceDto workPlaceDto,int workPlaceId) {
+    public Result update(WorkPlaceDto workPlaceDto,Long workPlaceId) {
 
         if (!_workPlaceDao.existsById(workPlaceId)){
             return new ErrorResult("Çalışma yeri bulunamadı.");
 
         }else {
            WorkPlace workPlace = _workPlaceDao.getById(workPlaceId);
-            workPlace.setWorkPlace(TextEditOperation.makeAllWordsCapitalLetter(workPlace.getWorkPlace()));
+            workPlace.setWorkPlaceName(TextEditOperation.makeAllWordsCapitalLetter(workPlaceDto.getWorkPlace()));
             _workPlaceDao.save(workPlace);
             return new SuccessResult("Veri güncellendi.");
         }
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         if (!_workPlaceDao.existsById(id)) {
             return new ErrorResult("Veri bulunamadı.");
         } else {
@@ -66,7 +66,7 @@ public class WorkPlaceManager implements WorkPlaceService {
     }
 
     @Override
-    public DataResult<WorkPlace> getOne(int id) {
+    public DataResult<WorkPlace> getOne(Long id) {
         try{
             return new SuccessDataResult<WorkPlace>(_workPlaceDao.getById(id),"Veri getirildi.");
         }catch (Exception ex){

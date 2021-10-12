@@ -17,18 +17,18 @@ public interface JobAdvertisementService {
 
    // Result add(JobAdvertisement jobAdvertisement);
     Result addDto(JobAdvertisementDto jobAdvertisementDto);
-    Result update(JobAdvertisementDto jobAdvertisementDto,int advertisementId);
-    Result delete(int id);
-    Result setActivationStatus(int id);
+    Result update(JobAdvertisementDto jobAdvertisementDto,Long advertisementId);
+    Result delete(Long id);
+    Result setActivationStatus(Long id);
     DataResult<List<JobAdvertisement>> getAll();
-    DataResult<JobAdvertisement> getOne(int id);//Repository'de var ancak c#'den gelen alışkanlık :)
+    DataResult<JobAdvertisement> getOne(Long id);//Repository'de var ancak c#'den gelen alışkanlık :)
     DataResult<JobAdvertisement>getByAdvertisementNumber(String advertisementNumber);
 
 
     DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatus(int pageNo, int pageSize);
 
     DataResult<List<JobAdvertisement>>getJobAdvertisementsByJobAdvertisementStatusAndReleaseDateOrderByReleaseDateDesc(int pageNo, int pageSize);
-    DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(int employerId,int pageNo, int pageSize);
+    DataResult<List<JobAdvertisement>> getJobAdvertisementsByEmployerAndJobAdvertisementStatus(Long employerId,int pageNo, int pageSize);
 
     DataResult<List<JobAdvertisement>> getByIsActiveAndPageNumber(int pageNo, int pageSize,JobAdvertisementFilter jobAdvertisementFilter);
 

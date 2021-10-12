@@ -20,7 +20,7 @@ public abstract class Activation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @Column(name = "activation_number",unique = true)
     private String activationNumber;

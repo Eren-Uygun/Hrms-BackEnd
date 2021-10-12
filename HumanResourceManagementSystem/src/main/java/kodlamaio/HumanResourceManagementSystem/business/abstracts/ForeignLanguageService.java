@@ -9,9 +9,9 @@ import kodlamaio.HumanResourceManagementSystem.entities.dtos.ForeignLanguageDto;
 import java.util.List;
 
 public interface ForeignLanguageService {
-    Result add(ForeignLanguageDto foreignLanguageDto,int cvId);
-    Result delete(int id,int cvId);
-    Result update(ForeignLanguageDto foreignLanguageDto,int cvId,int foreignLanguageId);
-    DataResult<ForeignLanguage> getOne(int id);
+    Result add(ForeignLanguageDto foreignLanguageDto,Long cvId);
+    Result delete(Long id,Long cvId);
+    Result update(ForeignLanguageDto foreignLanguageDto,Long cvId,Long foreignLanguageId);
+    DataResult<ForeignLanguage> getOne(Long id);
     DataResult<List<ForeignLanguage>> getAll();
 }

@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/jobTypes")
+@CrossOrigin
 public class JobTypesController {
 
     private JobTypeService _jobTypeService;
@@ -25,7 +26,7 @@ public class JobTypesController {
 
 
     @GetMapping("/getJobType")
-    public ResponseEntity<?> getOne(int id){
+    public ResponseEntity<?> getOne(Long id){
         Result result = _jobTypeService.getOne(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -59,7 +60,7 @@ public class JobTypesController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int  id){
+    public ResponseEntity<?> delete(Long  id){
 
         Result result = _jobTypeService.delete(id);
         if (result.isSuccess()){
@@ -69,7 +70,7 @@ public class JobTypesController {
     }
 
     @PutMapping(value = "/update/{jobTypeId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody JobTypeDto jobTypeDto,@PathVariable("jobTypeId") int jobTypeId){
+    public ResponseEntity<?> update(@RequestBody JobTypeDto jobTypeDto,@PathVariable("jobTypeId") Long jobTypeId){
       Result result =  _jobTypeService.update(jobTypeDto,jobTypeId);
       if (result.isSuccess()){
           return ResponseEntity.ok(result);

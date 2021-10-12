@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface CityService {
     Result add(CityDto cityDto);
-    Result update(CityDto cityDto,int id);
-    Result delete(int id);
+    Result update(CityDto cityDto,Long id);
+    Result delete(Long id);
 
     DataResult<List<City>> getAll();
-    DataResult<City> getOne(int id);
+    DataResult<City> getOne(Long id);
 }

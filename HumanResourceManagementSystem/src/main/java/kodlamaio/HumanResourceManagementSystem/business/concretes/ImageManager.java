@@ -31,7 +31,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Result update(MultipartFile multipartFile, int cvId) throws IOException {
+    public Result update(MultipartFile multipartFile, Long cvId) throws IOException {
         try {
             BufferedImage bufferedImage= ImageIO.read(multipartFile.getInputStream());
             if(bufferedImage==null){
@@ -71,7 +71,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Result delete(int id){
+    public Result delete(Long id){
         if (!_imageDao.existsById(id)){
             return new ErrorResult("Resim bulunamadı.");
         }
@@ -90,7 +90,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public DataResult<Image> getById(int id) {
+    public DataResult<Image> getById(Long id) {
         if(!this._imageDao.existsById(id)){
             return new ErrorDataResult<Image>("Bu idye ait resim bulunamadı");
         }
@@ -98,7 +98,7 @@ public class ImageManager implements ImageService {
     }
 
     @Override
-    public Boolean isExist(int id) {
+    public Boolean isExist(Long id) {
         return _imageDao.existsById(id);
     }
 }

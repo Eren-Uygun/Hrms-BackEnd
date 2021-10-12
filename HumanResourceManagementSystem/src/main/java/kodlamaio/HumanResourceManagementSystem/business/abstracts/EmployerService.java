@@ -10,9 +10,9 @@ import java.util.List;
 public interface EmployerService {
 
     Result add(EmployerAddDto employerAddDto);
-    Result update(int employerId,EmployerAddDto employerAddDto);
-    Result delete(int id);
+    Result update(Long employerId,EmployerAddDto employerAddDto);
+    Result delete(Long id);
 
     DataResult<List<Employer>> getAll();
-    DataResult<Employer> getById(int id);
+    DataResult<Employer> getById(Long id);
 }

@@ -17,7 +17,7 @@ public class JobAdvertisementFavorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_advertisement_favorite_id")
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "candidate_id")

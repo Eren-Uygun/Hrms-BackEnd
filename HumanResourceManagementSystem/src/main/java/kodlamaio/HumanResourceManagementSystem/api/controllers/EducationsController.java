@@ -25,7 +25,7 @@ public class EducationsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody EducationDto education,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> add(@RequestBody EducationDto education,@PathVariable("cvId") Long cvId){
         Result result = _educationService.add(education,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -35,7 +35,7 @@ public class EducationsController {
     }
 
     @PutMapping(value = "/update/{educationId}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@RequestBody EducationDto educationDto,@PathVariable("cvId") int cvId,@PathVariable("educationId") int educationId){
+    public ResponseEntity<?> update(@RequestBody EducationDto educationDto,@PathVariable("cvId") Long cvId,@PathVariable("educationId") Long educationId){
         Result result = _educationService.update(educationDto,cvId,educationId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -45,7 +45,7 @@ public class EducationsController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id,@PathVariable("cvId") int cvId){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id,@PathVariable("cvId") Long cvId){
         Result result = _educationService.delete(id,cvId);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

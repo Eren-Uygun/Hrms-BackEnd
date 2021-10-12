@@ -26,7 +26,7 @@ public class EducationManager implements EducationService {
     }
 
     @Override
-    public Result add(EducationDto educationDto,int cvId) {
+    public Result add(EducationDto educationDto,Long cvId) {
         try {
             if (!_curriculumVitaeDao.existsById(cvId)) {
                 return new ErrorResult("Cv bulunamadı.");
@@ -60,7 +60,7 @@ public class EducationManager implements EducationService {
     }
 
     @Override
-    public Result update(EducationDto educationDto, int cvId,int educationId) {
+    public Result update(EducationDto educationDto, Long cvId,Long educationId) {
         if (!_curriculumVitaeDao.existsById(cvId)){
             return new ErrorResult("Cv bulunamadı.");
         }else if (educationDto.getStartingDate() == null){
@@ -90,7 +90,7 @@ public class EducationManager implements EducationService {
 
 
     @Override
-    public Result delete(int id,int cvId) {
+    public Result delete(Long id,Long cvId) {
         try {
             if (!_curriculumVitaeDao.existsById(cvId)) {
                 return new ErrorResult("Cv bulunamadı.");
@@ -108,7 +108,7 @@ public class EducationManager implements EducationService {
     }
 
     @Override
-    public DataResult<List<Education>> getAll(int cvId) {
+    public DataResult<List<Education>> getAll(Long cvId) {
         try {
             return new SuccessDataResult<List<Education>>(_educationDao.getEducationsByCurriculumVitae_Id(cvId), "Veriler getirildi.");
         } catch (Exception ex) {
@@ -117,7 +117,7 @@ public class EducationManager implements EducationService {
     }
 
     @Override
-    public DataResult<Education> getOne(int id) {
+    public DataResult<Education> getOne(Long id) {
         try {
             return new SuccessDataResult<Education>(_educationDao.getById(id), "Veri getirildi.");
         } catch (Exception ex) {

@@ -19,12 +19,12 @@ public class JobType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     //Full-time , Part-Time , Freelancer
 
     @Column(name = "job_type")
-    private String jobType;
+    private String jobTypeName;
 
     @JsonIgnore
     @OneToMany(mappedBy = "jobType",cascade = CascadeType.ALL)

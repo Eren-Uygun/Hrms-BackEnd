@@ -64,7 +64,7 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     }
 
     @Override
-    public Result update(int id,HrmsEmployeeDto employeeDto) {
+    public Result update(Long id,HrmsEmployeeDto employeeDto) {
         try{
 
             if (!_hrmsEmployeeDao.existsById(id)){
@@ -96,7 +96,7 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     }
 
     @Override
-    public Result delete(int id) {
+    public Result delete(Long id) {
         try{
             if (_hrmsEmployeeDao.existsById(id)){
                 _hrmsEmployeeDao.deleteById(id);
@@ -114,14 +114,14 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     @Override
     public DataResult<List<HrmsEmployee>> getAll() {
         try {
-            return new SuccessDataResult<List<HrmsEmployee>>(_hrmsEmployeeDao.findAll(),"Veriler getirildi.");
+            return new SuccessDataResult<>(_hrmsEmployeeDao.findAll(), "Veriler getirildi.");
         }catch (Exception ex){
-            return new ErrorDataResult<>("Veriler getirilemedi.");
+            return new ErrorDataResult<>("Veriler getirilemedi."+ex);
         }
     }
 
     @Override
-    public DataResult<HrmsEmployee> getById(int id) {
+    public DataResult<HrmsEmployee> getById(Long id) {
         try {
             return new SuccessDataResult<HrmsEmployee>( _hrmsEmployeeDao.getById(id),"Veri getirildi.");
         }catch (Exception ex){

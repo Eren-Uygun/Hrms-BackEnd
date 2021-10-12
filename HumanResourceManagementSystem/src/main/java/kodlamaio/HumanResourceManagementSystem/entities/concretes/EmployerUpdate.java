@@ -14,7 +14,7 @@ public class EmployerUpdate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Column(name = "company_name")
     private String companyName;
     @Column(name = "website")
@@ -22,7 +22,7 @@ public class EmployerUpdate {
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "employer_id")
-    private int employerId;
+    private Long employerId;
 
 
 }

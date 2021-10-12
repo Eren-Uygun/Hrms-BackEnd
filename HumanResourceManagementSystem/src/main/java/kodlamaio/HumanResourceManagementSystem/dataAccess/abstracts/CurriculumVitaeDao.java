@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CurriculumVitaeDao extends JpaRepository<CurriculumVitae, Integer> {
+public interface CurriculumVitaeDao extends JpaRepository<CurriculumVitae, Long> {
 
-    CurriculumVitae findCurriculumVitaeByCandidate_Id(int candidateId);
+    CurriculumVitae findCurriculumVitaeByCandidate_Id(Long candidateId);
 
-    DataResult<List<CurriculumVitae>> getCurriculumVitaesByCandidate_Id(int candidateId);
+    DataResult<List<CurriculumVitae>> getCurriculumVitaesByCandidate_Id(Long candidateId);
 
 }

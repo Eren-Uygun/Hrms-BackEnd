@@ -39,7 +39,7 @@ public class HrmsEmployeesController {
     }
 
     @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
-    public ResponseEntity<?> update(@PathVariable("id") int id,@RequestBody HrmsEmployeeDto hrmsEmployeeDto){
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@RequestBody HrmsEmployeeDto hrmsEmployeeDto){
         Result result = _employeeService.update(id,hrmsEmployeeDto);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -49,7 +49,7 @@ public class HrmsEmployeesController {
     }
 
     @GetMapping("/getById")
-    public ResponseEntity<?> getById(int id){
+    public ResponseEntity<?> getById(Long id){
         Result result= _employeeService.getById(id);
         if(result.isSuccess()){
             return ResponseEntity.ok(result);
@@ -73,7 +73,7 @@ public class HrmsEmployeesController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(int id) {
+    public ResponseEntity<?> delete(Long id) {
         Result result = _employeeService.delete(id);
         if (result.isSuccess()){
             return ResponseEntity.ok(result);

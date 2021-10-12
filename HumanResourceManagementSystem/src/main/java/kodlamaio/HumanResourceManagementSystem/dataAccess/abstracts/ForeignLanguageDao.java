@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ForeignLanguageDao extends JpaRepository<ForeignLanguage, Integer> {
+public interface ForeignLanguageDao extends JpaRepository<ForeignLanguage, Long> {
 
     @Query("select f from ForeignLanguage f where f.curriculumVitae.id =: cvId")
-    DataResult<List<ForeignLanguage>> getForeignLanguagesByCurriculumVitae_Id(int cvId);
+    DataResult<List<ForeignLanguage>> getForeignLanguagesByCurriculumVitae_Id(Long cvId);
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -36,8 +37,8 @@ public class HrmsEmployee extends User {
     private String department;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "hrmsEmployee",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private JobAdvertisementActivationByEmployee jobAdvertisementActivationByEmployee;
+    @OneToMany(mappedBy = "hrmsEmployee",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<JobAdvertisementActivationByEmployee> jobAdvertisementActivationByEmployees;
 
 
 }

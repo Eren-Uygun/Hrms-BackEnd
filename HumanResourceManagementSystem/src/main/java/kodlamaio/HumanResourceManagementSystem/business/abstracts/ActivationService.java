@@ -5,11 +5,11 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 public interface ActivationService {
 
     Result activateByActivationCode(String activationCode);
-    Result manualEmployerActivation(int employerId,int employeeId);
+    Result manualEmployerActivation(Long employerId,Long employeeId);
     Result activateEmployerByActivationCode(String activationCode);
     Result activateHrmsEmployeeByActivationCode(String activationCode);
-    Result jobAdvertisementActivation(int employeeId,int jobAdvertisementId);
-    Result employerUpdateConfirmation(int employeeId,int employerId);
+    Result jobAdvertisementActivation(Long employeeId,Long jobAdvertisementId);
+    Result employerUpdateConfirmation(Long employeeId,Long employerId);
 
     //Result jobAdvertisementActivationByHrmsEmployee(int hrmsEmployeeId,String activationNumber,int advertisementNumber);
 

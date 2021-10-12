@@ -5,7 +5,7 @@ import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.JobDao;
 public class JobValidation {
     private static JobDao _jobDao;
 
-    public static boolean isJobExists(int id){
+    public static boolean isJobExists(Long id){
         var tempJob = _jobDao.getById(id);
         if (tempJob != null){
             return true;

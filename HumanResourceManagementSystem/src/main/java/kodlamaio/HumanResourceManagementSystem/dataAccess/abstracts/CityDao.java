@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CityDao extends JpaRepository<City,Integer> {
+public interface CityDao extends JpaRepository<City,Long> {
 
     boolean existsCityByCityName(String cityName);
 

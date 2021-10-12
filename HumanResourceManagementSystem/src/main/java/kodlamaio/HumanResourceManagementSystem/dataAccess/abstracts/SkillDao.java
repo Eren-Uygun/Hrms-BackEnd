@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SkillDao extends JpaRepository<Skill,Integer> {
+public interface SkillDao extends JpaRepository<Skill,Long> {
 
     DataResult<List<Skill>> getSkillsByCurriculumVitae_Id(int id);
 }
