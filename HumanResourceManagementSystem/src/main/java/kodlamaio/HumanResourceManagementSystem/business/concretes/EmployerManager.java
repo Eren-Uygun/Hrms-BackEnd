@@ -14,7 +14,6 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerActivationDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.EmployerUpdateDao;
-import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.RoleDao;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Employer;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerActivation;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerUpdate;
@@ -33,17 +32,15 @@ public class EmployerManager implements EmployerService {
     private UserValidationService _userValidationService;
     private EmployerUpdateDao _employerUpdateDao;
     private EmailSenderService _emailSenderService;
-    private RoleDao _roleDao;
     private UserService _userService;
 
     @Autowired
-    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, RoleDao _roleDao, UserService _userService, RuleValidationService _ruleValidationService) {
+    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, UserService _userService, RuleValidationService _ruleValidationService) {
         this._employerDao = _employerDao;
         this._employerActivationDao = _employerActivationDao;
         this._userValidationService = _userValidationService;
         this._employerUpdateDao = _employerUpdateDao;
         this._emailSenderService = _emailSenderService;
-        this._roleDao = _roleDao;
         this._userService = _userService;
         this._ruleValidationService = _ruleValidationService;
     }
@@ -81,7 +78,6 @@ public class EmployerManager implements EmployerService {
                 _employerDao.save(employer);
                 _employerActivationDao.save(employerActivation);
                 _emailSenderService.sendMail(employer.getEmail());
-                _userService.addRoleToUser(employer.getEmail(),"ROLE_EMPLOYER");
                 return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 

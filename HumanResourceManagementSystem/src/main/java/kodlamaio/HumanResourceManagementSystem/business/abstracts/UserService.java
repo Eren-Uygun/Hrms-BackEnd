@@ -1,19 +1,15 @@
 package kodlamaio.HumanResourceManagementSystem.business.abstracts;
 
+import javassist.NotFoundException;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
-import kodlamaio.HumanResourceManagementSystem.entities.abstracts.Role;
 import kodlamaio.HumanResourceManagementSystem.entities.abstracts.User;
-import kodlamaio.HumanResourceManagementSystem.entities.dtos.LoginDto;
-import kodlamaio.HumanResourceManagementSystem.entities.dtos.RoleAddDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
-public interface UserService {
-
-    Result saveRole(Role role);
-    void addRoleToUser(String email,String roleName);
-    Result login(LoginDto loginDto);
-    User getUser(String userName);
+public interface UserService extends UserDetailsService {
+    User findUserBEmail(String email) throws NotFoundException;
     List<User> getUsers();
 
 

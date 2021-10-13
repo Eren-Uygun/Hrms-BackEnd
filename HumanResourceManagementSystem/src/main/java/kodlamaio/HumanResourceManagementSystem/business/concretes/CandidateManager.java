@@ -14,8 +14,6 @@ import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.
 import kodlamaio.HumanResourceManagementSystem.core.utils.validations.abstracts.UserValidationService;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateActivationDao;
 import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.CandidateDao;
-import kodlamaio.HumanResourceManagementSystem.dataAccess.abstracts.RoleDao;
-import kodlamaio.HumanResourceManagementSystem.entities.abstracts.Role;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.Candidate;
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.CandidateActivation;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.CandidateAddDto;
@@ -36,19 +34,17 @@ public class CandidateManager implements CandidateService {
     private UserValidationService _userValidationService;
     private RuleValidationService _ruleValidationService;
     private EmailSenderService _emailSenderService;
-    private RoleDao _roleDao;
     private UserService _userService;
     private PasswordEncoder _passwordEncoder;
 
     @Autowired
-    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService, RoleDao _roleDao, UserService _userService, PasswordEncoder _passwordEncoder) {
+    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService, UserService _userService, PasswordEncoder _passwordEncoder) {
         this._candidateDao = _candidateDao;
         this._candidateActivationDao = _candidateActivationDao;
         this._candidateValidationService = _candidateValidationService;
         this._userValidationService = _userValidationService;
         this._ruleValidationService = _ruleValidationService;
         this._emailSenderService = _emailSenderService;
-        this._roleDao = _roleDao;
         this._userService = _userService;
         this._passwordEncoder = _passwordEncoder;
     }
@@ -60,7 +56,7 @@ public class CandidateManager implements CandidateService {
                 return new ErrorResult("11 Haneli Türkiye Cumhuriyeti Kimlik Numaranızı giriniz.");
             } else if (!_candidateValidationService.isRealPerson(candidateAddDto.getBirthDate().getYear(),candidateAddDto.getFirstName(),candidateAddDto.getLastName(),candidateAddDto.getNationalIdentityNumber())) {
                 return new ErrorResult("Kimlik doğrulanamadı.");
-            }else if(_userValidationService.isMailAddressExists(candidateAddDto.getEmail())){
+            }else if(_candidateDao.existsCandidateByEmail(candidateAddDto.getEmail())){
                 return new ErrorResult("Bu mail adresi sistemde kayıtlı.");
             } else if(!_ruleValidationService.isMailRuleOk(candidateAddDto.getEmail())&&!_ruleValidationService.isPasswordRuleOk(candidateAddDto.getPassword())){
                 return new ErrorResult("Mail adresiniz veya şifreniz kurallara uygun değil");
@@ -87,8 +83,6 @@ public class CandidateManager implements CandidateService {
                     _candidateActivationDao.save(activation);
                     _candidateDao.save(candidate);
                     _emailSenderService.sendMail(candidate.getEmail());
-                    _userService.addRoleToUser(candidate.getEmail(),"ROLE_CANDIDATE");
-
 
                 return new SuccessResult(BusinessMessage.addOperationSuccess);
             }

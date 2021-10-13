@@ -33,13 +33,6 @@ public class User {
     @Transient
     private String passwordRepeat;
 
-    @ManyToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
-    private Collection<Role> roles;
-
-    {
-        roles = new ArrayList<>();
-    }
-
 
     @Column(name = "user_status")
     @Enumerated(EnumType.STRING)

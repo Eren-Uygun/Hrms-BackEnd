@@ -7,5 +7,6 @@ public interface CandidateDao extends JpaRepository<Candidate,Long> {
 
     Candidate findByNationalIdentityNumber(String nationalIdentityNumber);
     Candidate findByEmail(String email);
+    boolean existsCandidateByEmail(String email);
 
 }

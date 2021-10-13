@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.HrmsEmployeeService;
+import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.*;
@@ -20,13 +21,14 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     private HrmsEmployeeDao _hrmsEmployeeDao;
     private UserValidationService _userValidationService;
     private RuleValidationService _ruleValidationService;
-
+    private UserService _userService;
 
     @Autowired
-    public HrmsEmployeeManager(HrmsEmployeeDao _hrmsEmployeeDao, UserValidationService _userValidationService, RuleValidationService _ruleValidationService) {
+    public HrmsEmployeeManager(HrmsEmployeeDao _hrmsEmployeeDao, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, UserService _userService) {
         this._hrmsEmployeeDao = _hrmsEmployeeDao;
         this._userValidationService = _userValidationService;
         this._ruleValidationService = _ruleValidationService;
+        this._userService = _userService;
     }
 
     @Override
