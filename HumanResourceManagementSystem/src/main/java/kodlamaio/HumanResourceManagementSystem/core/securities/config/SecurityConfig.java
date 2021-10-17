@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.core.securities.config;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
+import kodlamaio.HumanResourceManagementSystem.core.securities.filter.CustomAuthorizationFilter;
 import kodlamaio.HumanResourceManagementSystem.core.securities.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean(name = "passwordEncoderBean")
     public PasswordEncoder passwordEncoder()
     {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -54,12 +55,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable().authorizeRequests()
                 //http.csrf().disable().authorizeRequests()
-
                 .antMatchers("/api/auths/login/**").permitAll()
                 .antMatchers("/api/candidates/add").permitAll()
-                .antMatchers("/api/employers/add").permitAll()
+                .antMatchers("/api/employers/add").hasAnyAuthority("ROLE_CANDIDATE")
                 .antMatchers("/api").permitAll()
-                .antMatchers("/api/activations/**").authenticated()
+                .antMatchers("/api/activations/**").permitAll()
+                //.hasAnyAuthority("ROLE_CANDIDATE")
                 /*.antMatchers("/api/register/job-seeker").permitAll()
                 .antMatchers("/api/register/job-seeker/confirm").permitAll()
                 .antMatchers("/api/register/employer").permitAll()

@@ -12,16 +12,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserManager implements UserService {
 
     private final UserDao _userDao;
+
+    private Set getAuthority(User user) {
+        Set authorities = new HashSet();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return authorities;
+    }
 
 
 
@@ -30,7 +35,7 @@ public class UserManager implements UserService {
         User user = _userDao.findUserByEmailEquals(email).orElseThrow(() ->
                 new UsernameNotFoundException("User bulunamadı."));
 
-            return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),new ArrayList<>());
+            return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),getAuthority(user));
 
     }
 

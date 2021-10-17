@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.CandidateService;
+import kodlamaio.HumanResourceManagementSystem.business.abstracts.RoleService;
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
@@ -34,19 +35,19 @@ public class CandidateManager implements CandidateService {
     private UserValidationService _userValidationService;
     private RuleValidationService _ruleValidationService;
     private EmailSenderService _emailSenderService;
-    private UserService _userService;
     private PasswordEncoder _passwordEncoder;
+    private RoleService _roleService;
 
     @Autowired
-    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService, UserService _userService, PasswordEncoder _passwordEncoder) {
+    public CandidateManager(CandidateDao _candidateDao, CandidateActivationDao _candidateActivationDao, CandidateValidationService _candidateValidationService, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, EmailSenderService _emailSenderService, PasswordEncoder _passwordEncoder, RoleService _roleService) {
         this._candidateDao = _candidateDao;
         this._candidateActivationDao = _candidateActivationDao;
         this._candidateValidationService = _candidateValidationService;
         this._userValidationService = _userValidationService;
         this._ruleValidationService = _ruleValidationService;
         this._emailSenderService = _emailSenderService;
-        this._userService = _userService;
         this._passwordEncoder = _passwordEncoder;
+        this._roleService = _roleService;
     }
 
     @Override
@@ -83,6 +84,9 @@ public class CandidateManager implements CandidateService {
                     _candidateActivationDao.save(activation);
                     _candidateDao.save(candidate);
                     _emailSenderService.sendMail(candidate.getEmail());
+                _roleService.addRoleToUser(candidate.getEmail(), "ROLE_CANDIDATE");
+
+
 
                 return new SuccessResult(BusinessMessage.addOperationSuccess);
             }

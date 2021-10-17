@@ -8,7 +8,9 @@ import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.core.securities.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -36,40 +39,46 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    @Autowired
     private final JwtUtil jwtUtil;
+
     private final UserService userService;
+
+    public static String UserClaim = "";
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
-        String token = null;
-        String userName = null;
+
+        final String authorizationHeader = request.getHeader("Authorization");
+        String username = null;
+        String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            token = authorizationHeader.substring(7);
-            userName = jwtUtil.extractUsername(token);
+            jwt = authorizationHeader.substring(7);
+            username = jwtUtil.extractUsername(jwt);
+            UserClaim = username;
         }
 
-        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(userName);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userService.loadUserByUsername(username);
+            if (jwtUtil.validateToken(jwt, userDetails)) {
 
-            if (jwtUtil.validateToken(token, userDetails)) {
-
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                String authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining());
+                System.out.println("Authorities granted : " + authorities);
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            } else {
+                System.out.println("Not Valid Token");
             }
+
         }
         filterChain.doFilter(request, response);
-
-
-
-
     }
 
-    }
+}
 

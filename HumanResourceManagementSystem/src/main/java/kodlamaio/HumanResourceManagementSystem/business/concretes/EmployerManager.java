@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.EmployerService;
+import kodlamaio.HumanResourceManagementSystem.business.abstracts.RoleService;
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.business.constants.BusinessMessage;
 import kodlamaio.HumanResourceManagementSystem.core.enums.activationEnums.UserActivationStatus;
@@ -27,26 +28,24 @@ import java.util.List;
 @Service
 public class EmployerManager implements EmployerService {
 
-    private EmployerDao _employerDao;
-    private EmployerActivationDao _employerActivationDao;
-    private UserValidationService _userValidationService;
-    private EmployerUpdateDao _employerUpdateDao;
-    private EmailSenderService _emailSenderService;
-    private UserService _userService;
+    private final EmployerDao _employerDao;
+    private final EmployerActivationDao _employerActivationDao;
+    private final UserValidationService _userValidationService;
+    private final EmployerUpdateDao _employerUpdateDao;
+    private final EmailSenderService _emailSenderService;
+    private final RoleService _roleService;
+    private final RuleValidationService _ruleValidationService;
 
     @Autowired
-    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, UserService _userService, RuleValidationService _ruleValidationService) {
+    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, RoleService _roleService, RuleValidationService _ruleValidationService) {
         this._employerDao = _employerDao;
         this._employerActivationDao = _employerActivationDao;
         this._userValidationService = _userValidationService;
         this._employerUpdateDao = _employerUpdateDao;
         this._emailSenderService = _emailSenderService;
-        this._userService = _userService;
+        this._roleService = _roleService;
         this._ruleValidationService = _ruleValidationService;
     }
-
-    private RuleValidationService _ruleValidationService;
-
 
     @Override
     public Result add(EmployerAddDto employerAddDto) {
@@ -78,6 +77,7 @@ public class EmployerManager implements EmployerService {
                 _employerDao.save(employer);
                 _employerActivationDao.save(employerActivation);
                 _emailSenderService.sendMail(employer.getEmail());
+                _roleService.addRoleToUser(employerAddDto.getEmail(),"ROLE_EMPLOYER");
                 return new SuccessResult(BusinessMessage.addOperationSuccess);
             }
 

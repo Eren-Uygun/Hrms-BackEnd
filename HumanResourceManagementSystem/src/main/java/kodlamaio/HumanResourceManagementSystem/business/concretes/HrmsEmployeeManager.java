@@ -1,6 +1,7 @@
 package kodlamaio.HumanResourceManagementSystem.business.concretes;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.HrmsEmployeeService;
+import kodlamaio.HumanResourceManagementSystem.business.abstracts.RoleService;
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
 import kodlamaio.HumanResourceManagementSystem.core.enums.userEnums.UserStatus;
 import kodlamaio.HumanResourceManagementSystem.core.utils.TextEditOperation;
@@ -21,14 +22,14 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
     private HrmsEmployeeDao _hrmsEmployeeDao;
     private UserValidationService _userValidationService;
     private RuleValidationService _ruleValidationService;
-    private UserService _userService;
+    private RoleService _roleService;
 
     @Autowired
-    public HrmsEmployeeManager(HrmsEmployeeDao _hrmsEmployeeDao, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, UserService _userService) {
+    public HrmsEmployeeManager(HrmsEmployeeDao _hrmsEmployeeDao, UserValidationService _userValidationService, RuleValidationService _ruleValidationService, RoleService _roleService) {
         this._hrmsEmployeeDao = _hrmsEmployeeDao;
         this._userValidationService = _userValidationService;
         this._ruleValidationService = _ruleValidationService;
-        this._userService = _userService;
+        this._roleService = _roleService;
     }
 
     @Override
@@ -57,6 +58,7 @@ public class HrmsEmployeeManager implements HrmsEmployeeService {
                 employee.setPasswordRepeat(employeeDto.getPasswordConfirm());
                 employee.setUserStatus(UserStatus.Active);
                 _hrmsEmployeeDao.save(employee);
+                _roleService.addRoleToUser(employeeDto.getEmail(), "ROLE_ADMIN");
                 return new SuccessResult("Personel sisteme eklendi ve aktif hale getirildi.");
             }
 
