@@ -20,6 +20,7 @@ import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerActiva
 import kodlamaio.HumanResourceManagementSystem.entities.concretes.EmployerUpdate;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.EmployerAddDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,9 +36,10 @@ public class EmployerManager implements EmployerService {
     private final EmailSenderService _emailSenderService;
     private final RoleService _roleService;
     private final RuleValidationService _ruleValidationService;
+    private PasswordEncoder _passwordEncoder;
 
     @Autowired
-    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, RoleService _roleService, RuleValidationService _ruleValidationService) {
+    public EmployerManager(EmployerDao _employerDao, EmployerActivationDao _employerActivationDao, UserValidationService _userValidationService, EmployerUpdateDao _employerUpdateDao, EmailSenderService _emailSenderService, RoleService _roleService, RuleValidationService _ruleValidationService, PasswordEncoder _passwordEncoder) {
         this._employerDao = _employerDao;
         this._employerActivationDao = _employerActivationDao;
         this._userValidationService = _userValidationService;
@@ -45,6 +47,7 @@ public class EmployerManager implements EmployerService {
         this._emailSenderService = _emailSenderService;
         this._roleService = _roleService;
         this._ruleValidationService = _ruleValidationService;
+        this._passwordEncoder = _passwordEncoder;
     }
 
     @Override
@@ -66,8 +69,8 @@ public class EmployerManager implements EmployerService {
                 employer.setWebsite(employerAddDto.getWebsite());
                 employer.setPhoneNumber(employerAddDto.getPhoneNumber());
                 employer.setEmail(employerAddDto.getEmail());
-                employer.setPassword(employerAddDto.getPassword());
-                employer.setPasswordRepeat(employerAddDto.getConfirmPassword());
+                employer.setPassword(_passwordEncoder.encode(employerAddDto.getPassword()));
+                employer.setPasswordRepeat(_passwordEncoder.encode(employerAddDto.getConfirmPassword()));
                 employer.setUserStatus(UserStatus.Passive);
                 EmployerActivation employerActivation = new EmployerActivation();
                 employerActivation.setEmployer(employer);

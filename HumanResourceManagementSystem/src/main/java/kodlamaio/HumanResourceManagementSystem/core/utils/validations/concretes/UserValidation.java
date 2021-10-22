@@ -34,7 +34,7 @@ public class UserValidation implements UserValidationService {
     @Override
     public boolean isMailAddressExists(String emailAddress){
 
-            if (_userDao.findUserByEmailEquals(emailAddress) != null){
+            if (_userDao.existsByEmail(emailAddress)){
                 return true;
             }
             else{

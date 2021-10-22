@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/hrmsEmployees")
 @CrossOrigin
 public class HrmsEmployeesController {
+
     private HrmsEmployeeService _employeeService;
 
     @Autowired
@@ -28,16 +29,17 @@ public class HrmsEmployeesController {
         this._employeeService = _employeeService;
     }
 
-    @PostMapping(value = "/add")
-    public ResponseEntity<?> add(@Valid @RequestBody HrmsEmployeeDto hrmsEmployee) {
-        Result result = this._employeeService.add(hrmsEmployee);
-        if (result.isSuccess()){
-            return ResponseEntity.ok(result);
-        }
-        return ResponseEntity.badRequest().body(hrmsEmployee);
-
+    @CrossOrigin
+    @PostMapping(value = "/add",headers = {"content-type=application/json"})
+    public ResponseEntity<?> add(@RequestBody HrmsEmployeeDto hrmsEmployee) {
+            Result result = this._employeeService.add(hrmsEmployee);
+            if (result.isSuccess()){
+                return ResponseEntity.ok(result);
+            }
+            return ResponseEntity.badRequest().body(result.getMessage());
     }
 
+    @CrossOrigin
     @PutMapping(value = "/update/{id}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update(@PathVariable("id") Long id,@RequestBody HrmsEmployeeDto hrmsEmployeeDto){
         Result result = _employeeService.update(id,hrmsEmployeeDto);
@@ -72,6 +74,7 @@ public class HrmsEmployeesController {
         return _employeeService.getAll();
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(Long id) {
         Result result = _employeeService.delete(id);

@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
@@ -45,9 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean(name = "passwordEncoderBean")
+    @Deprecated()
     public PasswordEncoder passwordEncoder()
     {
-        return new BCryptPasswordEncoder();
+      return new BCryptPasswordEncoder();
+
+       // return NoOpPasswordEncoder.getInstance();
     }
 
     @Override
@@ -56,8 +59,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 //http.csrf().disable().authorizeRequests()
                 .antMatchers("/api/auths/login/**").permitAll()
-                .antMatchers("/api/candidates/add").permitAll()
-                .antMatchers("/api/employers/add").hasAnyAuthority("ROLE_CANDIDATE")
+                .antMatchers("/api/candidates/add").permitAll() //Register Sayfası
+                .antMatchers("/api/employers/add").permitAll() //Register Sayfası
+                .antMatchers("/api/curriculumVitaes/**").permitAll()
+                .antMatchers("/api/employers/**").permitAll()
+                .antMatchers("/api/hrmsEmployees/**").permitAll()
+                .antMatchers("/api/foreignLanguages/**").permitAll()
+                .antMatchers("/api/jobExperiences/**").permitAll()
+                .antMatchers("/api/educations/**").permitAll()
+                .antMatchers("/api/skills/**").permitAll()
+                .antMatchers("/api/coverLetters/**").permitAll()
+                .antMatchers("/api/jobAdvertisements/**").permitAll()
+                .antMatchers("/api/jobs/**").permitAll()
+                .antMatchers("/api/cities/**").permitAll()
+                .antMatchers("/api/jobTypes/**").permitAll()
+                .antMatchers("/api/workPlaces/**").permitAll()
+                .antMatchers("/api/favoriteJobAdvertisement/**").permitAll()
+
+
+
+
+                /*
+                .antMatchers("/api/curriculumVitaes/**").hasAnyAuthority("ROLE_CANDIDATE")
+                .antMatchers("/api/foreignLanguages/**").hasAnyAuthority("ROLE_CANDIDATE","ROLE_EMPLOYEE")
+                .antMatchers("/api/jobExperiences/**").hasAnyAuthority("ROLE_CANDIDATE","ROLE_EMPLOYEE")
+                .antMatchers("/api/educations/**").hasAnyAuthority("ROLE_CANDIDATE","ROLE_EMPLOYEE")
+                .antMatchers("/api/skills/**").hasAnyAuthority("ROLE_CANDIDATE","ROLE_EMPLOYEE")
+                .antMatchers("/api/coverLetters/**").hasAnyAuthority("ROLE_CANDIDATE","ROLE_EMPLOYEE")
+
+
+                .antMatchers("/api/jobAdvertisements/**").hasAnyAuthority("ROLE_EMPLOYER","ROLE_EMPLOYEE")
+
+                .antMatchers("/api/jobs/**").hasAnyAuthority("ROLE_EMPLOYER","ROLE_EMPLOYEE")
+                .antMatchers("/api/cities/**").hasAnyAuthority("ROLE_EMPLOYER","ROLE_EMPLOYEE")
+                .antMatchers("/api/jobTypes/**").hasAnyAuthority("ROLE_EMPLOYER","ROLE_EMPLOYEE")
+                .antMatchers("/api/workPlaces/**").hasAnyAuthority("ROLE_EMPLOYER","ROLE_EMPLOYEE")
+
                 .antMatchers("/api").permitAll()
                 .antMatchers("/api/activations/**").permitAll()
                 //.hasAnyAuthority("ROLE_CANDIDATE")

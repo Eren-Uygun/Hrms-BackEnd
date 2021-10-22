@@ -60,7 +60,6 @@ public class AuthManager implements AuthService {
         });
 
         try {
-
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(),loginDto.getPassword(),authorities));
         } catch(Exception e) {

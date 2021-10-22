@@ -25,6 +25,7 @@ public class EmployersController {
         this._employerService = _employerService;
     }
 
+    @CrossOrigin
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody EmployerAddDto employerAddDto){
         Result result=_employerService.add(employerAddDto);
@@ -58,6 +59,7 @@ public class EmployersController {
         return _employerService.getAll();
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete/{employerId}")
     public ResponseEntity<?> delete(@PathVariable("employerId") Long employerId){
         Result result=_employerService.delete(employerId);
@@ -67,6 +69,7 @@ public class EmployersController {
         return ResponseEntity.badRequest().body(result);
     }
 
+    @CrossOrigin
     @PutMapping(value = "/update/{employerId}",headers = {"content-type=application/json"})
     public ResponseEntity<?> update( @RequestBody EmployerAddDto employerAddDto,@PathVariable("employerId") Long employerId){
         Result result=_employerService.update(employerId,employerAddDto);

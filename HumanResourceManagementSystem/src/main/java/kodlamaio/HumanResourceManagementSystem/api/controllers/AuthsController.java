@@ -2,6 +2,7 @@ package kodlamaio.HumanResourceManagementSystem.api.controllers;
 
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.AuthService;
 import kodlamaio.HumanResourceManagementSystem.business.abstracts.UserService;
+import kodlamaio.HumanResourceManagementSystem.core.utils.results.DataResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.ErrorResult;
 import kodlamaio.HumanResourceManagementSystem.core.utils.results.Result;
 import kodlamaio.HumanResourceManagementSystem.entities.dtos.LoginDto;
